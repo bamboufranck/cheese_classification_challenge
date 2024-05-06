@@ -39,7 +39,9 @@ class DatasetGenerator:
                     f"Generating images for prompt: {prompt_metadata['prompt']}"
                 )
                 for i in range(0, num_images_per_prompt, self.batch_size):
+
                     batch = prompt[i : i + self.batch_size]
+                    
                     images = self.generator.generate(batch)
 
                     image_input = processor(images=images, return_tensors="pt")  # Ajout
@@ -59,6 +61,7 @@ class DatasetGenerator:
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
+                    
                     
                     
                 pbar.close()

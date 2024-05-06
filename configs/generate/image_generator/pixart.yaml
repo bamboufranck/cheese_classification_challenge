@@ -1,0 +1,2 @@
+_target_: generators.pixart.PixartGenerator
+use_cpu_offload: false
