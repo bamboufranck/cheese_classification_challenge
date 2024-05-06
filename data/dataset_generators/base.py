@@ -22,11 +22,14 @@ class DatasetGenerator:
         self.output_dir = output_dir
 
     def generate(self, labels_names):
+        """""
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
 
         labels_names_with_cheese = [name + " cheese" for name in labels_names]
         text_inputs = processor(text=labels_names_with_cheese, return_tensors="pt", padding=True) # Ajout
+
+        """""
 
         labels_prompts = self.create_prompts(labels_names)
         for label, label_prompts in labels_prompts.items():
@@ -43,6 +46,8 @@ class DatasetGenerator:
                     batch = prompt[i : i + self.batch_size]
                     
                     images = self.generator.generate(batch)
+
+                    """""
 
                     image_input = processor(images=images, return_tensors="pt")  # Ajout
 
@@ -61,8 +66,11 @@ class DatasetGenerator:
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
-                    
-                    
+                     """""
+                    self.save_images(images, label, image_id_0)            
+                    image_id_0 += len(images)                               
+                    pbar.update(1)
+
                     
                 pbar.close()
 
