@@ -21,6 +21,6 @@ class PixartGenerator:
             prompt=prompts, 
             num_inference_steps=self.num_inference_steps, 
             guidance_scale=self.guidance_scale
-        ).images[0]
+        ).images
         
         return images
