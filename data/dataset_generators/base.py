@@ -24,7 +24,9 @@ class DatasetGenerator:
     def generate(self, labels_names):
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
-        text_inputs = processor(text=labels_names, return_tensors="pt", padding=True) # Ajout
+
+        labels_names_with_cheese = [name + " cheese" for name in labels_names]
+        text_inputs = processor(text=labels_names_with_cheese, return_tensors="pt", padding=True) # Ajout
 
         labels_prompts = self.create_prompts(labels_names)
         for label, label_prompts in labels_prompts.items():
@@ -51,12 +53,14 @@ class DatasetGenerator:
 
                     similarities = torch.matmul(image_features, text_features.T)  # Ajout
                     predicted_index = similarities.argmax().item()               # Ajout
-                    predicted_category = labels_names[predicted_index]           # Ajout
+                    predicted_category = labels_names_with_cheese[predicted_index]           # Ajout
 
-                    if(predicted_category==label):                              # Ajout
+                    if(predicted_category==label+ " cheese"):                              # Ajout
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
+                    
+                    
                 pbar.close()
 
     def create_prompts(self, labels_names):
