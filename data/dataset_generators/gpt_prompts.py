@@ -25,7 +25,7 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         super().__init__(generator, batch_size, output_dir)
         self.num_images_per_label = num_images_per_label
 
-    def create_prompts(self, labels_names,val_data):
+    def create_prompts(self, labels_names,val_data,maping):
         descriptions = {}
         adding = ["box", "cartons", "plates", "many"]
 

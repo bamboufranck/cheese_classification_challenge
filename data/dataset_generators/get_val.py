@@ -22,6 +22,7 @@ class Get_val:
         )
         self.batch_size = 1
         self.num_workers = num_workers
+        self.idx_to_class = {v: k for k, v in self.real_images_val_dataset.class_to_idx.items()}
 
    
     def val_real_dataloader(self):
@@ -30,5 +31,5 @@ class Get_val:
                 batch_size=1,
                 shuffle=False,
                 num_workers=self.num_workers,
-            )
+            ), self.idx_to_class 
         
