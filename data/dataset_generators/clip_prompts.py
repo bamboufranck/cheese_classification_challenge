@@ -3,7 +3,17 @@ from .base import DatasetGenerator
 from clip_interrogator import Interrogator
 from PIL import Image
 
-ci = Interrogator()
+config = {
+    "model_type": "openai/clip-vit-base-patch32",
+    "image_size": 224,
+    "num_beams": 5,
+   
+}
+
+
+ci = Interrogator(config=config)
+
+
 
 class ClipPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
