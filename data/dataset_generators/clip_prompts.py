@@ -2,6 +2,7 @@ import torch
 from .base import DatasetGenerator
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
+import torchvision.transforms as transforms
 
 # Charger le modèle et le processeur BLIP
 processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
@@ -24,12 +25,14 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names,val_data):
         prompts = {}
+        to_pil = transforms.ToPILImage()
+       
         for label in labels_names:
             prompts[label]=[]
 
         for i,batch in enumerate(val_data):
             image, label = batch
-            image = Image.open(image)
+            image = to_pil(image)
             inputs = processor(images=image, return_tensors="pt")
             output_ids = model.generate(**inputs)
             description = processor.decode(output_ids[0], skip_special_tokens=True)

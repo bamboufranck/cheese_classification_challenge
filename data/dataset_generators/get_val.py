@@ -13,7 +13,9 @@ class Get_val:
         num_workers,
     ):
         transformations = transforms.Compose([
-            transforms.Resize((224, 224))])
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            ])
         
         self.real_images_val_dataset = ImageFolder(
             real_images_val_path, transform=transformations
