@@ -32,6 +32,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         for i,batch in enumerate(val_data):
             image, label = batch
+            print(image.shape)
             image = to_pil(image)
             inputs = processor(images=image, return_tensors="pt")
             output_ids = model.generate(**inputs)
