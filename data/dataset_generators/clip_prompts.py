@@ -30,17 +30,16 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         for label in labels_names:
             prompts[label]=[]
 
-        print(maping.keys())
+       
         for i,batch in enumerate(val_data):
             image, label = batch
-            print(label)
             image = image.squeeze(0)
             image = to_pil(image)
             inputs = processor(images=image, return_tensors="pt")
             output_ids = model.generate(**inputs)
             description = processor.decode(output_ids[0], skip_special_tokens=True)
-
-            prompts[maping[str(label.item())]].append(
+            valeur_label = label[0].item()
+            prompts[maping[valeur_label]].append(
                 {
                     "prompt": description,
                     "num_images": self.num_images_per_label,
