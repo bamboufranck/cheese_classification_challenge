@@ -77,7 +77,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             input_ids = input_ids.to(device)
 
 
-            generated_ids = model.generate(pixel_values=pixel_values,decoder_input_ids=input_ids,max_length=20)
+            generated_ids = model.generate(pixel_values=pixel_values,decoder_input_ids=input_ids,max_new_tokens=16)
 
             description = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
 
