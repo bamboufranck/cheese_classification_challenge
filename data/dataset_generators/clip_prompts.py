@@ -35,9 +35,13 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             image, label = batch
             image = image.squeeze(0)
             image = to_pil(image)
+            print("process time")
             inputs = processor(images=image, return_tensors="pt")
+            print("generation time")
             output_ids = model.generate(**inputs,max_new_tokens=100)
+            print("description time")
             description = processor.decode(output_ids[0], skip_special_tokens=True)
+            print("end of description")
             valeur_label = label[0].item()
             prompts[maping[valeur_label]].append(
                 {
