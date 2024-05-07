@@ -21,7 +21,7 @@ class DatasetGenerator:
         self.batch_size = batch_size
         self.output_dir = output_dir
 
-    def generate(self, labels_names):
+    def generate(self, labels_names,val_data):
         """""
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
@@ -31,7 +31,12 @@ class DatasetGenerator:
 
         """""
 
-        labels_prompts = self.create_prompts(labels_names)
+        # ensuite ici fine tune mon générateur avec val_data ou tout simplement utilise ses images 
+        # pour mieux generer
+
+        # ou encore utiliser ca pour generer de meilleur prompt avec clip interrogator par exemple 
+
+        labels_prompts = self.create_prompts(labels_names,val_data)
         for label, label_prompts in labels_prompts.items():
             image_id_0 = 0
             for prompt_metadata in label_prompts:
@@ -74,7 +79,7 @@ class DatasetGenerator:
                     
                 pbar.close()
 
-    def create_prompts(self, labels_names):
+    def create_prompts(self, labels_names,val_data):
         """
         Prompts should be a dictionary with the following structure:
         {

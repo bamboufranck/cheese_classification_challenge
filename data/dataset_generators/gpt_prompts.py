@@ -20,12 +20,12 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         generator,
          batch_size=1,
         output_dir="dataset/train",
-        num_images_per_label=200,
+        num_images_per_label=25,
     ):
         super().__init__(generator, batch_size, output_dir)
         self.num_images_per_label = num_images_per_label
 
-    def create_prompts(self, labels_names):
+    def create_prompts(self, labels_names,val_data):
         descriptions = {}
         adding = ["box", "cartons", "plates", "many"]
 
