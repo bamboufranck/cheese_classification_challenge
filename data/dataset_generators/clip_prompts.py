@@ -2,7 +2,12 @@ import torchvision.transforms as transforms
 import torch
 from PIL import Image
 from .base import DatasetGenerator
+
+"""""
 from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
+
+
+
 
 
 model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -17,7 +22,18 @@ max_length = 50
 num_beams = 4
 gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
+"""""
 
+from transformers import VisionEncoderDecoderModel, ViTFeatureExtractor, AutoTokenizer
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+feature_extractor = ViTFeatureExtractor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+
+model.to(device)
 
 class ClipPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
@@ -38,7 +54,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         for label in labels_names:
             prompts[label]=[]
 
-       
+        print("start of  generation")
+
         for i,batch in enumerate(val_data):
             image, label = batch
             image = image.squeeze(0)
@@ -46,19 +63,32 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             valeur_label = label[0].item()
             
 
-            print("process time")
+           
           
             pixel_values = feature_extractor(images=image, return_tensors="pt").pixel_values
             pixel_values = pixel_values.to(device)
 
-            print("generation time")
+           
+           # start prompt caption and new elements
+            prompt = f"describe this image of a {maping[valeur_label]} cheese :"
 
-            output_ids = model.generate(pixel_values, **gen_kwargs)
-            descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
-            description = descriptions[0].strip()
+            input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+            
+            input_ids = input_ids.to(device)
 
-            print("description")
-            print("end of description")
+
+            generated_ids = model.generate(pixel_values=pixel_values,decoder_input_ids=input_ids,max_length=20)
+
+            description = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+
+            description+=  " " + f"a piece or a box of {maping[valeur_label]}"
+            # end of new
+
+            #output_ids = model.generate(pixel_values, **gen_kwargs)
+            #descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
+            #description = descriptions[0].strip()+ " " + f"a piece or a box of {maping[valeur_label]}"
+
+           
 
             prompts[maping[valeur_label]].append(
                 {
@@ -68,4 +98,5 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             )
 
             torch.cuda.empty_cache()
+            print("end of generation")
         return prompts

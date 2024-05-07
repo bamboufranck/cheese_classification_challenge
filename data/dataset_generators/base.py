@@ -44,7 +44,7 @@ class DatasetGenerator:
                 prompt = [prompt_metadata["prompt"]] * num_images_per_prompt
                 pbar = tqdm(range(0, num_images_per_prompt, self.batch_size))
                 pbar.set_description(
-                    f"Generating images for prompt: {prompt_metadata['prompt']}"
+                    f"Generating images for prompt: {prompt_metadata['prompt']} and label:{label}"
                 )
                 for i in range(0, num_images_per_prompt, self.batch_size):
 
