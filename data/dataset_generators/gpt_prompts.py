@@ -1,3 +1,4 @@
+import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from .base import DatasetGenerator
 
@@ -7,6 +8,9 @@ model = GPT2LMHeadModel.from_pretrained('gpt2')
 
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = 'left'
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model.to(device)
 
 class GptPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
@@ -26,14 +30,14 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         for label in labels_names:
             descriptions[label] = []
             for add in adding:
-                prompt = f"An image of a {add} of {label} cheese"
+                prompt = f" description of an image of a {add} of {label} cheese "
 
                
                 inputs = tokenizer.encode_plus(
                     prompt, return_tensors='pt', padding='max_length', max_length=100, truncation=True
                 )
-                input_ids = inputs['input_ids']
-                attention_mask = inputs['attention_mask']
+                input_ids = inputs['input_ids'].to(device)
+                attention_mask = inputs['attention_mask'].to(device)
 
                 
                 outputs = model.generate(
