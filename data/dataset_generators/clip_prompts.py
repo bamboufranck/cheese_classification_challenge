@@ -1,17 +1,12 @@
 import torch
 from .base import DatasetGenerator
-from clip_interrogator import Interrogator
+from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 
-config = {
-    "model_type": "openai/clip-vit-base-patch32",
-    "image_size": 224,
-    "num_beams": 5,
-   
-}
+# Charger le modèle et le processeur BLIP
+processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
 
-
-ci = Interrogator(config=config)
 
 
 
@@ -34,9 +29,13 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         for i,batch in enumerate(val_data):
             image, label = batch
+            image = Image.open(image)
+            inputs = processor(images=image, return_tensors="pt")
+            output_ids = model.generate(**inputs)
+            description = processor.decode(output_ids[0], skip_special_tokens=True)
             prompts[label].append(
                 {
-                    "prompt": ci.interrogate(image),
+                    "prompt": description,
                     "num_images": self.num_images_per_label,
                 }
             )
