@@ -83,7 +83,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             descript = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
 
-            description= descript.strip() + " " + prompt
+            description= descript + " " + prompt
 
            
             # end of new
