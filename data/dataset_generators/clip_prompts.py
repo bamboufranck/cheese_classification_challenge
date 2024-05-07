@@ -36,7 +36,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             image = image.squeeze(0)
             image = to_pil(image)
             inputs = processor(images=image, return_tensors="pt")
-            output_ids = model.generate(**inputs)
+            output_ids = model.generate(**inputs,max_new_tokens=100)
             description = processor.decode(output_ids[0], skip_special_tokens=True)
             valeur_label = label[0].item()
             prompts[maping[valeur_label]].append(
