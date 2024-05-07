@@ -33,6 +33,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         print(maping.keys())
         for i,batch in enumerate(val_data):
             image, label = batch
+            print(label)
             image = image.squeeze(0)
             image = to_pil(image)
             inputs = processor(images=image, return_tensors="pt")
