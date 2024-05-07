@@ -1,8 +1,8 @@
-import torch
-from .base import DatasetGenerator
-from PIL import Image
-from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 import torchvision.transforms as transforms
+import torch
+from PIL import Image
+from .base import DatasetGenerator
+from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 
 
 model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -10,7 +10,12 @@ feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image
 tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
 
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 
+max_length = 50
+num_beams = 4
+gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
 
 
@@ -39,23 +44,28 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             image = image.squeeze(0)
             image = to_pil(image)
             valeur_label = label[0].item()
-            text= f"An image of a {maping[valeur_label]} cheese."
+            
 
             print("process time")
-            prompt = " a description of this image ..."
+          
             pixel_values = feature_extractor(images=image, return_tensors="pt").pixel_values
-           
+            pixel_values = pixel_values.to(device)
+
             print("generation time")
-            input_text = prompt + " " + tokenizer.decode(pixel_values[0], skip_special_tokens=True)+ ". " + text
-            generated_ids = model.generate(input_text,max_length=50)
-            generated_prompt = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+
+            output_ids = model.generate(pixel_values, **gen_kwargs)
+            descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
+            description = descriptions[0].strip()
+
+            print("description")
             print("end of description")
 
             prompts[maping[valeur_label]].append(
                 {
-                    "prompt": generated_prompt,
+                    "prompt": description,
                     "num_images": self.num_images_per_label,
                 }
             )
+
             torch.cuda.empty_cache()
         return prompts
