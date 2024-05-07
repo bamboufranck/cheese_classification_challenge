@@ -30,6 +30,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         for label in labels_names:
             prompts[label]=[]
 
+        print(maping.keys())
         for i,batch in enumerate(val_data):
             image, label = batch
             image = image.squeeze(0)
