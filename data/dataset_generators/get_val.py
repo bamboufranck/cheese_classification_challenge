@@ -20,7 +20,6 @@ class Get_val:
         )
         self.batch_size = batch_size
         self.num_workers = num_workers
-        self.idx_to_class = {v: k for k, v in self.dataset.class_to_idx.items()}
 
    
     def val_real_dataloader(self):
