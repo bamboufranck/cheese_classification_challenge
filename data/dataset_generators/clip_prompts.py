@@ -79,9 +79,11 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             generated_ids = model.generate(pixel_values=pixel_values,decoder_input_ids=input_ids,max_new_tokens=16)
 
-            description = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+            descript = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
 
-            description+=  " " + f"a piece or a box of {maping[valeur_label]}"
+            description= descript[0].strip() + " " + prompt
+
+           
             # end of new
 
             #output_ids = model.generate(pixel_values, **gen_kwargs)
@@ -98,5 +100,6 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             )
 
             torch.cuda.empty_cache()
-            print("end of generation")
+            
+        print("end of generation")
         return prompts
