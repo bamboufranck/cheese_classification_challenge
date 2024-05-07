@@ -28,10 +28,12 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         to_pil = transforms.ToPILImage()
        
         for label in labels_names:
+            print(label)
             prompts[label]=[]
 
         for i,batch in enumerate(val_data):
             image, label = batch
+            print(label +str(1))
             image = image.squeeze(0)
             image = to_pil(image)
             inputs = processor(images=image, return_tensors="pt")
