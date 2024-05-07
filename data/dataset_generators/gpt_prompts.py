@@ -4,8 +4,9 @@ from .base import DatasetGenerator
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 model = GPT2LMHeadModel.from_pretrained('gpt2')
 
-# Définir pad_token pour l'encodeur
+
 tokenizer.pad_token = tokenizer.eos_token
+tokenizer.padding_side = 'left'
 
 class GptPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
@@ -27,14 +28,14 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
             for add in adding:
                 prompt = f"An image of a {add} of {label} cheese"
 
-                # Encoder les inputs correctement
+               
                 inputs = tokenizer.encode_plus(
                     prompt, return_tensors='pt', padding='max_length', max_length=100, truncation=True
                 )
                 input_ids = inputs['input_ids']
                 attention_mask = inputs['attention_mask']
 
-                # Générer les sorties
+                
                 outputs = model.generate(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
