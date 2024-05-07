@@ -26,8 +26,12 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
             descriptions[label] = []
             for add in adding:
                 prompt=f"An image of a {add} of {label} cheese"
+
+                inputs = tokenizer.encode_plus(prompt, return_tensors='pt', padding='max_length', max_length=50, truncation=True)
+                input_ids = inputs['input_ids']
+                attention_mask = inputs['attention_mask']
                 input_ids = tokenizer.encode(prompt, return_tensors='pt')
-                outputs = model.generate(input_ids, max_length=50)
+                outputs = model.generate(input_ids=input_ids,attention_mask=attention_mask,pad_token_id=tokenizer.eos_token_id,max_length=50)
                 description = tokenizer.decode(outputs[0], skip_special_tokens=True)
                 descriptions[label].append(description)
         
