@@ -1,12 +1,15 @@
 import torch
 from .base import DatasetGenerator
-from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
+from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 import torchvision.transforms as transforms
 
-# Charger le modèle et le processeur BLIP
-processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+
+model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+
+
 
 
 
@@ -35,17 +38,22 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             image, label = batch
             image = image.squeeze(0)
             image = to_pil(image)
-            print("process time")
-            inputs = processor(images=image, return_tensors="pt")
-            print("generation time")
-            output_ids = model.generate(**inputs,max_new_tokens=100)
-            print("description time")
-            description = processor.decode(output_ids[0], skip_special_tokens=True)
-            print("end of description")
             valeur_label = label[0].item()
+            text= f"An image of a {maping[valeur_label]} cheese."
+
+            print("process time")
+            prompt = " a description of this image ..."
+            pixel_values = feature_extractor(images=image, return_tensors="pt").pixel_values
+           
+            print("generation time")
+            input_text = prompt + " " + tokenizer.decode(pixel_values[0], skip_special_tokens=True)+ ". " + text
+            generated_ids = model.generate(input_text,max_length=50)
+            generated_prompt = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+            print("end of description")
+
             prompts[maping[valeur_label]].append(
                 {
-                    "prompt": description,
+                    "prompt": generated_prompt,
                     "num_images": self.num_images_per_label,
                 }
             )
