@@ -2,6 +2,7 @@ import torchvision.transforms as transforms
 import torch
 from PIL import Image
 from .base import DatasetGenerator
+from tqdm import tqdm
 
 """""
 from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
@@ -54,8 +55,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         for label in labels_names:
             prompts[label]=[]
 
-        print("start of  generation")
-
+        
+        pbar = tqdm(enumerate(val_data))
+        pbar.set_description( "generation of prompts" )
         for i,batch in enumerate(val_data):
             image, label = batch
             image = image.squeeze(0)
@@ -81,7 +83,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             descript = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
 
-            description= descript[0].strip() + " " + prompt
+            description= descript.strip() + " " + prompt
 
            
             # end of new
@@ -100,6 +102,6 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             )
 
             torch.cuda.empty_cache()
-            
-        print("end of generation")
+            pbar.update(1)
+       
         return prompts
