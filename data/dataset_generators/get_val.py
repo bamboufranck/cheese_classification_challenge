@@ -20,14 +20,14 @@ class Get_val:
         self.real_images_val_dataset = ImageFolder(
             real_images_val_path, transform=transformations
         )
-        self.batch_size = batch_size
+        self.batch_size = 1
         self.num_workers = num_workers
 
    
     def val_real_dataloader(self):
         return DataLoader(
                 self.real_images_val_dataset,
-                batch_size=self.batch_size,
+                batch_size=1,
                 shuffle=False,
                 num_workers=self.num_workers,
             )
