@@ -14,12 +14,15 @@ class SimplePromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names):
         prompts = {}
+        adding=["box","cartons","plates","many elements"]  #ajout
         for label in labels_names:
             prompts[label] = []
-            prompts[label].append(
+            for add in adding:
+                prompts[label].append(
                 {
-                    "prompt": f"An image of a {label} cheese",
+                    "prompt": f"An image of a {add} of {label} cheese",  #ajout
                     "num_images": self.num_images_per_label,
                 }
             )
+                
         return prompts
