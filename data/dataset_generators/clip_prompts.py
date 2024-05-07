@@ -49,4 +49,5 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
                     "num_images": self.num_images_per_label,
                 }
             )
+            torch.cuda.empty_cache()
         return prompts
