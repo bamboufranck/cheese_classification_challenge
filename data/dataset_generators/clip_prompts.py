@@ -17,7 +17,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 max_length = 20
-num_beams = 10
+num_beams = 8
 gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
 
