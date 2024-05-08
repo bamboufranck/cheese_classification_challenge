@@ -14,11 +14,13 @@ class SimplePromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names,val_data,maping):
         prompts = {}
+        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat"]
         for label in labels_names:
-            prompts[label] = []
-            prompts[label].append(
+            for situation in situations:
+                prompts[label] = []
+                prompts[label].append(
                 {
-                    "prompt": f"An image of a {label} cheese",
+                    "prompt": f"An image of a {label} cheese in {situation}",
                     "num_images": self.num_images_per_label,
                 }
             )
