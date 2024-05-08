@@ -20,18 +20,18 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         generator,
          batch_size=1,
         output_dir="dataset/train",
-        num_images_per_label=25,
+        num_images_per_label=4,
     ):
         super().__init__(generator, batch_size, output_dir)
         self.num_images_per_label = num_images_per_label
 
     def create_prompts(self, labels_names,val_data,maping):
         descriptions = {}
-        adding = ["box", "cartons", "plates", "many"]
+        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat"]
 
         for label in labels_names:
-            prompts = [f"description of an image of a {add} of {label} cheese" for add in adding]
-            inputs = tokenizer(prompts, return_tensors='pt', padding=True, truncation=True, max_length=50)
+            prompts = [f"description an image of {label} cheese in  {situation}" for situation in situations]
+            inputs = tokenizer(prompts, return_tensors='pt', padding=True, truncation=True, max_length=30)
             input_ids = inputs['input_ids'].to(device)
             attention_mask = inputs['attention_mask'].to(device)
 
@@ -40,7 +40,7 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
                     input_ids=input_ids,
                     attention_mask=attention_mask,
                     pad_token_id=tokenizer.pad_token_id,
-                    max_new_tokens=30
+                    max_new_tokens=20
                 )
             
             generated_texts = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
