@@ -14,7 +14,7 @@ class SimplePromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names,val_data,maping):
         prompts = {}
-        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat"]
+        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat","with a piece of cake","with a piece of bread","with a wooden cutting board","a yellow plastic container filled with this cheese","a table topped with lots of different types of food"]
         for label in labels_names:
             for situation in situations:
                 prompts[label] = []
