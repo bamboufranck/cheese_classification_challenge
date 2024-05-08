@@ -1,16 +1,11 @@
 import torch
 from .base import DatasetGenerator
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 
-# Initialisation du modèle et du tokenizer
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-model = GPT2LMHeadModel.from_pretrained('gpt2')
 
-# Configuration de padding
-tokenizer.pad_token = tokenizer.eos_token
-tokenizer.padding_side = 'left'
+tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
+model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base", device_map="auto")
 
-# Configuration de l'appareil
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 
@@ -26,29 +21,24 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         self.num_images_per_label = num_images_per_label
 
     def create_prompts(self, labels_names,val_data,maping):
-        descriptions = {}
-        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat"]
+        prompts = {}
+        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat","with a piece of cake","with a piece of bread","with a wooden cutting board","a yellow plastic container filled with this cheese","a table topped with lots of different types of food"]
 
         for label in labels_names:
-            prompts = [f"description an image of {label} cheese in  {situation}" for situation in situations]
-            inputs = tokenizer(prompts, return_tensors='pt', padding=True, truncation=True, max_length=30)
-            input_ids = inputs['input_ids'].to(device)
-            attention_mask = inputs['attention_mask'].to(device)
+            prompts[label]=[]
+            for situation in situations:
+                prompts = f"describe an image of {label} cheese in  {situation}:"
+                inputs = tokenizer(prompts, return_tensors='pt', padding=True, truncation=True, max_length=30)
+                input_ids = inputs['input_ids'].to(device)
+                attention_mask = inputs['attention_mask'].to(device)
 
-            with torch.no_grad():  
-                outputs = model.generate(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    pad_token_id=tokenizer.pad_token_id,
-                    max_new_tokens=20
-                )
+                
+                outputs = model.generate(input_ids=input_ids,attention_mask=attention_mask,pad_token_id=tokenizer.pad_token_id,max_new_tokens=20)
             
-            generated_texts = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
-            descriptions[label] = generated_texts
+                generated_texts = tokenizer.decode(outputs[0], skip_special_tokens=True) 
 
-        prompts = {
-            label: [{"prompt": description, "num_images": self.num_images_per_label} for description in descriptions[label]]
-            for label in labels_names
-        }
+                prompts[label].append({"prompt": generated_texts, "num_images": self.num_images_per_label})
+
+           
 
         return prompts
