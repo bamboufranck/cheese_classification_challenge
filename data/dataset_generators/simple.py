@@ -16,8 +16,8 @@ class SimplePromptsDatasetGenerator(DatasetGenerator):
         prompts = {}
         situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat","with a piece of cake","with a piece of bread","with a wooden cutting board","a yellow plastic container filled with this cheese","a table topped with lots of different types of food"]
         for label in labels_names:
+            prompts[label] = []
             for situation in situations:
-                prompts[label] = []
                 prompts[label].append(
                 {
                     "prompt": f"An image of a {label} cheese in {situation}",

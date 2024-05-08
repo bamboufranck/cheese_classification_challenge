@@ -60,7 +60,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             output_ids = model.generate(pixel_values, **gen_kwargs)
             descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
-            description= f" A piece of {maping[valeur_label]} cheese" + " and " + descriptions[0].strip()
+            description= f" An image of a piece of {maping[valeur_label]} cheese" + " and " + descriptions[0].strip()
 
             prompts[maping[valeur_label]].append(
                 {
