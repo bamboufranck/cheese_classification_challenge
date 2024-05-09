@@ -5,7 +5,21 @@ from .base import DatasetGenerator
 from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 
 
+
+model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+        
+
+
+max_length = 20
+num_beams = 10
+gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
+
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
 
 
 class ClipPromptsDatasetGenerator(DatasetGenerator):
@@ -24,18 +38,13 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         prompts = {}
         to_pil = transforms.ToPILImage()
 
-        model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-        feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-        tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-        
-        model.to(device)
-
-        max_length = 20
-        num_beams = 10
-        gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
        
         for label in labels_names:
             prompts[label]=[]
+            prompts[label].append({
+                    "prompt": f"an image of {label} cheese",
+                    "num_images": self.num_images_per_label,
+                })
 
         
         

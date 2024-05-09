@@ -22,6 +22,8 @@ class DatasetGenerator:
         self.output_dir = output_dir
 
     def generate(self, labels_names,val_data,maping):
+
+        """""
         
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
@@ -29,7 +31,7 @@ class DatasetGenerator:
         labels_names_with_cheese = [name + " cheese" for name in labels_names]
         text_inputs = processor(text=labels_names_with_cheese, return_tensors="pt", padding=True) # Ajout
 
-        
+        """""
 
         # ensuite ici fine tune mon générateur avec val_data ou tout simplement utilise ses images 
         # pour mieux generer
@@ -52,7 +54,7 @@ class DatasetGenerator:
                     
                     images = self.generator.generate(batch)
 
-
+                    """""
                     image_input = processor(images=images, return_tensors="pt")  # Ajout
 
                     with torch.no_grad():
@@ -75,7 +77,7 @@ class DatasetGenerator:
                     self.save_images(images, label, image_id_0)            
                     image_id_0 += len(images)                               
                     pbar.update(1)
-                    """""
+                    
 
                     
                 pbar.close()
