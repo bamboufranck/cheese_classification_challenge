@@ -49,6 +49,8 @@ class DatasetGenerator:
 
                     """""
 
+                    """""
+
                     image_input = processor(images=images, return_tensors="pt")  # Ajout
 
                     with torch.no_grad():
@@ -71,10 +73,15 @@ class DatasetGenerator:
                     image_id_0 += len(images)                               
                     pbar.update(1)
 
+                     """""
+                    self.save_images(images, label, image_id_0)            
+                    image_id_0 += len(images)                               
+                    pbar.update(1)
+
                     
                 pbar.close()
 
-    def create_prompts(self, labels_names):
+    def create_prompts(self, labels_names,val_data,maping):
         """
         Prompts should be a dictionary with the following structure:
         {
