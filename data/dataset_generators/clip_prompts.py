@@ -5,23 +5,6 @@ from .base import DatasetGenerator
 from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 
 
-
-model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-        
-
-
-max_length = 20
-num_beams = 10
-gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
-
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
-
-
-
 class ClipPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
         self,
@@ -35,6 +18,17 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
     def create_prompts(self, labels_names,val_data,maping):
+        model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+        feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+        tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
+         
+        max_length = 20
+        num_beams = 10
+        gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
+         
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model.to(device)
+
         prompts = {}
         to_pil = transforms.ToPILImage()
 
@@ -73,7 +67,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
                 }
             )
 
-            torch.cuda.empty_cache()
+        del model
+        torch.cuda.empty_cache()
 
         print("end of generation")
        

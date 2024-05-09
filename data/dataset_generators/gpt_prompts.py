@@ -3,11 +3,7 @@ from .base import DatasetGenerator
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 
-tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
-model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base", device_map="auto")
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model.to(device)
 
 class GptPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
@@ -21,6 +17,13 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         self.num_images_per_label = num_images_per_label
 
     def create_prompts(self, labels_names,val_data,maping):
+
+        tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
+        model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base", device_map="auto")
+        
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model.to(device)
+
         prompts = {}
         situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat","with a piece of cake","with a piece of bread","with a wooden cutting board","a yellow plastic container filled with this cheese","a table topped with lots of different types of food"]
 
@@ -39,6 +42,12 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
 
                 prompts[label].append({"prompt": generated_texts, "num_images": self.num_images_per_label})
 
-           
+            prompts[label].append({
+                    "prompt": f"an image of {label} cheese",
+                    "num_images": self.num_images_per_label,
+                })
+
+        del model
+        torch.cuda.empty_cache() 
 
         return prompts

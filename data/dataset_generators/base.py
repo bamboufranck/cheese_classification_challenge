@@ -81,6 +81,10 @@ class DatasetGenerator:
 
                     
                 pbar.close()
+        """""
+        del model
+        torch.cuda.empty_cache()
+        """""
 
     def create_prompts(self, labels_names,val_data,maping):
         """
