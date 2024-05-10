@@ -18,11 +18,14 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names,val_data,maping):
 
-        tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
-        model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base", device_map="auto")
+        
+        tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-small")
+        model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-small", device_map="auto")
+      
         
         device = "cuda" if torch.cuda.is_available() else "cpu"
         model.to(device)
+        
 
         prompts = {}
         situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat","with a piece of cake","with a piece of bread","with a wooden cutting board","a yellow plastic container filled with this cheese","a table topped with lots of different types of food"]
