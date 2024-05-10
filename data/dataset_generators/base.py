@@ -3,6 +3,8 @@ from tqdm import tqdm
 import torch
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel
+import torchvision.transforms as transforms
+from torch import optim
 
 class DatasetGenerator:
     def __init__(
@@ -37,6 +39,8 @@ class DatasetGenerator:
         # pour mieux generer
 
         # ou encore utiliser ca pour generer de meilleur prompt avec clip interrogator par exemple 
+
+        self.fine_tune(val_data,maping)
 
         labels_prompts = self.create_prompts(labels_names,val_data,maping)
         for label, label_prompts in labels_prompts.items():
@@ -81,12 +85,53 @@ class DatasetGenerator:
 
                     
                 pbar.close()
-                
+
         """""
         del model
         torch.cuda.empty_cache()
         """""
 
+    def fine_tune(self,val_data,maping):
+
+        epochs=3
+        model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
+        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
+        to_pil = transforms.ToPILImage()
+        optimizer = optim.Adam(self.generator.parameters(), lr=1e-3)
+        target_similarity = 1.0
+
+        print("start of fine tuning")
+
+        for epoch in tqdm(range(epochs)):
+            for i,batch in enumerate(val_data):
+
+                optimizer.zero_grad()
+                image, label = batch
+                image = image.squeeze(0)
+                image = to_pil(image)
+                valeur_label = label[0].item()
+                prompt=f"An image of {maping[valeur_label]} cheese"
+
+                generate_image = self.generator.generate(prompt)
+                generate_image_input = processor(images=generate_image, return_tensors="pt")  # Ajout
+                image_input=  processor(images=image, return_tensors="pt")
+
+                with torch.no_grad():
+                    image_features = model.get_image_features(**image_input) # Ajout
+                    generate_image_features = model.get_image_features(**generate_image_input)  # Ajout
+
+
+                similarity = torch.nn.functional.cosine_similarity(generate_image_features, image_features, dim=1)
+                loss = torch.abs(similarity - target_similarity)
+
+                loss.backward()
+                optimizer.step()
+
+
+        del model
+        torch.cuda.empty_cache()
+        print("end of fine tuning")
+    
     def create_prompts(self, labels_names,val_data,maping):
         """
         Prompts should be a dictionary with the following structure:
