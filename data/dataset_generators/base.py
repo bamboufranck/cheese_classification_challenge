@@ -39,7 +39,7 @@ class DatasetGenerator:
 
         # ou encore utiliser ca pour generer de meilleur prompt avec clip interrogator par exemple 
 
-        self.fine_tune(val_data,maping)
+        #self.fine_tune(val_data,maping)
 
         labels_prompts = self.create_prompts(labels_names,val_data,maping)
         for label, label_prompts in labels_prompts.items():
