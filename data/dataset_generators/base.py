@@ -96,7 +96,7 @@ class DatasetGenerator:
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         to_pil = transforms.ToPILImage()
-        optimizer = optim.Adam(self.generator.parameters(), lr=1e-3)
+        optimizer = optim.Adam(self.generator.unet.parameters(), lr=1e-3)
         target_similarity = 1.0
 
         print("start of fine tuning")
