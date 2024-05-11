@@ -170,16 +170,17 @@ class DatasetGenerator:
                 class_prompt_ids=text_inputs_general.input_ids
                 class_attention_mask= text_inputs_general.attention_mask
 
-                example["instance_prompt_ids"]+=class_prompt_ids
-                example["instance_images"]+=classe_instance
-                example["instance_attention_mask"]+=class_attention_mask
+                example["instance_prompt_ids"] = torch.cat([text_inputs.input_ids, class_prompt_ids], dim=0)
+                example["instance_attention_mask"] = torch.cat([text_inputs.attention_mask, class_attention_mask], dim=0)
+                example["instance_images"] = torch.cat([image, classe_instance], dim=0)
+
 
                 pixel_values =example["instance_images"]
                 pixel_values = pixel_values.to(memory_format=torch.contiguous_format).float()
                 input_ids = example["instance_prompt_ids"]
                 attention_mask = example["instance_attention_mask"]
-                
-                batch = { "input_ids": input_ids, "pixel_values": pixel_values, "attention_mask":attention_mask,}
+
+                batch = {"input_ids": input_ids, "pixel_values": pixel_values, "attention_mask":attention_mask,}
 
                 pixel_values = batch["pixel_values"].to(device)
                 model_input = pixel_values
