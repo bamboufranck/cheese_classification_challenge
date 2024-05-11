@@ -6,7 +6,7 @@ class SDXLLightiningGenerator(BaseGenerator):
         super().__init__(
             base="stabilityai/stable-diffusion-xl-base-1.0",
             unet_config_path="unet",
-            ckpt_path="ByteDance/SDXL-Lightning/sdxl_lightning_4step_unet.safetensors",
+            ckpt_path="sdxl_lightning_4step_unet.safetensors",
             use_cpu_offload=use_cpu_offload,
             num_inference_steps=4,
             guidance_scale=0
