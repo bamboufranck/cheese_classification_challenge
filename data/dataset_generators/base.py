@@ -165,11 +165,8 @@ class DatasetGenerator:
                 example["instance_prompt_ids"] = text_inputs.input_ids
                 example["instance_attention_mask"] = text_inputs.attention_mask
 
-                label,class_image=bibi
+                class_image,label=bibi
                 classe_instance=class_image
-                print(class_image.shape)
-                print(image.shape)
-                print(example["instance_images"].shape)
                 class_prompt_ids=text_inputs_general.input_ids
                 class_attention_mask= text_inputs_general.attention_mask
 
