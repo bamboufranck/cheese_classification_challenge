@@ -23,7 +23,7 @@ class DatasetGenerator:
         self.batch_size = batch_size
         self.output_dir = output_dir
 
-    def generate(self, labels_names,val_data,maping):
+    def generate(self, labels_names,val_data,maping,test_loaders):
 
         
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
@@ -37,7 +37,7 @@ class DatasetGenerator:
 
         # ou encore utiliser ca pour generer de meilleur prompt avec clip interrogator par exemple 
 
-        #self.fine_tune(val_data,maping)
+        #self.fine_tune(val_data,maping,test_loaders)
 
         labels_prompts = self.create_prompts(labels_names,val_data,maping)
         for label, label_prompts in labels_prompts.items():
@@ -89,13 +89,13 @@ class DatasetGenerator:
         torch.cuda.empty_cache()
         
 
-    def fine_tune(self,val_data,maping):
+    def fine_tune(self,val_data,maping,test_data):
 
         epochs=3
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         to_pil = transforms.ToPILImage()
-        optimizer = optim.Adam(self.generator.unet.parameters(), lr=1e-3)
+        optimizer = optim.Adam(self.generator.unet.parameters(), lr=1e-4)
         target_similarity = 1.0
 
         print("start of fine tuning")
@@ -108,6 +108,7 @@ class DatasetGenerator:
                 image = image.squeeze(0)
                 image = to_pil(image)
                 valeur_label = label[0].item()
+
                 prompt=f"An image of {maping[valeur_label]} cheese"
 
                 generate_image = self.generator.generate(prompt)
