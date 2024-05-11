@@ -128,10 +128,14 @@ class DatasetGenerator:
         unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
             device, torch.float16
         )
+        scheduler_config = {
+    "timestep_respacing": "25",  # Exemple de paramètre, ajustez selon les besoins réels
+    "betas": (0.9, 0.999)        # Autre exemple de paramètre pour l'optimiseur
+}
        
 
         
-        noise_scheduler = EulerDiscreteScheduler.from_config(unet.config.scheduler_config, timestep_spacing="trailing").to(device)
+        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing").to(device)
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
 
