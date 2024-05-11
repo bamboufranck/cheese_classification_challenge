@@ -1,5 +1,5 @@
 instance:
-  _target_: models.inception.InceptionFinetune
+  _target_: models.inception.CustomMobileNetFinetune
   num_classes: ${dataset.num_classes}
   frozen: True
   unfreeze_last_layer: True
