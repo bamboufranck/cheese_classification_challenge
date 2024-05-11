@@ -123,11 +123,12 @@ class DatasetGenerator:
                     return batch
                 
 
+        device = "cuda" if torch.cuda.is_available() else "cpu"
         base = "stabilityai/stable-diffusion-xl-base-1.0"
         unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
             device, torch.float16
         )
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+       
 
         
         noise_scheduler = EulerDiscreteScheduler.from_config(unet.config.scheduler_config, timestep_spacing="trailing").to(device)
