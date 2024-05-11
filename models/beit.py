@@ -1,12 +1,13 @@
 import torch
 import torch.nn as nn
+import timm
 
 # Charger un modèle Vision Transformer pré-entraîné via torch.hub
 class CustomViTClassifier(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         # Charger le modèle pré-entraîné (changer 'google/research/vision_transformer' par le repo approprié)
-        self.vit = torch.hub.load('facebookresearch/deit:main', 'deit_base_patch16_224', pretrained=True)
+        self.vit= timm.create_model('deit_base_patch16_224', pretrained=True)
 
         # Optionnellement, geler les paramètres du modèle pré-entraîné pour le fine-tuning
         if frozen:
