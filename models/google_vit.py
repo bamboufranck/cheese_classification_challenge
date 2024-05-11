@@ -10,10 +10,12 @@ class GoogleVitFinetune(nn.Module):
             for param in self.backbone.parameters():
                 param.requires_grad = False
 
-        self.classifier = nn.Linear(768, num_classes)
+        self.classifier1=nn.Linear(1000, 768)
+        self.classifier2 = nn.Linear(768, num_classes)
 
     def forward(self, x):
         outputs= self.backbone(x)
         x = outputs.logits
-        x = self.classifier(x)
+        x = self.classifier1(x)
+        x= self.classifier2(x)
         return x
