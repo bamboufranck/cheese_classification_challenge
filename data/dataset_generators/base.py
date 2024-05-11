@@ -152,11 +152,11 @@ class DatasetGenerator:
         print("start of fine tuning")
         for epoch in tqdm(range(epochs)):
             unet.train()
-            for batch in enumerate(val_data):
+            for i,batch in enumerate(val_data):
                 bibi=get_random_batch_from_loader(val_data)
                 example = {}
                 optimizer.zero_grad()
-                image, label = batch
+                image,label = batch
                 print(label)
                 print(image)
                 valeur_label = label[0].item()
