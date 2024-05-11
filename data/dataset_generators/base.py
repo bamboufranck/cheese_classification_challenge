@@ -135,7 +135,7 @@ class DatasetGenerator:
        
 
         
-        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing")
+        noise_scheduler = EulerDiscreteScheduler.from_config(beta_start=0.0001, beta_end=0.02, num_timesteps=1000, timestep_spacing="trailing")
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
 
@@ -158,6 +158,7 @@ class DatasetGenerator:
                 optimizer.zero_grad()
                 image, label = batch
                 print(label)
+                print(image)
                 valeur_label = label[0].item()
 
                 prompt=f"A  {maping[valeur_label]} cheese"
