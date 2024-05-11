@@ -2,5 +2,7 @@ instance:
   _target_: models.google_vit.GoogleVitFinetune
   num_classes: ${dataset.num_classes}
   frozen: True
+  unfreeze_last_layer: True
 
 name: Google_Vit
+
