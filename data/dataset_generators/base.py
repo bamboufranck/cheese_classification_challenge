@@ -157,8 +157,6 @@ class DatasetGenerator:
                 example = {}
                 optimizer.zero_grad()
                 image,label = batch
-                print(label)
-                print(image)
                 valeur_label = label[0].item()
 
                 prompt=f"A  {maping[valeur_label]} cheese"
@@ -176,7 +174,7 @@ class DatasetGenerator:
                 example["instance_images"]+=classe_instance
                 example["instance_attention_mask"]+=class_attention_mask
 
-                pixel_values = torch.stack( example["instance_images"])
+                pixel_values =example["instance_images"]
                 pixel_values = pixel_values.to(memory_format=torch.contiguous_format).float()
                 input_ids = torch.cat(example["instance_prompt_ids"], dim=0)
                 attention_mask = torch.cat(attention_mask, dim=0)
