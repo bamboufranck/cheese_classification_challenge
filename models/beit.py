@@ -1,6 +1,7 @@
 from transformers import BeitForImageClassification
-import torch.nn as nn
 import torch
+import torch.nn as nn
+
 
 class CustomBeitClassifier(nn.Module):
     def __init__(self, num_classes, pretrained_model_name='microsoft/beit-base-patch16-224-pt22k-ft22k', frozen=False):
