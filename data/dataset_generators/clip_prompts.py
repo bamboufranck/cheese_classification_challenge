@@ -54,8 +54,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             pixel_values = feature_extractor(images=image, return_tensors="pt").pixel_values
             pixel_values = pixel_values.to(device)
 
+            attention_mask = pixel_values.new_ones(pixel_values.shape[:2], dtype=torch.long) 
+
+            output_ids = model.generate(pixel_values, attention_mask=attention_mask, **gen_kwargs)
            
-            output_ids = model.generate(pixel_values, **gen_kwargs)
             descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
             description= f" An image of a piece of {maping[valeur_label]} cheese" + " and " + descriptions[0].strip()

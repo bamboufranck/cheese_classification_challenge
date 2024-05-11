@@ -13,6 +13,7 @@ class GoogleVitFinetune(nn.Module):
         self.classifier = nn.Linear(768, num_classes)
 
     def forward(self, x):
-        x = self.backbone(x)
+        outputs= self.backbone(x)
+        x = outputs.logits
         x = self.classifier(x)
         return x

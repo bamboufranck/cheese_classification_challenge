@@ -10,6 +10,7 @@ class PixartGenerator:
         self.pipe.to(device)
         self.num_inference_steps=4
         self.guidance_scale = 0
+        
 
 
     def generate(self, prompts):
