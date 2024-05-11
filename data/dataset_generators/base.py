@@ -157,7 +157,7 @@ class DatasetGenerator:
                 example = {}
                 optimizer.zero_grad()
                 image, label = batch
-                print(label.shape)
+                print(label)
                 valeur_label = label[0].item()
 
                 prompt=f"A  {maping[valeur_label]} cheese"
