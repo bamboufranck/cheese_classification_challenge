@@ -176,8 +176,8 @@ class DatasetGenerator:
 
                 pixel_values =example["instance_images"]
                 pixel_values = pixel_values.to(memory_format=torch.contiguous_format).float()
-                input_ids = torch.cat(example["instance_prompt_ids"], dim=0)
-                attention_mask = torch.cat(attention_mask, dim=0)
+                input_ids = example["instance_prompt_ids"]
+                attention_mask = example["instance_attention_mask"]
                 
                 batch = { "input_ids": input_ids, "pixel_values": pixel_values, "attention_mask":attention_mask,}
 
