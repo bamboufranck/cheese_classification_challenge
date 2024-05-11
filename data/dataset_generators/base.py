@@ -135,7 +135,7 @@ class DatasetGenerator:
        
 
         
-        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing").to(device)
+        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing")
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
 
