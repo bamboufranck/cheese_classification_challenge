@@ -123,20 +123,23 @@ class DatasetGenerator:
                     return batch
                 
 
+        base = "stabilityai/stable-diffusion-xl-base-1.0"
         unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
             device, torch.float16
         )
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        base = "stabilityai/stable-diffusion-xl-base-1.0"
+
+        
+        noise_scheduler = EulerDiscreteScheduler.from_config(unet.config.scheduler_config, timestep_spacing="trailing").to(device)
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        model = BertModel.from_pretrained('bert-base-uncased')
+        
         epochs=3
         prior_loss_weight=1
         optimizer = optim.Adam(unet.parameters(), lr=1e-4)
         prompt_general="a cheese"
         text_inputs_general=tokenizer(prompt_general,truncation=True,padding="max_length",max_length=20,return_tensors="pt")
-
-        noise_scheduler = EulerDiscreteScheduler.from_config(unet.config.scheduler_config, timestep_spacing="trailing").to(device)
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-        model = BertModel.from_pretrained('bert-base-uncased')
+*
         
         
        
