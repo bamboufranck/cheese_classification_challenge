@@ -24,9 +24,7 @@ class Get_val:
         self.batch_size = 1
         self.num_workers = num_workers
         self.idx_to_class = {v: k for k, v in self.real_images_val_dataset.class_to_idx.items()}
-        self.test_images= ImageFolder(
-            test_images_path, transform=transformations
-        )
+        
    
     def val_real_dataloader(self):
         return DataLoader(
@@ -34,10 +32,5 @@ class Get_val:
                 batch_size=1,
                 shuffle=False,
                 num_workers=self.num_workers,
-            ), self.idx_to_class,DataLoader(
-                self.test_images,
-                batch_size=1,
-                shuffle=False,
-                num_workers=self.num_workers,
-            )
+            ), self.idx_to_class
         

@@ -10,7 +10,6 @@ batch_size: 1
 get_val:
   _target_: data.dataset_generators.get_val.Get_val
   real_images_val_path: ${data_dir}/val
-  test_images_path: ${data_dir}/test
   batch_size: 1
   num_workers: 6
 

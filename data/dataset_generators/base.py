@@ -23,7 +23,7 @@ class DatasetGenerator:
         self.batch_size = batch_size
         self.output_dir = output_dir
 
-    def generate(self, labels_names,val_data,maping,test_loaders):
+    def generate(self, labels_names,val_data,maping):
 
         
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
@@ -89,7 +89,7 @@ class DatasetGenerator:
         torch.cuda.empty_cache()
         
 
-    def fine_tune(self,val_data,maping,test_data):
+    def fine_tune(self,val_data,maping):
 
         epochs=3
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
