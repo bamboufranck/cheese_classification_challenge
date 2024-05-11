@@ -69,7 +69,7 @@ class DatasetGenerator:
                     score_similarity =  similarities.squeeze().item()               # Ajout
                                
 
-                    if(score_similarity>=0.2):                              
+                    if(score_similarity>=0.3):                              
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
