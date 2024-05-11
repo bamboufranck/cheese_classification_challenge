@@ -2,5 +2,6 @@ instance:
   _target_: models.inception.InceptionFinetune
   num_classes: ${dataset.num_classes}
   frozen: True
+  unfreeze_last_layer: True
 
 name: Inception

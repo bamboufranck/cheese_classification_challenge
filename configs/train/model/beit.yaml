@@ -2,5 +2,6 @@ instance:
   _target_: models.beit.CustomBeitClassifier
   num_classes: ${dataset.num_classes}
   frozen: True
-
+  unfreeze_last_layer: True
+  
 name: Beit
