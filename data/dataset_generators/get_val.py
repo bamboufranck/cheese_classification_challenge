@@ -9,7 +9,6 @@ class Get_val:
     def __init__(
         self,
         real_images_val_path,
-        test_images_path,
         batch_size,
         num_workers,
     ):
