@@ -43,3 +43,6 @@ class SDXLLightiningGenerator:
             guidance_scale=self.guidance_scale,
         ).images
         return images
+    
+
+   

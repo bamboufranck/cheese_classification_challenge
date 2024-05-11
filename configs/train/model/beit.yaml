@@ -1,7 +1,7 @@
 instance:
-  _target_: models.beit.CustomBeitClassifier
+  _target_: models.beit.CustomViTClassifier
   num_classes: ${dataset.num_classes}
   frozen: True
   unfreeze_last_layer: True
-  
+
 name: Beit

@@ -25,14 +25,11 @@ class DatasetGenerator:
 
     def generate(self, labels_names,val_data,maping):
 
-        """""
+        
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
-        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
+        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")    # Ajout
 
-        labels_names_with_cheese = [name + " cheese" for name in labels_names]
-        text_inputs = processor(text=labels_names_with_cheese, return_tensors="pt", padding=True) # Ajout
-
-        """""
+        
         
 
         # ensuite ici fine tune mon générateur avec val_data ou tout simplement utilise ses images 
@@ -58,7 +55,7 @@ class DatasetGenerator:
                     
                     images = self.generator.generate(batch)
 
-                    """""
+                    text_inputs = processor(text="A {label} cheese", return_tensors="pt", padding=True)
                     image_input = processor(images=images, return_tensors="pt")  # Ajout
 
                     with torch.no_grad():
@@ -69,10 +66,10 @@ class DatasetGenerator:
                     text_features = text_features / text_features.norm(dim=-1, keepdim=True)  # Ajout
 
                     similarities = torch.matmul(image_features, text_features.T)  # Ajout
-                    predicted_index = similarities.argmax().item()               # Ajout
-                    predicted_category = labels_names_with_cheese[predicted_index]           # Ajout
+                    score_similarity =  similarities.squeeze().item()               # Ajout
+                               
 
-                    if(predicted_category==label+ " cheese"):                              # Ajout
+                    if(score_similarity>=0.4):                              
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
@@ -81,15 +78,16 @@ class DatasetGenerator:
                     self.save_images(images, label, image_id_0)            
                     image_id_0 += len(images)                               
                     pbar.update(1)
+                    """""
         
 
                     
                 pbar.close()
 
-        """""
+        
         del model
         torch.cuda.empty_cache()
-        """""
+        
 
     def fine_tune(self,val_data,maping):
 
