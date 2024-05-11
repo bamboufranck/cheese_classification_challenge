@@ -23,7 +23,9 @@ class SDXLLightiningGenerator:
             device, torch.float16
         )
         unet.load_state_dict(load_file(hf_hub_download(repo, ckpt), device=device))
+
         self.unet = unet
+        self.use_cpu_offload=use_cpu_offload
         self.pipe = StableDiffusionXLPipeline.from_pretrained(
             base, unet=unet, torch_dtype=torch.float16, variant="fp16"
         ).to(device)
@@ -43,3 +45,18 @@ class SDXLLightiningGenerator:
             guidance_scale=self.guidance_scale,
         ).images
         return images
+    
+    def update(self,unet,):
+        self.unet = unet
+        self.pipe = StableDiffusionXLPipeline.from_pretrained(
+            base, unet=unet, torch_dtype=torch.float16, variant="fp16"
+        ).to(device)
+        self.pipe.scheduler = EulerDiscreteScheduler.from_config(
+            self.pipe.scheduler.config, timestep_spacing="trailing"
+        )
+        self.pipe.set_progress_bar_config(disable=True)
+        if self.use_cpu_offload:
+            self.pipe.enable_sequential_cpu_offload()
+        self.num_inference_steps = 4
+        self.guidance_scale = 0
+

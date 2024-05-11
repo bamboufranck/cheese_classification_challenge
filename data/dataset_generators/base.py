@@ -1,10 +1,30 @@
 from pathlib import Path
 from tqdm import tqdm
 import torch
+import random
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel
 import torchvision.transforms as transforms
 from torch import optim
+from diffusers import StableDiffusionXLPipeline, UNet2DConditionModel, EulerDiscreteScheduler
+from transformers import BertModel, BertTokenizer
+import torch.nn.functional as F
+
+# Initialisation du tokenizer et du modèle
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertModel.from_pretrained('bert-base-uncased')
+
+# Préparer l'entrée
+inputs = tokenizer("Hello, my name is ChatGPT.", return_tensors="pt")
+input_ids = inputs['input_ids']
+attention_mask = inputs['attention_mask']
+
+# Passer l'entrée au modèle
+with torch.no_grad():
+    outputs = model(input_ids, attention_mask=attention_mask)
+
+# Récupérer les états cachés (représentations encodées)
+encoded_representations = outputs.last_hidden_state
 
 class DatasetGenerator:
     def __init__(
@@ -37,7 +57,7 @@ class DatasetGenerator:
 
         # ou encore utiliser ca pour generer de meilleur prompt avec clip interrogator par exemple 
 
-        #self.fine_tune(val_data,maping,test_loaders)
+        self.fine_tune(val_data,maping)
 
         labels_prompts = self.create_prompts(labels_names,val_data,maping)
         for label, label_prompts in labels_prompts.items():
@@ -69,7 +89,7 @@ class DatasetGenerator:
                     score_similarity =  similarities.squeeze().item()               # Ajout
                                
 
-                    if(score_similarity>=0.3):                              
+                    if(score_similarity>=0.30):                              
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
@@ -87,47 +107,108 @@ class DatasetGenerator:
         
         del model
         torch.cuda.empty_cache()
+
+    
+   
         
 
     def fine_tune(self,val_data,maping):
 
+
+        def get_random_batch_from_loader(dataloader):
+            total_batches = len(dataloader)
+            random_batch_index = random.randint(0, total_batches - 1)
+            for i, batch in enumerate(dataloader):
+                if i == random_batch_index:
+                    return batch
+                
+
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        base = "stabilityai/stable-diffusion-xl-base-1.0"
         epochs=3
-        model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
-        processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
-        to_pil = transforms.ToPILImage()
-        optimizer = optim.Adam(self.generator.unet.parameters(), lr=1e-4)
-        target_similarity = 1.0
+        prior_loss_weight=1
+        optimizer = optim.Adam(unet.parameters(), lr=1e-4)
+        prompt_general="a cheese"
+        text_inputs_general=tokenizer(prompt_general,truncation=True,padding="max_length",max_length=20,return_tensors="pt")
+        unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
+            device, torch.float16
+        )
+        noise_scheduler = EulerDiscreteScheduler.from_config(unet.config.scheduler_config, timestep_spacing="trailing").to(device)
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        model = BertModel.from_pretrained('bert-base-uncased')
+        
+        
+       
 
         print("start of fine tuning")
-
         for epoch in tqdm(range(epochs)):
-            for i,batch in enumerate(val_data):
-
+            unet.train()
+            for batch in enumerate(val_data):
+                bibi=get_random_batch_from_loader(val_data)
+                example = {}
                 optimizer.zero_grad()
                 image, label = batch
-                image = image.squeeze(0)
-                image = to_pil(image)
                 valeur_label = label[0].item()
 
-                prompt=f"An image of {maping[valeur_label]} cheese"
+                prompt=f"A  {maping[valeur_label]} cheese"
+                example["instance_images"]=image
+                text_inputs=tokenizer(prompt,truncation=True,padding="max_length",max_length=20,return_tensors="pt")
+                example["instance_prompt_ids"] = text_inputs.input_ids
+                example["instance_attention_mask"] = text_inputs.attention_mask
 
-                generate_image = self.generator.generate(prompt)
-                generate_image_input = processor(images=generate_image, return_tensors="pt")  # Ajout
-                image_input=  processor(images=image, return_tensors="pt")
+                _,class_image=bibi
+                classe_instance=class_image
+                class_prompt_ids=text_inputs_general.input_ids
+                class_attention_mask= text_inputs_general.attention_mask
 
-                with torch.no_grad():
-                    image_features = model.get_image_features(**image_input) # Ajout
-                    generate_image_features = model.get_image_features(**generate_image_input)  # Ajout
+                example["instance_prompt_ids"]+=class_prompt_ids
+                example["instance_images"]+=classe_instance
+                example["instance_attention_mask"]+=class_attention_mask
 
+                pixel_values = torch.stack( example["instance_images"])
+                pixel_values = pixel_values.to(memory_format=torch.contiguous_format).float()
+                input_ids = torch.cat(example["instance_prompt_ids"], dim=0)
+                attention_mask = torch.cat(attention_mask, dim=0)
+                
+                batch = { "input_ids": input_ids, "pixel_values": pixel_values, "attention_mask":attention_mask,}
 
-                similarity = torch.nn.functional.cosine_similarity(generate_image_features, image_features, dim=1)
-                loss = torch.abs(similarity - target_similarity)
+                pixel_values = batch["pixel_values"].to(device)
+                model_input = pixel_values
 
+                noise = torch.randn_like(model_input)
+                bsz, channels, height, width = model_input.shape
+                # Sample a random timestep for each image
+                timesteps = torch.randint(
+                    0, noise_scheduler.config.num_train_timesteps, (bsz,), device=model_input.device
+                )
+                timesteps = timesteps.long()
+
+                noisy_images = noise_scheduler.add_noise(pixel_values, noise, timesteps)  # Ajout de bruit
+                target = noise 
+
+                encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]).last_hidden_state
+
+                model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False)[0]
+
+                loss = F.mse_loss(model_pred, target)
+
+                model_pred, model_pred_prior = torch.chunk(model_pred, 2, dim=0)
+                target, target_prior = torch.chunk(target, 2, dim=0)
+                   
+                prior_loss = F.mse_loss(model_pred_prior.float(), target_prior.float(), reduction="mean")
+
+                loss = loss + prior_loss_weight * prior_loss
+                optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
 
 
-        del model
+
+
+
+        self.generator.update(unet)
+
         torch.cuda.empty_cache()
         print("end of fine tuning")
     
