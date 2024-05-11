@@ -128,14 +128,11 @@ class DatasetGenerator:
         unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
             device, torch.float16
         )
-        scheduler_config = {
-    "timestep_respacing": "25",  # Exemple de paramètre, ajustez selon les besoins réels
-    "betas": (0.9, 0.999)        # Autre exemple de paramètre pour l'optimiseur
-}
+        
        
 
         
-        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing")
+        noise_scheduler = EulerDiscreteScheduler.from_config(timestep_spacing="trailing")
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         model = BertModel.from_pretrained('bert-base-uncased')
 
@@ -157,6 +154,7 @@ class DatasetGenerator:
                 example = {}
                 optimizer.zero_grad()
                 image, label = batch
+                print("Label shape:", label.shape)
                 valeur_label = label[0].item()
 
                 prompt=f"A  {maping[valeur_label]} cheese"
