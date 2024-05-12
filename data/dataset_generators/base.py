@@ -211,8 +211,8 @@ class DatasetGenerator:
                 print("Encoder hidden state shape:", encoder_hidden.shape)
                 print("Timesteps shape:", timesteps.shape)
                 
-                noisy_images=noisy_images.float()
-                encoder_hidden=encoder_hidden.float()
+                noisy_images=noisy_images.half()
+                encoder_hidden=encoder_hidden.half()
                 model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False)[0]
 
                 print("Azoa")
@@ -223,6 +223,8 @@ class DatasetGenerator:
 
                 model_pred, model_pred_prior = torch.chunk(model_pred, 2, dim=0)
                 target, target_prior = torch.chunk(target, 2, dim=0)
+
+                print("azoa")
                    
                 prior_loss = F.mse_loss(model_pred_prior.float(), target_prior.float(), reduction="mean")
 
