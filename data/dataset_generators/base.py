@@ -213,7 +213,7 @@ class DatasetGenerator:
 
                 text_embeddings = encoder_hidden.last_hidden_state[:, 0, :]
 
-                added_cond_kwargs = {"text_embeds": text_embeddings}
+                added_cond_kwargs = {"text_embeds": text_embeddings,"time_ids": timesteps}
                 
                 noisy_images=noisy_images.half()
                 #encoder_hidden=encoder_hidden.half()
