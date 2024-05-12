@@ -205,18 +205,20 @@ class DatasetGenerator:
 
             
 
-                encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]).to(device)
+                encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]).last_hidden_state
 
                 print("Noisy images shape:", noisy_images.shape)
                 #print("Encoder hidden state shape:", encoder_hidden.shape)
                 print("Timesteps shape:", timesteps.shape)
 
-                text_embeddings = encoder_hidden.last_hidden_state[:, 0, :]
+                text_embeddings = encoder_hidden[:, 0, :]
 
                 added_cond_kwargs = {"text_embeds": text_embeddings,"time_ids": timesteps}
                 
-                noisy_images=noisy_images.half()
-                #encoder_hidden=encoder_hidden.half()
+                
+                noisy_images = noisy_images.to(device).half()
+                encoder_hidden=encoder_hidden.half()
+                encoder_hidden=encoder_hidden.to(device)
                 model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False,added_cond_kwargs=added_cond_kwargs)[0]
 
                 print("Azoa")
