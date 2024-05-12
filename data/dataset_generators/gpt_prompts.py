@@ -33,8 +33,8 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
         for label in labels_names:
             prompts[label]=[]
             for situation in situations:
-                prompts = f"describe an image of {label} cheese in  {situation}:"
-                inputs = tokenizer(prompts, return_tensors='pt', padding=True, truncation=True, max_length=30)
+                prompt_text = f"describe an image of {label} cheese in  {situation}:"
+                inputs = tokenizer(prompt_text , return_tensors='pt', padding=True, truncation=True, max_length=30)
                 input_ids = inputs['input_ids'].to(device)
                 attention_mask = inputs['attention_mask'].to(device)
 
