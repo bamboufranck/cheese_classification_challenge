@@ -30,25 +30,30 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         model.to(device)
 
         prompts = {}
+        map_images={}
         to_pil = transforms.ToPILImage()
 
        
         for label in labels_names:
             prompts[label]=[]
+            map_images[label]=[]
             prompts[label].append({
                     "prompt": f"an image of {label} cheese",
                     "num_images": self.num_images_per_label,
                 })
-
+            
+        
         
         
         print( "generation of prompts")
 
         for i,batch in enumerate(val_data):
             image, label = batch
-            image = image.squeeze(0)
-            image = to_pil(image)
             valeur_label = label[0].item()
+            image = image.squeeze(0)
+            map_images[maping[valeur_label]].append(image)
+            image = to_pil(image)
+           
             
           
             pixel_values = feature_extractor(images=image, return_tensors="pt").pixel_values
@@ -58,7 +63,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             output_ids = model.generate(pixel_values, **gen_kwargs)
             descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
 
-            description= f" An image of a piece of {maping[valeur_label]} cheese" + " and " + descriptions[0].strip()
+            description= f" A {maping[valeur_label]} cheese" + " and " + descriptions[0].strip()
 
             prompts[maping[valeur_label]].append(
                 {
@@ -67,9 +72,11 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
                 }
             )
 
+
+
         del model
         torch.cuda.empty_cache()
 
         print("end of generation")
        
-        return prompts
+        return prompts,map_images
