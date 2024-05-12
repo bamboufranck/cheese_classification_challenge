@@ -205,7 +205,7 @@ class DatasetGenerator:
 
             
 
-                encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]).last_hidden_state
+                encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"])
 
                 print("Noisy images shape:", noisy_images.shape)
                 print("Encoder hidden state shape:", encoder_hidden.shape)
