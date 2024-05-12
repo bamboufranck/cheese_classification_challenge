@@ -203,12 +203,16 @@ class DatasetGenerator:
                 noisy_images = noise_scheduler.add_noise(pixel_values, noise, timesteps)  # Ajout de bruit
                 target = noise 
 
-                print("Azoa")
+            
 
                 encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]).last_hidden_state
 
-                print("Azoa")
-
+                print("Noisy images shape:", noisy_images.shape)
+                print("Encoder hidden state shape:", encoder_hidden.shape)
+                print("Timesteps shape:", timesteps.shape)
+                
+                noisy_images=noisy_images.float()
+                encoder_hidden=encoder_hidden.float()
                 model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False)[0]
 
                 print("Azoa")
