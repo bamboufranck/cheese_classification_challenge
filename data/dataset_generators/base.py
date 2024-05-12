@@ -213,7 +213,7 @@ class DatasetGenerator:
                 
                 noisy_images=noisy_images.half()
                 encoder_hidden=encoder_hidden.half()
-                model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False)[0]
+                model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False,added_cond_kwargs={})[0]
 
                 print("Azoa")
 
