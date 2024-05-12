@@ -174,16 +174,22 @@ class DatasetGenerator:
                 example["instance_attention_mask"] = torch.cat([text_inputs.attention_mask, class_attention_mask], dim=0)
                 example["instance_images"] = torch.cat([image, classe_instance], dim=0)
 
+                print("Azoa")
+
 
                 pixel_values =example["instance_images"]
                 pixel_values = pixel_values.to(memory_format=torch.contiguous_format).float()
                 input_ids = example["instance_prompt_ids"]
                 attention_mask = example["instance_attention_mask"]
 
+                print("Azoa")
+
                 batch = {"input_ids": input_ids, "pixel_values": pixel_values, "attention_mask":attention_mask,}
 
                 pixel_values = batch["pixel_values"].to(device)
                 model_input = pixel_values
+
+                print("Azoa")
 
                 noise = torch.randn_like(model_input)
                 bsz, channels, height, width = model_input.shape
@@ -192,6 +198,8 @@ class DatasetGenerator:
                     0, noise_scheduler.config.num_train_timesteps, (bsz,), device=model_input.device
                 )
                 timesteps = timesteps.long()
+
+                print("Azoa")
 
                 noisy_images = noise_scheduler.add_noise(pixel_values, noise, timesteps)  # Ajout de bruit
                 target = noise 
