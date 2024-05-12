@@ -83,7 +83,7 @@ class DatasetGenerator:
                     average_similarity = similarities.mean().item()
                     print("average similarity", average_similarity)
 
-                    if(average_similarity>=0.5):                              # Ajout
+                    if(average_similarity>=0.52):                              # Ajout
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
