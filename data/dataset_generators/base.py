@@ -174,7 +174,7 @@ class DatasetGenerator:
                 example["instance_attention_mask"] = torch.cat([text_inputs.attention_mask, class_attention_mask], dim=0)
                 example["instance_images"] = torch.cat([image, classe_instance], dim=0)
 
-                print("Azoa")
+               
 
 
                 pixel_values =example["instance_images"]
@@ -182,14 +182,13 @@ class DatasetGenerator:
                 input_ids = example["instance_prompt_ids"]
                 attention_mask = example["instance_attention_mask"]
 
-                print("Azoa")
+               
 
                 batch = {"input_ids": input_ids, "pixel_values": pixel_values, "attention_mask":attention_mask,}
 
                 pixel_values = batch["pixel_values"].to(device)
                 model_input = pixel_values
 
-                print("Azoa")
 
                 noise = torch.randn_like(model_input)
                 bsz, channels, height, width = model_input.shape
@@ -199,16 +198,24 @@ class DatasetGenerator:
                 )
                 timesteps = timesteps.long()
 
-                print("Azoa")
+               
 
                 noisy_images = noise_scheduler.add_noise(pixel_values, noise, timesteps)  # Ajout de bruit
                 target = noise 
 
+                print("Azoa")
+
                 encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]).last_hidden_state
+
+                print("Azoa")
 
                 model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False)[0]
 
+                print("Azoa")
+
                 loss = F.mse_loss(model_pred, target)
+
+                print("Azoa")
 
                 model_pred, model_pred_prior = torch.chunk(model_pred, 2, dim=0)
                 target, target_prior = torch.chunk(target, 2, dim=0)
