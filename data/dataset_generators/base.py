@@ -135,15 +135,15 @@ class DatasetGenerator:
        
 
         
-        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing")
+        noise_scheduler = EulerDiscreteScheduler.from_config(scheduler_config, timestep_spacing="trailing").to(device)
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-        model = BertModel.from_pretrained('bert-base-uncased')
+        model = BertModel.from_pretrained('bert-base-uncased').to(device)
 
         epochs=3
         prior_loss_weight=1
         optimizer = optim.Adam(unet.parameters(), lr=1e-4)
         prompt_general="a cheese"
-        text_inputs_general=tokenizer(prompt_general,truncation=True,padding="max_length",max_length=20,return_tensors="pt")
+        text_inputs_general=tokenizer(prompt_general,truncation=True,padding="max_length",max_length=20,return_tensors="pt").to(device)
 
         
         
@@ -161,7 +161,7 @@ class DatasetGenerator:
 
                 prompt=f"A  {maping[valeur_label]} cheese"
                 example["instance_images"]=image
-                text_inputs=tokenizer(prompt,truncation=True,padding="max_length",max_length=20,return_tensors="pt")
+                text_inputs=tokenizer(prompt,truncation=True,padding="max_length",max_length=20,return_tensors="pt").to(device)
                 example["instance_prompt_ids"] = text_inputs.input_ids
                 example["instance_attention_mask"] = text_inputs.attention_mask
 
@@ -218,7 +218,8 @@ class DatasetGenerator:
                 
                 noisy_images = noisy_images.to(device).half()
                 encoder_hidden=encoder_hidden.half()
-                model_pred = unet(noisy_images, timesteps, return_dict=False,added_cond_kwargs=added_cond_kwargs)[0]
+                encoder_hidden=encoder_hidden.to(device)
+                model_pred = unet(noisy_images, timesteps, encoder_hidden, return_dict=False,added_cond_kwargs=added_cond_kwargs)[0]
 
                 print("Azoa")
 
