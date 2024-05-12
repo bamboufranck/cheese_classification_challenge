@@ -208,7 +208,7 @@ class DatasetGenerator:
                 encoder_hidden=model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"])
 
                 print("Noisy images shape:", noisy_images.shape)
-                print("Encoder hidden state shape:", encoder_hidden.shape)
+                #print("Encoder hidden state shape:", encoder_hidden.shape)
                 print("Timesteps shape:", timesteps.shape)
                 
                 noisy_images=noisy_images.half()
