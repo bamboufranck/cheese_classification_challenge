@@ -15,12 +15,19 @@ class DinoV2Finetune(nn.Module):
                     param.requires_grad = True
                 for param in self.backbone.blocks[-1].parameters():
                     param.requires_grad = True
-        self.classifier1 = nn.Linear(self.backbone.norm.normalized_shape[0],128)
-        self.classifier2= nn.Linear(128, num_classes)
 
+        self.features_dim = self.backbone.num_features
+        self.dropout = nn.Dropout(0.5)
+        self.batch_norm = nn.BatchNorm1d(self.features_dim)
+        self.activation = nn.ReLU()
+        self.classifier = nn.Linear(self.features_dim, num_classes)
+       
 
     def forward(self, x):
         x = self.backbone(x)
-        x = self.classifier1(x)
-        x = self.classifier2(x)
+        x = self.dropout(x)
+        x = self.batch_norm(x)
+        x = self.activation(x)
+        x = self.classifier(x)
+    
         return x

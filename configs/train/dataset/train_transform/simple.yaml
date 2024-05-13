@@ -2,6 +2,20 @@ _target_: torchvision.transforms.Compose
 transforms:
   - _target_: torchvision.transforms.Resize
     size: [224, 224]
+  - _target_: torchvision.transforms.RandomHorizontalFlip
+    p: 0.5  # Probabilité d'appliquer un flip horizontal à l'image
+  - _target_: torchvision.transforms.ColorJitter
+    brightness: 0.2  # Intervalle de variation de luminosité
+    contrast: 0.2    # Intervalle de variation de contraste
+    saturation: 0.2  # Intervalle de variation de saturation
+    hue: 0.02        # Intervalle de variation de teinte
+  - _target_: torchvision.transforms.RandomRotation
+    degrees: 15      # Degrés de rotation max/min autour du centre
+  - _target_: torchvision.transforms.RandomAffine
+    degrees: 0
+    translate: [0.1, 0.1]  # Translation maximale en pourcentage de la hauteur/ largeur de l'image
+    scale: [0.9, 1.1]      # Échelle de zoom
+    shear: 10              # Cisaillement en degrés
   - _target_: torchvision.transforms.ToTensor
   - _target_: torchvision.transforms.Normalize
     mean: [0.485, 0.456, 0.406]
