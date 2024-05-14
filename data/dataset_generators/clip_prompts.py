@@ -40,7 +40,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
-        model.to(device)
+    
 
         prompts = {}
         map_images={}
@@ -96,7 +96,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
 
-        del model
+        del blip_model
+
         torch.cuda.empty_cache()
 
         print("end of generation")
