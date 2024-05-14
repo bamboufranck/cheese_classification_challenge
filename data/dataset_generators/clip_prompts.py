@@ -8,8 +8,6 @@ from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoToken
 from transformers import AutoProcessor, BlipForConditionalGeneration
 import torch
 
-blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
 
 class ClipPromptsDatasetGenerator(DatasetGenerator):
@@ -34,10 +32,15 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         num_beams = 10
         gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
 
+        model.to(device)
+
         """""
          
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        blip_model.to(device)
+        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+
+        model.to(device)
 
         prompts = {}
         map_images={}
