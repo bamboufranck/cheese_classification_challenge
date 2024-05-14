@@ -83,7 +83,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             """""
 
             pixel_values = inputs.pixel_values
-            generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=50)
+            generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=20)
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
             description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
 
