@@ -29,6 +29,8 @@ class GoogleVitFinetune(nn.Module):
         self.classifier = nn.Linear(768, num_classes)  # 768 est la dimension typique pour 'vit-base'
 
     def forward(self, x):
-        x = self.backbone(x)
-        x = self.classifier(x)
+        outputs = self.backbone(x)  # Exécute le modèle pré-entraîné
+        logits = outputs.logits  # Extraire les logits de l'objet de sortie
+        x = self.classifier(logits)  # Passer les logits au classificateur
         return x
+
