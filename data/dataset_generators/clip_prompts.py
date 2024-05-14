@@ -23,7 +23,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
     def create_prompts(self, labels_names,val_data,maping):
-        """""
+       
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
         feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
         tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -40,6 +41,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
+        """""
     
 
         prompts = {}
@@ -67,7 +69,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             map_images[maping[valeur_label]].append(image)
             image = to_pil(image)
 
-
+            
+            """""
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
 
             """""
@@ -87,6 +90,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
             description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
 
+            
+            """""
             prompts[maping[valeur_label]].append(
                 {
                     "prompt": description,
@@ -96,8 +101,12 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
 
+            """""
         del blip_model
 
+            """""
+        
+        del model
         torch.cuda.empty_cache()
 
         print("end of generation")
