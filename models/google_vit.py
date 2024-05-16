@@ -5,7 +5,7 @@ class GoogleVitFinetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         # Charger le modèle pré-entraîné
-        self.backbone = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
+        self.backbone = ViTForImageClassification.from_pretrained('google/vit-large-patch16-224')
         # Remplacer la tête de classification par une identité (pas de calcul)
         self.backbone.classifier = nn.Identity()
 
