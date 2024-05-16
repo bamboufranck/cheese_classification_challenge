@@ -5,17 +5,19 @@ print("start")
 
 # Utiliser le token lors de la création de l'entraînement
 training = replicate.trainings.create(
-    model="stability-ai/sdxl",
-    version="39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+
+    model="bamboufranck/fossi",
+    version="e026716504638dbb45364a6ab37ad7283637384acb9ce3758ce79e830be005ca",
     input={
-        "input_images": "https://franckbambou.s3.eu-north-1.amazonaws.com/photo.zip?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEEIaCmV1LW5vcnRoLTEiRzBFAiEAoee1CSXZWkISZCJydicMilMt6xKOWh543emNejHaqC4CIHYZ4CA7IAyf0OEA7gka3DCZPQ20L0gIA%2FAVBV6KIcdWKu0CCKz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMMzgxNDkyMDU5Nzc4Igxb%2Fe6dV1kx%2F9aQK%2BQqwQLrVj1SWidOJ4l1w4Og90Trf9Wnm8vxdBdEUuzjkvpER5jGLs%2FZrNAQLNOKlHB9gywqQUvVgvWHdqDzi9XSKbfHq2QyeLifsSjddIh1gOAMOXsISux%2FMWlT6v8NSJomjVrIqrw5ga6X2s%2FHtW3bwthnuznFYRxVQ9fEMz%2FSNx3MXmS87gIbmjPFJLYLT6oMES%2Bf6KIGrHU6ThSAJHbSq2djQ%2BA3UaAcvAmNaaNS1HeUu3HrWdQ%2BLV%2FMiig3xSWwUo4IhYeDiWAWrZ0apl9C2jjZMtu1pY6%2BT9MZSuDyFlA3vkJi9QgvV9jJuhYEw3cjmXoOSimjdRoGqcm8rK1c1YdG%2B1afZgBE%2BxiB5tcBo9%2FaWW%2BO%2BtjFqvJ8yuMLiKigzKWNboZAg5dApPfaeGTKHY0qIRYKRphhWuiMYsGu4SnrWMAwz%2B2TsgY6swLssnI6LznOZdlAYiiJZy4BIbcBv4Qu%2Bh7ihDSYrNr1WobBEPi2MVKygIMY5lW2q7MmgozuVt2eitwjDWqiJHY7nJc0kX4aN3ZXO5U2Eh2hwZfNOUBg3TJXRL7S9ChjpkOJ0iq3t9jLEnmYAkiteANi3wGXaynDO6MnWv5MxMPeNF2wsvrSLQYOlubVbTzAdUOUQ0Euu2goIDRwGw2WaTMWmZPJaS2Vc8Y9g%2BKXqvqXikPPO0zrlLfTnYu1DxkCh%2F%2BR6O%2FinsWufNoVqZ%2FxLla%2Bqum7yaUftvGNSKrUp6aqk6JwSND9sjG3SL%2BM64mbVAFqxh3YBjNi6Qt9IyyQFUS3DGA4dlY8L%2F%2BJEWOVDz%2FXWStWE3ChlE0ELHcqNaljt5qzXugSCH6mlehBHSRpObhWO8l8&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240515T202504Z&X-Amz-SignedHeaders=host&X-Amz-Expires=42000&X-Amz-Credential=ASIAVRUVS32BHDXU7FES%2F20240515%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Signature=74300f64e9781e9dc0fe28f610ab623764203e8bac54d6cbca9091abcf2d8314",
-        "token_string": "8b632f7e-34a0-48a3-8e7d-3a0de722f62c",
-        "caption_prefix": "a photo of 8b632f7e-34a0-48a3-8e7d-3a0de722f62c",
+        "input_images": "https://franckbambou.s3.eu-north-1.amazonaws.com/photo.zip?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEE8aCmV1LW5vcnRoLTEiRzBFAiEAyNqgavahkAWnOukBvMcDU7%2B%2B4ok5LVXa5kAY4SIY240CIECRNqFQHJRN8a0RiF%2FZozWj%2BookRk8UBu5RZfViCfjAKu0CCLn%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMMzgxNDkyMDU5Nzc4Igx4ucfP0GgsEOEjaUIqwQIQOaJzpjMys4yDwVnrXavQLK47oLyGZwfJVylDhiqEtqr3SGbc922sLHZdArslgZ%2FnCkXCAhOjsZUaYsy4IPsbmYQB6K%2FRuDjWjQIDgZwgFH5LZmDplHLJhnuT9dMqwsv2P2IlL87F%2BpLZZuqQDwe%2F6iJyHAK2P8W2AFMBHZBUvePphcR%2B6ghFRrL2s7A1w0xETHpmV3ydjb3pWdo2F1dGmCA8DDcumGTSEhYQP9nFn9z6bA2BJU10PPr98kklD%2BPnEDcKkZWuEUlx7%2FEzHmS1v5fSzVQCn%2BNKcs661lwWCIt5qEl0YYSWGTmeISO5tKtUohdUNJdf2yOE%2BOwOJm%2FSG8vTVzjIhlb3cy404y2DAAtUiJLIwWbpJjQx2dFhvsR6iIkWEgWH%2FGZpWBheAJiIfXlVi6XUL1IdWNKrJEhXVgowt%2BmWsgY6swIbHTQ2dzp%2Fagy9MD7m6AXIfohMthZ4AmDhl2RZw2dKgEnnoG5xX598yHdV5G5dmbcOLCWfUA1dPtiZOyAWYHselSAWBYpDBbrpeDUg8xo%2Bk%2F9zU8QoOGB9vz%2FYJ2nOft2TT4Nqc0sEd0mlZ5cG656ccdxFdAOIjG3Au2CbPwGB6onhCfVDMpZqk12HH8kWq469KON9ZPImaLvwvxBleIW2Ig1D4%2F9A8CvsXFWgBsfnTZYXYUi7jXMhZ7S5KxYgk2wjUSYPiLPOnMztA%2FdntirTR4smRyMOL9fLRwMpimr2Uxay2vXIUAW%2BZNHA7%2FpvmQMfqVOe42u80FB3xC2Chprte0M2dkJKOvVQCgbvVqTB6jCiXLQphs1uUDxDo%2B8oRgYuCK51UlMeLx4dm5xrV%2BUALYAw&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240516T075848Z&X-Amz-SignedHeaders=host&X-Amz-Expires=12000&X-Amz-Credential=ASIAVRUVS32BESWDOL5R%2F20240516%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Signature=9b9585215b50bbf5a8429c055328e4502fc7973204bcd47325e9725f85055eee",
+        "token_string": "cedf28f7-d0dd-4091-ade7-765296dd5fe9",
+        "caption_prefix": "a photo of cedf28f7-d0dd-4091-ade7-765296dd5fe9 cheese",
         "max_train_steps": 1000,
         "use_face_detection_instead": False
     },
-    destination="bamboufranck/model_franck"
+    destination="bamboufranck/fossi"
 )
+
 
 training.reload()
 print(training.status)
