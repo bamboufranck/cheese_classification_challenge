@@ -26,7 +26,7 @@ class GoogleVitFinetune(nn.Module):
                         param.requires_grad = True
 
         # Ajouter un nouveau classificateur
-        self.classifier = nn.Linear(768, num_classes)  # 768 est la dimension typique pour 'vit-base'
+        self.classifier = nn.Linear(1024, num_classes)  # 768 est la dimension typique pour 'vit-base'
 
     def forward(self, x):
         outputs = self.backbone(x)  # Exécute le modèle pré-entraîné
