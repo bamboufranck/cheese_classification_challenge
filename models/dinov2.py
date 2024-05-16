@@ -12,7 +12,7 @@ class DinoV2Finetune(nn.Module):
             for param in self.backbone.parameters():
                 param.requires_grad = False
             if unfreeze_last_layer:
-                for param in self.backbone.blocks[-2:].parameters():
+                for param in self.backbone.blocks[-4:].parameters():
                     param.requires_grad = True
                 for param in self.backbone.norm.parameters():
                     param.requires_grad = True
@@ -25,7 +25,7 @@ class DinoV2Finetune(nn.Module):
         self.activation = nn.ReLU()
         #self.classifier= nn.Linear(self.features_dim, num_classes)
         self.classifier = nn.Linear(self.features_dim, 768)
-        self.activation = nn.ReLU()
+        #self.activation = nn.ReLU()
         self.classifier1 = nn.Linear(768, num_classes)
        
 
@@ -34,7 +34,7 @@ class DinoV2Finetune(nn.Module):
         #x = self.dropout(x)
         #x = self.batch_norm(x)
         x = self.classifier(x)
-        x = self.activation(x)
+        #x = self.activation(x)
         x = self.classifier1(x)
     
         return x
