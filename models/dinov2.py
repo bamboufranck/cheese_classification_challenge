@@ -12,7 +12,7 @@ class DinoV2Finetune(nn.Module):
             for param in self.backbone.parameters():
                 param.requires_grad = False
             if unfreeze_last_layer:
-                for param in self.backbone.blocks[-4:].parameters():
+                for param in self.backbone.blocks[-2:].parameters():
                     param.requires_grad = True
                 for param in self.backbone.norm.parameters():
                     param.requires_grad = True

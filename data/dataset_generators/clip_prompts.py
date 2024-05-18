@@ -2,12 +2,14 @@ import torchvision.transforms as transforms
 import torch
 from PIL import Image
 from .base import DatasetGenerator
-from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
+#from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 
 # for blip
-from transformers import AutoProcessor, BlipForConditionalGeneration
-import torch
+#from transformers import AutoProcessor, BlipForConditionalGeneration
 
+
+#laava 
+from transformers import pipeline
 
 
 class ClipPromptsDatasetGenerator(DatasetGenerator):
@@ -25,6 +27,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     def create_prompts(self, labels_names,val_data,maping):
        
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        """""
         model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
         feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
         tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -32,8 +35,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         max_length = 20
         num_beams = 10
         gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
-
         model.to(device)
+
+        """""
 
         """""
          
@@ -42,6 +46,13 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
         """""
+
+        model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
+        pipe = pipeline("image-to-text", model=model_id, device=device)
+
+        model_id.to(device)
+        prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
+          "<|start_header_id|>assistant<|end_header_id|>\n\n")
     
 
         prompts = {}
@@ -69,19 +80,24 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             map_images[maping[valeur_label]].append(image)
             image = to_pil(image)
 
+            outputs = pipe(image, prompt=prompt, generate_kwargs={"max_new_tokens": 200})
+
             
             """""
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
 
             """""
+
+            """""
             pixel_values = feature_extractor(images=image, return_tensors="pt").pixel_values
             pixel_values = pixel_values.to(device)
+            """""
 
-           
+            """""
             output_ids = model.generate(pixel_values, **gen_kwargs)
             descriptions = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
-
             description= f" A {maping[valeur_label]} cheese" + " and " + descriptions[0].strip()
+            """""
 
             """""
 
@@ -92,6 +108,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             
             """""
+
+            description= f" A {maping[valeur_label]} cheese," + outputs
             prompts[maping[valeur_label]].append(
                 {
                     "prompt": description,
@@ -106,7 +124,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             """""
         
-        del model
+        del model_id
         torch.cuda.empty_cache()
 
         print("end of generation")
