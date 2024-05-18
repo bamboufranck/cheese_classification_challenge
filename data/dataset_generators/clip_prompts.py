@@ -5,12 +5,9 @@ from .base import DatasetGenerator
 #from transformers import VisionEncoderDecoderModel, ViTImageProcessor, AutoTokenizer
 
 # for blip
-from transformers import AutoProcessor, BlipForConditionalGeneration
+from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import os
-
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
 
 
 #hf_token = "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"
@@ -18,6 +15,8 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel
 # Ajouter le token dans les variables d'environnement
 #os.environ["HUGGINGFACE_TOKEN"] = hf_token
 
+
+from transformers import AutoProcessor, LlavaForConditionalGeneration
 
 
 
@@ -38,34 +37,19 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-        model = GPT2LMHeadModel.from_pretrained("gpt2").to(device, torch.float16)
-
-        """"
-        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
-        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
-        model.to(device)
-
-    
         """""
-
-        """""
-        model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-        feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-        tokenizer = AutoTokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-         
-        max_length = 20
-        num_beams = 10
-        gen_kwargs = {"max_length": max_length, "num_beams": num_beams}
-        model.to(device)
-
-        """""
-
-    
-        
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        """""
+        
+        model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
+        prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
+          "<|start_header_id|>assistant<|end_header_id|>\n\n")
+        
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16, low_cpu_mem_usage=True).to(device)
+        processor = AutoProcessor.from_pretrained(model_id)
 
+       
 
 
         prompts = {}
@@ -93,28 +77,26 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             map_images[maping[valeur_label]].append(image)
             image = to_pil(image)
             
+            # blip
+
+            """""
 
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
-
-    
-
             pixel_values = inputs.pixel_values
-            generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=40)
+            generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
             description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
 
-            
-            
+            """""
 
-            #ADD
-            text = "inspire you of the following context: " + generated_caption.split("\n")[0]+ f", and give me a description of an image of a {maping[valeur_label]} cheese"
-            input = tokenizer.encode(text, return_tensors="pt").to(device)
+            # llava 
 
-            outputs = model.generate(input, max_length=100, num_return_sequences=1)
-            generated_text=tokenizer.decode(outputs[0], skip_special_tokens=True)
-            generated_text=generated_text[len(text):].strip()
-            description= generated_text
-            #ADD
+            inputs = processor(prompt, image, return_tensors='pt').to(device, torch.float16)
+            output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
+            description=processor.decode(output[0][2:], skip_special_tokens=True)
+
+
+
 
             
             prompts[maping[valeur_label]].append(
