@@ -8,8 +8,10 @@ from .base import DatasetGenerator
 #from transformers import AutoProcessor, BlipForConditionalGeneration
 
 
+
 #laava 
-from transformers import pipeline
+from transformers import LlavaNextProcessor, LlavaNextForConditionalGeneration
+
 
 
 class ClipPromptsDatasetGenerator(DatasetGenerator):
@@ -27,6 +29,12 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     def create_prompts(self, labels_names,val_data,maping):
        
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        processor = LlavaNextProcessor.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf")
+        model = LlavaNextForConditionalGeneration.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf", torch_dtype=torch.float16, low_cpu_mem_usage=True) 
+        model.to(device)
+        prompt = "[INST] <image>\nWhat is shown in this image? [/INST]"
+        
+    
         """""
         model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
         feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -47,13 +55,6 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         """""
 
-        model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
-        pipe = pipeline("image-to-text", model=model_id, device=device)
-
-        model_id.to(device)
-        prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
-          "<|start_header_id|>assistant<|end_header_id|>\n\n")
-    
 
         prompts = {}
         map_images={}
@@ -79,9 +80,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             image = image.squeeze(0)
             map_images[maping[valeur_label]].append(image)
             image = to_pil(image)
+            inputs = processor(prompt, image, return_tensors="pt").to(device)
+            output = model.generate(**inputs, max_new_tokens=100)
 
-            outputs = pipe(image, prompt=prompt, generate_kwargs={"max_new_tokens": 200})
-
+           
             
             """""
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
@@ -109,7 +111,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
             """""
 
-            description= f" A {maping[valeur_label]} cheese," + outputs
+            description= f" A {maping[valeur_label]} cheese," + processor.decode(output[0], skip_special_tokens=True)
             prompts[maping[valeur_label]].append(
                 {
                     "prompt": description,
