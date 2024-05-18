@@ -116,7 +116,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             outputs = model.generate(input_ids=input_ids, attention_mask=attention_mask, max_length=100, num_return_sequences=1)
             generated_text=tokenizer.decode(outputs[0], skip_special_tokens=True)
             generated_text=generated_text[len(text):].strip()
-            description= f"a {maping[valeur_label]} cheese "
+            description= generated_text
             #ADD
 
             
