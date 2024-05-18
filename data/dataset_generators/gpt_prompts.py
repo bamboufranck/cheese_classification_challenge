@@ -33,22 +33,20 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
 
 
         prompts = {}
-        situations = ["kitchen", "dishes", "table", "boxes","with persons","with a knife and meat","with a piece of cake","with a piece of bread","with a wooden cutting board","a yellow plastic container filled with this cheese","a table topped with lots of different types of food"]
 
         for label in labels_names:
             prompts[label]=[]
-            for situation in situations:
-                prompt_text = f"describe an image of {label} cheese in  {situation}:"
-                inputs = tokenizer(prompt_text , return_tensors='pt', padding=True, truncation=True, max_length=30)
-                input_ids = inputs['input_ids'].to(device)
-                attention_mask = inputs['attention_mask'].to(device)
+            prompt_text = f"describe an image of {label} cheese in differents places or in differents dishes with differents aliments:"
+            inputs = tokenizer(prompt_text , return_tensors='pt', padding=True, truncation=True, max_length=30)
+            input_ids = inputs['input_ids'].to(device)
+            attention_mask = inputs['attention_mask'].to(device)
 
                 
-                outputs = model.generate(input_ids=input_ids,attention_mask=attention_mask,pad_token_id=tokenizer.pad_token_id,max_new_tokens=50)
+            outputs = model.generate(input_ids=input_ids,attention_mask=attention_mask,pad_token_id=tokenizer.pad_token_id,max_new_tokens=50)
             
-                generated_texts = tokenizer.decode(outputs[0], skip_special_tokens=True) 
+            generated_texts = tokenizer.decode(outputs[0], skip_special_tokens=True) 
 
-                prompts[label].append({"prompt": generated_texts, "num_images": self.num_images_per_label})
+            prompts[label].append({"prompt": generated_texts, "num_images": self.num_images_per_label})
 
             prompts[label].append({
                     "prompt": f"an image of {label} cheese",

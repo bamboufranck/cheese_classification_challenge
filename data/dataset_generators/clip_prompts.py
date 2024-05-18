@@ -7,6 +7,17 @@ from .base import DatasetGenerator
 # for blip
 from transformers import AutoProcessor, BlipForConditionalGeneration
 
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+
+
+
+inputs = tokenizer(text, return_tensors="pt")
+
+outputs = model.generate(**inputs, max_new_tokens=20)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+
+
 
 
 
@@ -27,6 +38,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     def create_prompts(self, labels_names,val_data,maping):
        
         
+        model_id = "mistralai/Mixtral-8x22B-v0.1"
+        tokenizer = AutoTokenizer.from_pretrained(model_id)
+        model = AutoModelForCausalLM.from_pretrained(model_id)
         
     
         """""
@@ -83,6 +97,13 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=40)
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
             description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
+
+            #ADD
+            text= f"describe an image of a {maping[valeur_label]} cheese with the following context: "+ generated_caption.split("\n")[0]
+            inputs = tokenizer(text, return_tensors="pt")
+            outputs = model.generate(**inputs, max_new_tokens=40)
+            description= f"describe an image of a {maping[valeur_label]} cheese "+ tokenizer.decode(outputs[0], skip_special_tokens=True)
+            #ADD
 
             
             prompts[maping[valeur_label]].append(
