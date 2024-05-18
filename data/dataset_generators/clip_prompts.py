@@ -25,12 +25,11 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
     def create_prompts(self, labels_names,val_data,maping):
-       
-        
-        model_id = "mistralai/Mistral-7B"
-        tokenizer = AutoTokenizer.from_pretrained(model_id)
-        model = AutoModelForCausalLM.from_pretrained(model_id)
-        
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        model.to(device)
+
     
         """""
         model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -86,12 +85,15 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=40)
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
             description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
+            
 
             #ADD
             text= f"describe an image of a {maping[valeur_label]} cheese with the following context: "+ generated_caption.split("\n")[0]
-            inputs = tokenizer(text, return_tensors="pt")
-            outputs = model.generate(**inputs, max_new_tokens=40)
-            description= f"an image of a {maping[valeur_label]} cheese "+ tokenizer.decode(outputs[0], skip_special_tokens=True)
+            inputs = tokenizer(text, return_tensors="pt").to(device)
+            generated_ids = model.generate(inputs['input_ids'], max_new_tokens=100, do_sample=True)
+            generated_text = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+            
+            description= f"a {maping[valeur_label]} cheese "+ generated_text
             #ADD
 
             
