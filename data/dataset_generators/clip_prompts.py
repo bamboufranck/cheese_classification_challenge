@@ -108,10 +108,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             #ADD
             text = "inspire you of the following context: " + generated_caption.split("\n")[0]+ f", and give me a description of an image of a {maping[valeur_label]} cheese"
-            input_ids = tokenizer.encode(text, return_tensors="pt").to(device)
+            input = tokenizer.encode(text, return_tensors="pt").to(device)
 
-            input_ids = input_ids["input_ids"]
-            attention_mask = input_ids["attention_mask"]
+            input_ids = input["input_ids"]
+            attention_mask = input["attention_mask"]
 
             outputs = model.generate(input_ids=input_ids, attention_mask=attention_mask, max_length=100, num_return_sequences=1)
             generated_text=tokenizer.decode(outputs[0], skip_special_tokens=True)
