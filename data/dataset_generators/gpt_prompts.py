@@ -39,7 +39,7 @@ class GptPromptsDatasetGenerator(DatasetGenerator):
                 attention_mask = inputs['attention_mask'].to(device)
 
                 
-                outputs = model.generate(input_ids=input_ids,attention_mask=attention_mask,pad_token_id=tokenizer.pad_token_id,max_new_tokens=20)
+                outputs = model.generate(input_ids=input_ids,attention_mask=attention_mask,pad_token_id=tokenizer.pad_token_id,max_new_tokens=50)
             
                 generated_texts = tokenizer.decode(outputs[0], skip_special_tokens=True) 
 
