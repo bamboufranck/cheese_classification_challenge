@@ -8,6 +8,12 @@ from .base import DatasetGenerator
 from transformers import AutoProcessor, BlipForConditionalGeneration
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
+
+hf_token = "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"
+
+# Ajouter le token dans les variables d'environnement
+os.environ["HUGGINGFACE_TOKEN"] = hf_token
 
 
 
@@ -26,8 +32,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names,val_data,maping):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
-        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2")
+        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",use_auth_token=hf_token)
+        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.2",use_auth_token=hf_token)
         model.to(device)
 
     
