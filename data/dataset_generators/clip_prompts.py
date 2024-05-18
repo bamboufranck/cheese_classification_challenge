@@ -102,12 +102,18 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=40)
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
             description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
+
+            
             
 
             #ADD
             text = "inspire you of the following context: " + generated_caption.split("\n")[0]+ f", and give me a description of an image of a {maping[valeur_label]} cheese"
             input_ids = tokenizer.encode(text, return_tensors="pt").to(device)
-            outputs = model.generate(input_ids, max_length=100, num_return_sequences=1)
+
+            input_ids = input_ids["input_ids"]
+            attention_mask = input_ids["attention_mask"]
+
+            outputs = model.generate(input_ids=input_ids, attention_mask=attention_mask, max_length=100, num_return_sequences=1)
             description= f"a {maping[valeur_label]} cheese "+ tokenizer.decode(outputs[0], skip_special_tokens=True)
             #ADD
 
