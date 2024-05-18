@@ -12,17 +12,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 
-inputs = tokenizer(text, return_tensors="pt")
-
-outputs = model.generate(**inputs, max_new_tokens=20)
-print(tokenizer.decode(outputs[0], skip_special_tokens=True))
-
-
-
-
-
-
-
 class ClipPromptsDatasetGenerator(DatasetGenerator):
     def __init__(
         self,
@@ -102,7 +91,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             text= f"describe an image of a {maping[valeur_label]} cheese with the following context: "+ generated_caption.split("\n")[0]
             inputs = tokenizer(text, return_tensors="pt")
             outputs = model.generate(**inputs, max_new_tokens=40)
-            description= f"describe an image of a {maping[valeur_label]} cheese "+ tokenizer.decode(outputs[0], skip_special_tokens=True)
+            description= f"an image of a {maping[valeur_label]} cheese "+ tokenizer.decode(outputs[0], skip_special_tokens=True)
             #ADD
 
             
