@@ -38,7 +38,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        tokenizer = GPT2Tokenizer.from_pretrained("gpt2").to(device, torch.float16)
+        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         model = GPT2LMHeadModel.from_pretrained("gpt2").to(device, torch.float16)
 
         """"
