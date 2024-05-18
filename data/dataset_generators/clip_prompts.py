@@ -27,7 +27,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     def create_prompts(self, labels_names,val_data,maping):
        
         
-        model_id = "mistralai/Mixtral-8x22B-v0.1"
+        model_id = "mistralai/Mistral-7B"
         tokenizer = AutoTokenizer.from_pretrained(model_id)
         model = AutoModelForCausalLM.from_pretrained(model_id)
         
