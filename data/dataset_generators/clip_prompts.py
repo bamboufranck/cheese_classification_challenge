@@ -10,6 +10,9 @@ from transformers import AutoProcessor, BlipForConditionalGeneration
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import os
 
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+
+
 #hf_token = "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"
 
 # Ajouter le token dans les variables d'environnement
@@ -31,12 +34,21 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
     def create_prompts(self, labels_names,val_data,maping):
+
+
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1",use_auth_token=hf_token)
-        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1",use_auth_token=hf_token)
+
+        tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        model = GPT2LMHeadModel.from_pretrained("gpt2")
+
+        """"
+        model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
+        tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1")
         model.to(device)
 
     
+        """""
+
         """""
         model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
         feature_extractor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
@@ -50,8 +62,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         """""
 
     
-         
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
@@ -94,12 +105,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
 
             #ADD
-            text= f"describe an image of a {maping[valeur_label]} cheese with the following context: "+ generated_caption.split("\n")[0]
-            inputs = tokenizer(text, return_tensors="pt").to(device)
-            generated_ids = model.generate(inputs['input_ids'], max_new_tokens=100, do_sample=True)
-            generated_text = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
-            
-            description= f"a {maping[valeur_label]} cheese "+ generated_text
+            text = "inspire you of the following context: " + generated_caption.split("\n")[0]+ f", and give me a description of an image of a {maping[valeur_label]} cheese"
+            input_ids = tokenizer.encode(text, return_tensors="pt").to(device)
+            outputs = model.generate(input_ids, max_length=100, num_return_sequences=1)
+            description= f"a {maping[valeur_label]} cheese "+ tokenizer.decode(outputs[0], skip_special_tokens=True)
             #ADD
 
             
