@@ -112,7 +112,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_text=generated_caption.split("\n")[0]
             generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
 
-            text="use the following context:" + generated_text  + " and give me a detailed description the background of the image and the differents details"
+            text="add somes adjectives and some precisions for the following description:" + generated_text 
             #description=  f" A {maping[valeur_label]} cheese," + generated_text
 
 
