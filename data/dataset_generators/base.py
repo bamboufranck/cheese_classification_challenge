@@ -62,7 +62,7 @@ class DatasetGenerator:
 
                     batch = prompt[i : i + self.batch_size]
                     
-                    images = self.generator.generate(batch)
+                    images = self.generator.generate(batch,label)
 
                     image_input = processor(images=images, return_tensors="pt")  # Ajout
 

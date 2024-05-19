@@ -20,7 +20,7 @@ class SimplePromptsDatasetGenerator(DatasetGenerator):
             for situation in situations:
                 prompts[label].append(
                 {
-                    "prompt": f"An image of a {label} cheese in {situation}",
+                    "prompt": f"An image of a tok cheese in {situation}",
                     "num_images": self.num_images_per_label,
                 }
             )

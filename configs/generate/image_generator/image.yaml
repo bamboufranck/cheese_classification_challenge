@@ -1,0 +1,2 @@
+_target_: generators.image.Fromage
+use_cpu_offload: false

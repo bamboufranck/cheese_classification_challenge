@@ -1,2 +1,0 @@
-_target_: generators.sdxl_turbo.SDXLTurboGenerator
-use_cpu_offload: false

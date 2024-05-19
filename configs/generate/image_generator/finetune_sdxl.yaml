@@ -1,0 +1,2 @@
+_target_: generators.finetune_sdxl.FineTune_Sdxl
+use_cpu_offload: false

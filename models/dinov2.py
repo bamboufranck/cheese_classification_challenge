@@ -1,5 +1,8 @@
 import torch
 import torch.nn as nn
+from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+
+
 
 
 class DinoV2Finetune(nn.Module):
@@ -27,14 +30,33 @@ class DinoV2Finetune(nn.Module):
         self.classifier = nn.Linear(self.features_dim, 768)
         #self.activation = nn.ReLU()
         self.classifier1 = nn.Linear(768, num_classes)
-       
+
+
+        """"
+        Train a model to learn and detect text about cheese in an image and classify this image 
+
+        OU BIEN
+
+        use a pretrained model to detect text in an image and if we have a text we  transform this text in the a different space 
+        with BERT or CLIP and evaluate the similarity with my differents labels of cheese and choose one
+
+        processor = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten')
+        model_vision = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')
+
+        # trouver un LLM qui va générer des prompts encore plus diversifiés que mon LLM actuel
+
+        pixel_values = processor(images=image, return_tensors="pt").pixel_values
+        generated_ids = model_vision.generate(pixel_values)
+        generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+        """""
 
     def forward(self, x):
         x = self.backbone(x)
         #x = self.dropout(x)
         #x = self.batch_norm(x)
         x = self.classifier(x)
-        #x = self.activation(x)
+        x = self.activation(x)
         x = self.classifier1(x)
     
         return x

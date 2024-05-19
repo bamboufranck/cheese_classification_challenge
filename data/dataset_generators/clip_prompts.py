@@ -6,8 +6,20 @@ from .base import DatasetGenerator
 
 # for blip
 from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
-
 import os
+
+from huggingface_hub import login
+import transformers
+
+hf_token= os.getenv("HF_TOKEN")
+
+if hf_token is None:
+    raise ValueError("The secret `HF_TOKEN` does not exist in your Colab secrets. Please add it and restart the session.")
+
+# Authentifier avec Hugging Face
+login(token=hf_token)
+model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+
 
 
 #hf_token = "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"
@@ -16,7 +28,18 @@ import os
 #os.environ["HUGGINGFACE_TOKEN"] = hf_token
 
 
-from transformers import AutoProcessor, LlavaForConditionalGeneration
+
+
+def correct(text,key_word):
+
+    bags=["cake","cheese","cakes","cheeses"]
+
+    for word in bags:
+        start=text.find(text,word)
+        if(start!=-1):
+            text=text.replace(text,key_word)
+
+
 
 
 
@@ -37,9 +60,12 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        """""
+    
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        pipeline = transformers.pipeline("text-generation",model=model_id,tokenizer=model_id,model_kwargs={"torch_dtype": torch.bfloat16},device=device,use_auth_token=hf_token)
+        
+
         """""
         
         model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
@@ -48,7 +74,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         
         model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16, low_cpu_mem_usage=True)
         processor = AutoProcessor.from_pretrained(model_id)
-
+        """""
        
 
 
@@ -79,22 +105,27 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
             # blip
 
-            """""
-
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
             pixel_values = inputs.pixel_values
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
             generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-            description=  f" A {maping[valeur_label]} cheese," + generated_caption.split("\n")[0]
+            generated_text=generated_caption.split("\n")[0]
+            generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
 
-            """""
+            text="use the following context:" + generated_text  + " and give me a detailed description the background of the image and the differents details"
+            #description=  f" A {maping[valeur_label]} cheese," + generated_text
+
+
+            description=pipeline(text, max_length=100, num_return_sequences=1)[0]['generated_text']
+
+            
 
             # llava 
-
+            """""
             inputs = processor(prompt, image, return_tensors='pt')
             output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
-
+            """""
 
 
 
@@ -110,6 +141,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
     
         del blip_model
+
+        del pipeline
 
         torch.cuda.empty_cache()
 
