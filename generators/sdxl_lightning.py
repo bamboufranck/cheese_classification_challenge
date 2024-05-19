@@ -4,8 +4,7 @@ from diffusers import (
     UNet2DConditionModel,
     EulerDiscreteScheduler,
 )
-
-from diffusers import StableDiffusionXLRefinerPipeline
+from diffusers import StableDiffusionXLImg2ImgPipeline
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
 
@@ -39,19 +38,20 @@ class SDXLLightiningGenerator:
         self.guidance_scale = 0
         
         # refiner 
-        refiner_model_id = "stabilityai/stable-diffusion-xl-refiner-1.0"
-        self.refiner_pipe = StableDiffusionXLRefinerPipeline.from_pretrained(refiner_model_id, torch_dtype=torch.float16).to(device)
+        self.refiner_pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to(device)
+        
 
 
 
 
     def generate(self, prompts,label):
+        
         images = self.pipe(
             prompts,
             num_inference_steps=self.num_inference_steps,
             guidance_scale=self.guidance_scale,
         ).images
 
-        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5)
-        refined_image = refined_output.images[0]
-        return refined_image
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5).images
+
+        return refined_output
