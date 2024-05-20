@@ -2,7 +2,7 @@ import torchvision.transforms as transforms
 import torch
 from PIL import Image
 from .base import DatasetGenerator
-#from transformers import AutoProcessor, LlavaForConditionalGeneration
+from transformers import AutoProcessor, LlavaForConditionalGeneration
 
 # for blip
 from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
