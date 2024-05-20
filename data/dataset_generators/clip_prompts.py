@@ -55,7 +55,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
     
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16)
 
         """""
         pipeline = transformers.pipeline("text-generation",model=model_id,tokenizer=model_id,model_kwargs={"torch_dtype": torch.bfloat16})
