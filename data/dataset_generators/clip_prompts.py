@@ -55,14 +55,16 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
        
+        """""
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
         blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
     
 
         """""
+        """""
         pipeline = transformers.pipeline("text-generation",model=model_id,tokenizer=model_id,model_kwargs={"torch_dtype": torch.bfloat16})
-    
+        """""
         
 
         prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
@@ -70,10 +72,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         
         
         
-        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16, low_cpu_mem_usage=True)
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device)
         processor = AutoProcessor.from_pretrained(model_id)
 
-        """""
+    
        
 
 
@@ -107,7 +109,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
             # blip
         
-
+            """""
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
             pixel_values = inputs.pixel_values
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
@@ -116,6 +118,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
             description=f" A {maping[valeur_label]} cheese," + generated_text
 
+            """""
 
             # llama
             """"
@@ -131,12 +134,11 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             # llava 
           
-            """
+            
             inputs = processor(prompt, image, return_tensors='pt')
             output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
             
-            """
         
 
             
