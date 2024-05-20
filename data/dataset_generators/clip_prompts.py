@@ -149,7 +149,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     
         del blip_model
 
-        del model
+        #del model
 
         torch.cuda.empty_cache()
 
