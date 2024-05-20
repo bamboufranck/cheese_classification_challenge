@@ -147,8 +147,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
                 }
             )
 
-            pbar.update(1)
-
+           
 
 
     
