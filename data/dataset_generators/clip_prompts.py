@@ -35,9 +35,11 @@ def correct(text,key_word):
     bags=["cake","cheese","cakes","cheeses"]
 
     for word in bags:
-        start=text.find(text,word)
-        if(start!=-1):
-            text=text.replace(text,key_word)
+        start = text.find(word)
+        if start != -1:
+            text = text.replace(word, key_word)
+
+    return text
 
 
 
