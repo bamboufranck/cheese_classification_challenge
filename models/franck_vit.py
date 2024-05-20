@@ -41,6 +41,7 @@ class FranckVit(nn.Module):
     def forward(self, x):
         to_pil = transforms.ToPILImage()
         #feature extractor for image
+        x=x.squeeze(0)
         x=to_pil(x)
         inputs = self.processor_image(images=x, return_tensors="pt")
         outputs = self.model_image(**inputs)
