@@ -1,5 +1,6 @@
 from transformers import ViTForImageClassification
 import torch.nn as nn
+import torchvision.transforms as transforms
 import torch
 #from transformers import ViTFeatureExtractor
 from transformers import ViTImageProcessor, ViTModel
@@ -38,7 +39,9 @@ class FranckVit(nn.Module):
  
 
     def forward(self, x):
+        to_pil = transforms.ToPILImage()
         #feature extractor for image
+        x=to_pil(x)
         inputs = self.processor_image(images=x, return_tensors="pt")
         outputs = self.model_image(**inputs)
         features_extractor_image = outputs.last_hidden_state[:, 0]
