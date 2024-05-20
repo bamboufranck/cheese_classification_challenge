@@ -3,6 +3,7 @@ import torch
 from PIL import Image
 from .base import DatasetGenerator
 from transformers import AutoProcessor, LlavaForConditionalGeneration
+from tqdm import tqdm
 
 # for blip
 from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
@@ -93,9 +94,11 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         
         
         
-        print( "generation of prompts")
+        print( "start generation of prompts")
 
-        for i,batch in enumerate(val_data):
+       
+
+        for i,batch in tqdm(enumerate(val_data),desc='generation'):
             image, label = batch
             valeur_label = label[0].item()
             image = image.squeeze(0)
@@ -143,6 +146,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
                     "num_images": self.num_images_per_label,
                 }
             )
+
+            pbar.update(1)
 
 
 
