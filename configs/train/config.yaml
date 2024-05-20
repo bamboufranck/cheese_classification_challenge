@@ -1,6 +1,6 @@
 defaults:
-  - model: dinov2
-  - dataset: clip_prompts
+  - model: franck_vit
+  - dataset: simple_prompts
   - optim: adamw
   - loss_fn: cross_entropy
 
