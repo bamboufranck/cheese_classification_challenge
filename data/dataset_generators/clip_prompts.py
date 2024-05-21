@@ -141,7 +141,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             # llava 
 
-            inputs = processor(prompt,image, return_tensors='pt').to(0, torch.float16)
+            inputs = processor(prompt,image, return_tensors='pt').to(torch.float16)
             output = model.generate(**inputs, max_new_tokens=60, do_sample=False)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
             j=description.find(".")
