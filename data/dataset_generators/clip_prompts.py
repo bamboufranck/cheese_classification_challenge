@@ -53,7 +53,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     def create_prompts(self, labels_names,val_data,maping):
 
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
        
         """""
         blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
