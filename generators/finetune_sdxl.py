@@ -67,7 +67,7 @@ class FineTune_Sdxl:
 
         self.pipe = DiffusionPipeline.from_pretrained(
             base, torch_dtype=torch.float16, variant="fp16",
-        ).to(device)
+        )
 
         
 

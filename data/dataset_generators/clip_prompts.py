@@ -11,7 +11,7 @@ from tqdm import tqdm
 import json
 
 # for blip
-from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
+#from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
 import os
 
 from huggingface_hub import login
