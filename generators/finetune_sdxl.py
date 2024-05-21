@@ -121,7 +121,9 @@ class FineTune_Sdxl:
                 self.actual_label=label
                 self.pipe.load_lora_weights(self.models[label],token=hf_token)
         
-            prompts=prompts.replace(label,"tok")
+            for index,text in enumerate(prompts):
+                text=text.replace(label,"tok")
+                prompts[index]=text
 
             images = self.pipe(
             prompts,
