@@ -54,4 +54,4 @@ class SDXLLightiningGenerator:
 
         refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5).images
 
-        return images
+        return refined_output
