@@ -1,4 +1,5 @@
 import torchvision.transforms as transforms
+import torchvision
 import torch
 from PIL import Image
 from .base import DatasetGenerator

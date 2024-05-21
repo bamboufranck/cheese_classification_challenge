@@ -3,6 +3,7 @@ from tqdm import tqdm
 import torch
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel
+import torchvision.transforms as transforms
 
 class DatasetGenerator:
     def __init__(
