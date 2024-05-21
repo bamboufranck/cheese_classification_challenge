@@ -91,7 +91,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
        
         for label in labels_names:
             prompts[label]=[]
-            #map_images[label]=[]
+            map_images[label]=[]
             prompts[label].append({
                     "prompt": f"an image of {label} cheese",
                     "num_images": self.num_images_per_label,
@@ -112,9 +112,6 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             map_images[maping[valeur_label]].append(image)
             image = to_pil(image)
 
-            if(i==50):
-                i=20000
-                break
             
             # blip
         
