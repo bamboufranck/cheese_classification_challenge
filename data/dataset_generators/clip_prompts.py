@@ -101,6 +101,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
        
 
         for i,batch in tqdm(enumerate(val_data),desc='generation'):
+            print("numbers of tours", i)
             image, label = batch
             valeur_label = label[0].item()
             image = image.squeeze(0)
@@ -153,9 +154,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
     
-        del blip_model
+        #del blip_model
 
-        #del model
+        del model
 
         torch.cuda.empty_cache()
 
