@@ -3,6 +3,10 @@ from diffusers import (
     DiffusionPipeline,
     EulerDiscreteScheduler,
 )
+from diffusers import (
+    StableDiffusionXLPipeline,
+    UNet2DConditionModel,
+)
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
 import os 
@@ -57,9 +61,6 @@ class FineTune_Sdxl:
             "TÊTE DE MOINES": "Franck19/tetedemoine",
             "FROMAGE FRAIS": "Franck19/fromageFrais"
         }
-
-
-        self.repo_base = "ByteDance/SDXL-Lightning"
         base = "stabilityai/stable-diffusion-xl-base-1.0"
 
         self.actual_label=""
@@ -83,7 +84,27 @@ class FineTune_Sdxl:
         self.guidance_scale = 0
 
 
-        self.pipe.load_lora_weights(self.repo_base)
+
+        base = "stabilityai/stable-diffusion-xl-base-1.0"
+        repo = "ByteDance/SDXL-Lightning"
+        ckpt = "sdxl_lightning_4step_unet.safetensors"
+
+        unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
+            device, torch.float16
+        )
+        unet.load_state_dict(load_file(hf_hub_download(repo, ckpt), device=device))
+        self.pipe1 = StableDiffusionXLPipeline.from_pretrained(
+            base, unet=unet, torch_dtype=torch.float16, variant="fp16"
+        ).to(device)
+        self.pipe1.scheduler = EulerDiscreteScheduler.from_config(
+            self.pipe1.scheduler.config, timestep_spacing="trailing"
+        )
+        self.pipe1.set_progress_bar_config(disable=True)
+        if use_cpu_offload:
+            self.pipe1.enable_sequential_cpu_offload()
+        
+
+
 
          # refiner 
        
@@ -100,14 +121,19 @@ class FineTune_Sdxl:
         
             prompts=prompts.replace(label,"tok")
 
-        else:
-            self.pipe.load_lora_weights(self.repo_base)
-
-        images = self.pipe(
+            images = self.pipe(
             prompts,
             num_inference_steps=self.num_inference_steps,
             guidance_scale=self.guidance_scale,
         ).images
+
+        else:
+            images = self.pipe1(
+            prompts,
+            num_inference_steps=self.num_inference_steps,
+            guidance_scale=self.guidance_scale,
+        ).images
+            
 
         refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5)
         refined_image = refined_output.images[0]
