@@ -111,6 +111,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             image = image.squeeze(0)
             map_images[maping[valeur_label]].append(image)
             image = to_pil(image)
+
+            if(i==50):
+                i=20000
+                break
             
             # blip
         

@@ -119,12 +119,14 @@ class FineTune_Sdxl:
         if label in self.models:
             if label!=self.actual_label:
                 self.actual_label=label
+                print("load")
                 self.pipe.load_lora_weights(self.models[label],token=hf_token)
         
             for index,text in enumerate(prompts):
                 text=text.replace(label,"tok")
                 prompts[index]=text
 
+            print("start of generation")
             images = self.pipe(
             prompts,
             num_inference_steps=self.num_inference_steps,
@@ -132,17 +134,21 @@ class FineTune_Sdxl:
         ).images
 
         else:
+            print("start of generation")
             images = self.pipe1(
             prompts,
             num_inference_steps=self.num_inference_steps,
             guidance_scale=self.guidance_scale,
         ).images
             
+        #print("rafinage")
+        #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5)
+        #refined_image = refined_output.images[0]
 
-        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5)
-        refined_image = refined_output.images[0]
+        print("end generation")
 
-        return refined_image
+        #return refined_image
+        return images
 
 
         
