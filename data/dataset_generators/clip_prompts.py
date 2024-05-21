@@ -72,7 +72,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         
         
         
-        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32).to(device)
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32)
         processor = AutoProcessor.from_pretrained(model_id)
 
     
