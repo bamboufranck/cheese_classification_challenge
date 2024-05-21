@@ -80,7 +80,6 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         processor = LlavaNextProcessor.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf")
         model = LlavaNextForConditionalGeneration.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf", torch_dtype=torch.float16, low_cpu_mem_usage=True) 
-        model.to(device)
         prompt = "[INST] <image>\nWhat is shown in this image? [/INST]"
 
 
@@ -158,7 +157,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             # llava 
           
             
-            inputs = processor(prompt, image, return_tensors="pt").to(device)
+            inputs = processor(prompt, image, return_tensors="pt")
             # autoregressively complete prompt
             output = model.generate(**inputs, max_new_tokens=100)
             description=processor.decode(output[0], skip_special_tokens=True)
