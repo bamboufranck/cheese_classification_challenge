@@ -69,7 +69,7 @@ class FineTune_Sdxl:
 
         self.pipe = DiffusionPipeline.from_pretrained(
             base, torch_dtype=torch.float16, variant="fp16",
-        )
+        ).to(device,torch.float16)
 
         
 
@@ -82,7 +82,7 @@ class FineTune_Sdxl:
         if use_cpu_offload:
             self.pipe.enable_sequential_cpu_offload()
 
-        self.num_inference_steps = 50
+        self.num_inference_steps = 40
         self.guidance_scale = 0
 
 
@@ -141,14 +141,14 @@ class FineTune_Sdxl:
             guidance_scale=self.guidance_scale,
         ).images
             
-        #print("rafinage")
-        #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=7.5)
-        #refined_image = refined_output.images[0]
+        print("rafinage")
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
+        refined_image = refined_output.images[0]
 
         print("end generation")
 
-        #return refined_image
-        return images
+        return refined_image
+        #return images
 
 
         
