@@ -36,6 +36,7 @@ class FineTune_Sdxl:
     ):
         self.models = {
             "BRIE DE MELUN": "Franck19/brie",
+            "SAINT-FÉLICIEN": "Franck19/saintfeli",
             "CAMEMBERT": "Franck19/camembert",
             "EPOISSES": "Franck19/epoisses",
             "FOURME D’AMBERT": "Franck19/fourme",
@@ -59,7 +60,8 @@ class FineTune_Sdxl:
             "GRUYÈRE": "Franck19/gruyere",
             "VACHERIN": "Franck19/vacherin",
             "TÊTE DE MOINES": "Franck19/tetedemoine",
-            "FROMAGE FRAIS": "Franck19/fromageFrais"
+            "FROMAGE FRAIS": "Franck19/fromageFrais",
+            "REBLOCHON": "Franck19/reblochon"
         }
         base = "stabilityai/stable-diffusion-xl-base-1.0"
 
