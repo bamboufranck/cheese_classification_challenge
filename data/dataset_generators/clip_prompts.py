@@ -77,7 +77,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         #llava
 
-        prompt = "<|user|>\n<image>\nDescribe the image, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt = "<|user|>\n<image>\nDescribe the image, focusing primarily on the cheese and its surroundings,its location.<|end|>\n<|assistant|>\n"
         model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16, low_cpu_mem_usage=True).to(device)
         processor = AutoProcessor.from_pretrained(model_id)
 
