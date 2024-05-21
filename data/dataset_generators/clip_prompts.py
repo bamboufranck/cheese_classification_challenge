@@ -4,8 +4,6 @@ from PIL import Image
 from .base import DatasetGenerator
 import transformers
 from transformers import AutoProcessor, LlavaForConditionalGeneration
-
-from transformers import LlavaNextProcessor, LlavaNextForConditionalGeneration
 from tqdm import tqdm
 
 
@@ -57,7 +55,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
     def create_prompts(self, labels_names,val_data,maping):
 
         #model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
-        model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
+        model_id = "xtuner/llava-phi-3-mini-hf"
+        
 
 
 
@@ -78,25 +77,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         #llava
 
-        processor = LlavaNextProcessor.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf")
-        model = LlavaNextForConditionalGeneration.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf", torch_dtype=torch.float16, low_cpu_mem_usage=True) 
-        prompt = "[INST] <image>\nWhat is shown in this image? [/INST]"
-
-
-
-        #prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nDescribe the image?<|eot_id|>"
-        # "<|start_header_id|>assistant<|end_header_id|>\n\n")
-        #model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32).to(device)
-        #processor = AutoProcessor.from_pretrained(model_id)
-
-
-       
-
-
-
-
-    
-       
+        prompt = "<|user|>\n<image>\nWhat are these?<|end|>\n<|assistant|>\n"
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16, low_cpu_mem_usage=True).to(device)
+        processor = AutoProcessor.from_pretrained(model_id)
 
 
 
@@ -155,23 +138,12 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
 
             # llava 
-          
-            
-            inputs = processor(prompt, image, return_tensors="pt")
-            # autoregressively complete prompt
-            output = model.generate(**inputs, max_new_tokens=100)
-            description=processor.decode(output[0], skip_special_tokens=True)
+
+            inputs = processor(prompt,image, return_tensors='pt').to(0, torch.float16)
+            output = model.generate(**inputs, max_new_tokens=100, do_sample=False)
+            description=processor.decode(output[0][2:], skip_special_tokens=True)
             description=correct(description,f" A {maping[valeur_label]} cheese")
 
-
-
-
-
-            #output = model.generate(**inputs, max_new_tokens=100, do_sample=False)
-            #description=processor.decode(output[0][2:], skip_special_tokens=True)
-            #description=correct(description,f" A {maping[valeur_label]} cheese")
-            
-        
 
             print(description)
             prompts[maping[valeur_label]].append(
@@ -187,7 +159,6 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
     
         #del blip_model
-
         del model
         #del pipeline
 
