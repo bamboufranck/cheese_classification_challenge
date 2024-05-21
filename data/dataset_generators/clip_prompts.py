@@ -128,7 +128,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             description=  f" A {maping[valeur_label]} cheese," + generated_text
 
 
-            description=pipeline(text, max_length=100, num_return_sequences=1)[0]['generated_text']
+            description=pipeline(text, max_length=100, num_return_sequences=1,truncation=True)[0]['generated_text']
 
         
 
