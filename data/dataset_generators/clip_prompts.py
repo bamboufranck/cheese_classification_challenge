@@ -73,9 +73,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
         #llava
-        prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
+        prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nDescribe the image?<|eot_id|>"
          "<|start_header_id|>assistant<|end_header_id|>\n\n")
-        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32)
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32).to(device)
         processor = AutoProcessor.from_pretrained(model_id)
 
     
@@ -141,8 +141,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
           
             
             inputs = processor(prompt, image, return_tensors='pt')
-            output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
+            output = model.generate(**inputs, max_new_tokens=100, do_sample=False)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
+            description=correct(description,f" A {maping[valeur_label]} cheese")
             
         
 
