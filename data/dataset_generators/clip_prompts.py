@@ -6,6 +6,9 @@ import transformers
 from transformers import AutoProcessor, LlavaForConditionalGeneration
 from tqdm import tqdm
 
+
+import json
+
 # for blip
 from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
 import os
@@ -19,9 +22,7 @@ if hf_token is None:
 
 # Authentifier avec Hugging Face
 login(token=hf_token)
-model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
 
-#model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
 
 
 def correct(text,key_word):
@@ -53,28 +54,29 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
     def create_prompts(self, labels_names,val_data,maping):
 
+        #model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+        model_id = "xtuner/llava-llama-3-8b-v1_1-transformers"
+
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
        
-        
-        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        #blip
+        #blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+        #blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
     
 
     
     
-        pipeline = transformers.pipeline("text-generation",model=model_id,tokenizer=model_id,model_kwargs={"torch_dtype": torch.bfloat16})
-    
-        
+        # llama
+        #pipeline = transformers.pipeline("text-generation",model=model_id,tokenizer=model_id,model_kwargs={"torch_dtype": torch.bfloat16})
 
-        #prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
-         # "<|start_header_id|>assistant<|end_header_id|>\n\n")
-        
-        
-        
-        #model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32)
-        #processor = AutoProcessor.from_pretrained(model_id)
+
+        #llava
+        prompt = ("<|start_header_id|>user<|end_header_id|>\n\n<image>\nWhat are these?<|eot_id|>"
+         "<|start_header_id|>assistant<|end_header_id|>\n\n")
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float32)
+        processor = AutoProcessor.from_pretrained(model_id)
 
     
        
@@ -111,7 +113,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
             # blip
         
-            
+            """""
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
             pixel_values = inputs.pixel_values
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
@@ -119,16 +121,17 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_text=generated_caption.split("\n")[0]
             generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
             description=f" A {maping[valeur_label]} cheese," + generated_text
-
+            """""
         
 
             # llama
         
-            text="add somes adjectives and some precisions for the following description:" + generated_text 
-            description=  f" A {maping[valeur_label]} cheese," + generated_text
+            #text="add somes adjectives and some precisions for the following description:" + generated_text 
+            #description=  f" A {maping[valeur_label]} cheese," + generated_text
 
 
-            description=pipeline(text, max_length=100, num_return_sequences=1,truncation=True)[0]['generated_text']
+            #description=pipeline(text, max_length=100, num_return_sequences=1,truncation=True)[0]['generated_text']
+            
 
         
 
@@ -137,13 +140,13 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             # llava 
           
             
-            #inputs = processor(prompt, image, return_tensors='pt')
-            #output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
-            #description=processor.decode(output[0][2:], skip_special_tokens=True)
+            inputs = processor(prompt, image, return_tensors='pt')
+            output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
+            description=processor.decode(output[0][2:], skip_special_tokens=True)
             
         
 
-            
+            print(description)
             prompts[maping[valeur_label]].append(
                 {
                     "prompt": description,
@@ -151,17 +154,22 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
                 }
             )
 
+
            
 
 
     
-        del blip_model
+        #del blip_model
 
-        #del model
+        del model
         #del pipeline
 
         torch.cuda.empty_cache()
 
         print("end of generation")
+
+        file_path = 'prompts_output.txt' 
+        with open(file_path, 'w') as file:
+            json.dump(prompts, file, indent=4)
        
         return prompts,map_images
