@@ -1,10 +1,10 @@
 defaults:
   - image_generator: finetune_sdxl
-  - dataset_generator: clip_prompts
+  - dataset_generator: clip1_prompts
 
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
-batch_size: 16
+batch_size: 4
 
 
 get_val:
