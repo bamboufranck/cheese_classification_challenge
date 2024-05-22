@@ -121,14 +121,14 @@ class FineTune_Sdxl:
             guidance_scale=self.guidance_scale,
         ).images
             
-        #print("rafinage")
-        #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
-        #refined_image = refined_output.images[0]
+        print("rafinage")
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
+        refined_image = refined_output.images[0]
 
         print("end generation")
 
-        #return refined_image
-        return images
+        return refined_image
+        #return images
 
 
         
