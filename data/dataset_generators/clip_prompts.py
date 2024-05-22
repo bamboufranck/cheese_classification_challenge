@@ -11,7 +11,7 @@ from tqdm import tqdm
 import json
 
 #for blip
-from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
+#from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
 import os
 
 from huggingface_hub import login
@@ -65,8 +65,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
        
         #blip
-        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        #blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+        #blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
 
     
 
@@ -78,9 +78,9 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         #llava
 
-        #prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese and its surroundings, its location.<|end|>\n<|assistant|>\n"
-        #model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
-        #processor = AutoProcessor.from_pretrained(model_id)
+        prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese and its surroundings, its location.<|end|>\n<|assistant|>\n"
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
+        processor = AutoProcessor.from_pretrained(model_id)
 
 
 
@@ -115,7 +115,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             
             # blip
         
-            
+            """""
             inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
             pixel_values = inputs.pixel_values
             generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
@@ -123,6 +123,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             generated_text=generated_caption.split("\n")[0]
             generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
             description=f" A {maping[valeur_label]} cheese," + generated_text
+            """""
             
         
 
@@ -141,14 +142,14 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
             # llava 
 
-            """""
+          
             inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
             output = model.generate(**inputs, max_new_tokens=60, do_sample=False)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
             j=description.find(".")
             description=description[j+1:]
             description=correct(description,f" A {maping[valeur_label]} cheese")
-            """""
+          
 
 
             print(description)
