@@ -25,6 +25,7 @@ class SDXLLightiningGenerator:
             device, torch.float16
         )
         unet.load_state_dict(load_file(hf_hub_download(repo, ckpt), device=device))
+        
         self.pipe = StableDiffusionXLPipeline.from_pretrained(
             base, unet=unet, torch_dtype=torch.float16, variant="fp16"
         ).to(device)
