@@ -63,7 +63,10 @@ class FineTune_Sdxl:
             "FROMAGE FRAIS": "Franck19/fromageFrais",
             "REBLOCHON": "Franck19/reblochon",
             "PARMESAN": "Franck19/parmesan",
-            "POULIGNY SAINT- PIERRE": "Franck19/pouligny"
+            "POULIGNY SAINT- PIERRE": "Franck19/pouligny",
+            "PECORINO": "Franck19/pecorino",
+            "NEUFCHATEL": "Franck19/neufchatel",
+            "MUNSTER": "Franck19/munster"
 
         }
         base = "stabilityai/stable-diffusion-xl-base-1.0"
