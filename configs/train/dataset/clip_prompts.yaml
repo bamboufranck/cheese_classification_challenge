@@ -4,8 +4,8 @@ defaults:
 
 name: clip_prompts
 num_classes: 37
-batch_size: 4
+batch_size: 32
 num_workers: 6
-train_path: ${data_dir}/train/clip1_prompts
+train_path: ${data_dir}/train/clip_prompts
 real_images_val_path: ${data_dir}/val
 test_path: ${data_dir}/test
