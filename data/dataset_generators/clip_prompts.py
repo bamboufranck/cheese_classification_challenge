@@ -165,8 +165,8 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
 
     
-        del blip_model
-        #del model
+        #del blip_model
+        del model
         #del pipeline
 
         torch.cuda.empty_cache()
