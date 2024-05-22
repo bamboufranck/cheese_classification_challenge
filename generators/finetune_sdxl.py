@@ -105,7 +105,7 @@ class FineTune_Sdxl:
             for index,text in enumerate(prompts):
                 text=text.replace(label,"tok")
                 prompts[index]=text
-            print(prompts[0])
+           
 
             print("start of generation")
             images = self.pipe(
