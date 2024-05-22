@@ -105,6 +105,7 @@ class FineTune_Sdxl:
             for index,text in enumerate(prompts):
                 text=text.replace(label,"tok")
                 prompts[index]=text
+            print(prompts[0])
 
             print("start of generation")
             images = self.pipe(
@@ -123,7 +124,7 @@ class FineTune_Sdxl:
             
         print("rafinage")
         refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
-        refined_image = refined_output.images[0]
+        refined_image = refined_output.images
 
         print("end generation")
 
