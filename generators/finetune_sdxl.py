@@ -70,9 +70,9 @@ class FineTune_Sdxl:
 
         self.actual_label=""
 
-        #self.pipe = DiffusionPipeline.from_pretrained(base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
+        self.pipe = DiffusionPipeline.from_pretrained(base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
 
-        self.pipe=DiffusionPipeline.from_pretrained("SG16222/Realistic_Vision_V1.4", torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
+        #self.pipe=DiffusionPipeline.from_pretrained("SG16222/Realistic_Vision_V1.4", torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
 
         
 
