@@ -1,5 +1,5 @@
 defaults:
-  - image_generator: finetune_sdxl
+  - image_generator: sdxl_lightning 
   - dataset_generator: clip_prompts
 
 data_dir: ${root_dir}/dataset
