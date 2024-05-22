@@ -66,7 +66,8 @@ class FineTune_Sdxl:
             "POULIGNY SAINT- PIERRE": "Franck19/pouligny",
             "PECORINO": "Franck19/pecorino",
             "NEUFCHATEL": "Franck19/neufchatel",
-            "MUNSTER": "Franck19/munster"
+            "MUNSTER": "Franck19/munster",
+            "OSSAU- IRATY":"Franck19/ossau"
 
         }
         base = "stabilityai/stable-diffusion-xl-base-1.0"
@@ -88,7 +89,7 @@ class FineTune_Sdxl:
         if use_cpu_offload:
             self.pipe.enable_sequential_cpu_offload()
 
-        self.num_inference_steps = 20
+        self.num_inference_steps = 30
         self.guidance_scale = 0
 
          # refiner 
@@ -126,13 +127,13 @@ class FineTune_Sdxl:
         ).images
             
         print("rafinage")
-        #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
-        #refined_image = refined_output.images
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
+        refined_image = refined_output.images
 
         print("end generation")
 
-        #return refined_image
-        return images
+        return refined_image
+        #return images
 
 
         
