@@ -1,5 +1,5 @@
 _target_: data.dataset_generators.clip_prompts.ClipPromptsDatasetGenerator
 generator: ${image_generator}
 batch_size: ${batch_size}
-output_dir: ${data_dir}/train/clip_prompts
+output_dir: ${data_dir}/train/clip1_prompts
 num_images_per_label: 4
