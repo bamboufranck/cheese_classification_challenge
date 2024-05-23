@@ -5,6 +5,8 @@ defaults:
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
 batch_size: 2
+label: "MORBIER"
+
 
 
 get_val:

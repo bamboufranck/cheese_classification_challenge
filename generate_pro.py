@@ -9,7 +9,8 @@ def generate(cfg):
     dataset_generator = hydra.utils.instantiate(cfg.dataset_generator)
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
-    label="MOTHAIS"
+    label=hydra.utils.instantiate(cfg.label)
+
 
     val_loaders,maping  = valmodule.val_real_dataloader()
 
