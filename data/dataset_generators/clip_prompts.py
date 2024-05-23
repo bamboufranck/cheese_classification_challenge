@@ -149,7 +149,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
             j=description.find(".")
             description=description[j+1:]
             description=correct(description,f" A {maping[valeur_label]} cheese")
-            description=+f"An image of a {maping[valeur_label]} cheese," + description
+            description=f"An image of a {maping[valeur_label]} cheese," + description
           
 
 
