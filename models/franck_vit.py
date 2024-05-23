@@ -75,7 +75,6 @@ class FranckVit(nn.Module):
         x=x.to(device)
 
         h=x
-
         image=denormalize(h)
         x= self.backbone(x)
 
@@ -85,23 +84,23 @@ class FranckVit(nn.Module):
 
         features_extractor_text_list = []
         # Traitement image par image pour la génération de texte
+        #images=img.unsqueeze(0)
     
-        for img in image:
-            pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
-            generated_ids = self.model_text.generate(pixel_values)
-            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_new_tokens=25)[0]
+        #for img in image:
+        pixel_values = self.processor_text(images=image, return_tensors="pt").pixel_values.to(device)
+        generated_ids = self.model_text.generate(pixel_values)
+        generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_new_tokens=25)[0]
             
-            encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
-            output = self.text_encoder(**encoded_input)
-            features_text = output.last_hidden_state[:, 0, :]
-            features_extractor_text_list.append(features_text.squeeze(0))
+        encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
+        output = self.text_encoder(**encoded_input)
+        features_text = output.last_hidden_state[:, 0, :]
+        features_extractor_text_list.append(features_text.squeeze(0))
 
 
         
-        print(x.shape)
+       
         
         features_extractor_text = torch.stack(features_extractor_text_list).to(device)
-        print(features_extractor_text.shape)
         combined_features = torch.cat([x, features_extractor_text], dim=1)
 
        

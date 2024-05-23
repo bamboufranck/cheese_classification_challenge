@@ -92,7 +92,7 @@ class FineTune_Sdxl:
         if use_cpu_offload:
             self.pipe.enable_sequential_cpu_offload()
 
-        self.num_inference_steps = 80
+        self.num_inference_steps = 40
         self.guidance_scale = 0
 
          # refiner 
@@ -137,7 +137,7 @@ class FineTune_Sdxl:
             
         print("rafinage")
         
-        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=50, guidance_scale=0)
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
         refined_image = refined_output.images
        
 
