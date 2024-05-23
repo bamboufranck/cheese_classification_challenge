@@ -8,6 +8,9 @@ from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+
 
 # Définition des transformations de base sans normalisation
 
@@ -69,7 +72,7 @@ class FranckVit(nn.Module):
  
 
     def forward(self, x):
-
+        x=x.to(device)
         image=denormalize(x)
         x= self.backbone(x)
 
@@ -77,17 +80,17 @@ class FranckVit(nn.Module):
         # Traitement image par image pour la génération de texte
     
         for img in image:
-            pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values
+            pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
             generated_ids = self.model_text.generate(pixel_values)
             generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_length=20)[0]
             
-            encoded_input = self.tokenizer(generated_text, return_tensors='pt')
+            encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
             output = self.text_encoder(**encoded_input)
             features_text = output.last_hidden_state[:, 0, :]
             features_extractor_text_list.append(features_text.squeeze(0))
             
         
-        features_extractor_text = torch.stack(features_extractor_text_list)
+        features_extractor_text = torch.stack(features_extractor_text_list).to(device)
         combined_features = torch.cat([image, features_extractor_text], dim=1)
 
         predictions = self.classifier1(combined_features)
