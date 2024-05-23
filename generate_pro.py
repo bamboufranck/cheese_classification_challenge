@@ -9,7 +9,7 @@ def generate(cfg):
     dataset_generator = hydra.utils.instantiate(cfg.dataset_generator)
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
-    label='BRIE DE MELUN'
+    label="BRIE DE MELUN"
 
     val_loaders,maping  = valmodule.val_real_dataloader()
 
