@@ -16,7 +16,8 @@ def generate(cfg):
         labels = f.readlines()
         labels = [label.strip() for label in labels]
 
-    print(label)
+    print(labels)
+    print("mon label",label)
 
     dataset_generator.generate(label,val_loaders,maping)
 
