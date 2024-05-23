@@ -73,7 +73,7 @@ class DinoV2Finetune(nn.Module):
         """""
 
     def forward(self, x):
-        image= self.backbone(x)
+        x= self.backbone(x)
         #x = self.dropout(x)
         #x = self.batch_norm(x)
         x = self.classifier(x)

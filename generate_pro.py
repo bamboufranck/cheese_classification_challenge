@@ -11,10 +11,7 @@ def generate(cfg):
 
     label="GRUYÈRE"
 
-   
 
-    backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vitb14_reg")
-    print("dim",backbone.num_features)
 
 
     val_loaders,maping  = valmodule.val_real_dataloader()
