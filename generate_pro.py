@@ -12,6 +12,11 @@ def generate(cfg):
     label="BRIE DE MELUN"
 
     val_loaders,maping  = valmodule.val_real_dataloader()
+    with open(cfg.labels_file, "r") as f:
+        labels = f.readlines()
+        labels = [label.strip() for label in labels]
+
+    print(label)
 
     dataset_generator.generate(label,val_loaders,maping)
 
