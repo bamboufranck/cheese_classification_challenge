@@ -9,10 +9,10 @@ def generate(cfg):
     dataset_generator = hydra.utils.instantiate(cfg.dataset_generator)
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
-    label="BRIE DE MELUN"
+    label="MOTHAIS"
 
     val_loaders,maping  = valmodule.val_real_dataloader()
-    
+
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]

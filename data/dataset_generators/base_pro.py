@@ -181,10 +181,60 @@ class DatasetGeneratorFromage:
         to_pil = transforms.ToPILImage()
         prompts[lab]=[]
         map_images[lab]=[]
+        
         prompts[lab].append({
                     "prompt": f"an image of {lab} cheese",
                     "num_images": self.num_images_per_label,
                 })
+        
+        prompts[lab].append({
+                    "prompt": f"A rustic wooden platter adorned with a wheel of creamy {lab} cheese , surrounded by fresh grapes, 
+figs, and crusty baguette slices",
+                    "num_images": self.num_images_per_label,
+                })
+        
+        prompts[lab].append({
+                    "prompt": f"Capture the bustling atmosphere of a French market stall, where {lab} cheese is displayed alongside 
+other artisanal cheeses, with handwritten labels and colorful produce",
+                    "num_images": self.num_images_per_label,
+                })
+        
+        prompts[lab].append({
+                    "prompt": f"Show the oozy, velvety texture of a warm slice of {lab} cheese, gently melting onto a slice of 
+toasted sourdough bread",
+                    "num_images": self.num_images_per_label,
+                })
+        
+
+        prompts[lab].append({
+                    "prompt": f"Create an inviting cheeseboard arrangement featuring {lab} cheese, paired with honeycomb, 
+walnuts, and a glass of red wine",
+                    "num_images": self.num_images_per_label,
+                })
+        
+        prompts[lab].append({
+                    "prompt": f"Place a wheel of {lab} cheese on a vintage marble countertop, with antique silverware and a faded 
+French cookbook in the background.",
+                    "num_images": self.num_images_per_label,
+                })
+        
+        prompts[lab].append({
+                    "prompt": f" Picture a sun-dappled picnic blanket in a lush garden, where friends share laughter and slices of {lab} cheese with baguette and raspberry jam.",
+                    "num_images": self.num_images_per_label,
+                })
+        
+
+
+        
+
+        
+         
+        
+        
+        
+
+        
+
             
         
         
