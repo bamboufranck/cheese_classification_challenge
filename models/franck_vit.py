@@ -82,7 +82,7 @@ class FranckVit(nn.Module):
         for img in image:
             pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
             generated_ids = self.model_text.generate(pixel_values)
-            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_length=20)[0]
+            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_new_tokens=25)[0]
             
             encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
             output = self.text_encoder(**encoded_input)
@@ -94,10 +94,6 @@ class FranckVit(nn.Module):
         
         
         features_extractor_text = torch.stack(features_extractor_text_list).to(device)
-
-        print(image.shape)
-        print(features_extractor_text.shape)
-            
         combined_features = torch.cat([x, features_extractor_text], dim=1)
 
        

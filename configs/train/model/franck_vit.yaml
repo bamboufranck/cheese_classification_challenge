@@ -1,7 +1,7 @@
 instance:
   _target_: models.franck_vit.FranckVit
   num_classes: ${dataset.num_classes}
-  frozen: True
+  frozen: False
   unfreeze_last_layer: True
 
 name: FRANCKVIT
