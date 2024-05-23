@@ -7,13 +7,29 @@ from transformers import ViTImageProcessor, ViTModel
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 
-from torchvision import transforms
+
 
 # Définition des transformations de base sans normalisation
 
 # Charger le modèle et l'extracteur de caractéristiques
 #model = ViTForImageClassification.from_pretrained('google/vit-large-patch16-224')
 #feature_extractor = ViTFeatureExtractor.from_pretrained('google/vit-large-patch16-224')
+
+def denormalize(tensor):
+    # Convertit un tenseur normalisé (ImageNet) en un tenseur avec des valeurs entre 0 et 1
+    mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+    std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+    if tensor.is_cuda:
+        mean = mean.cuda()
+        std = std.cuda()
+
+    tensor = tensor * std + mean  # Appliquer l'inverse de la normalisation
+    tensor = torch.clamp(tensor, 0.0, 1.0)  # Clamp les valeurs pour s'assurer qu'elles sont entre 0 et 1
+    return tensor
+
+
+
+
 
 class FranckVit(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
@@ -33,13 +49,6 @@ class FranckVit(nn.Module):
 
 
 
-        #transformations 
-        self.transforms=base_transform = transforms.Compose([
-transforms.Resize((224, 224)),  # Adaptez la taille si nécessaire
-    transforms.ToTensor()           # Convertit les valeurs de pixel en [0, 1]
-])
-
-
 
 
         # classifieur
@@ -56,7 +65,7 @@ transforms.Resize((224, 224)),  # Adaptez la taille si nécessaire
         #x=x.squeeze(0)
         #x=to_pil(x)
 
-        image=self.transforms(x)
+        image=denormalize(x)
         inputs = self.processor_image(images=image, return_tensors="pt")
         outputs = self.model_image(**inputs)
         features_extractor_image = outputs.last_hidden_state[:, 0]
