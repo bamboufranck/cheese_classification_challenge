@@ -98,7 +98,7 @@ class FineTune_Sdxl:
          # refiner 
        
         refiner_model_id = "stabilityai/stable-diffusion-xl-refiner-1.0"
-        #self.refiner_pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to(device)
+        self.refiner_pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to(device)
 
     def generate(self, prompts,label):
 
@@ -135,16 +135,16 @@ class FineTune_Sdxl:
             guidance_scale=self.guidance_scale,
         ).images
             
-        #print("rafinage")
+        print("rafinage")
         
-        #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
-        #refined_image = refined_output.images
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
+        refined_image = refined_output.images
        
 
         print("end generation")
 
-        #return refined_image
-        return images
+        return refined_image
+        #return images
 
 
         
