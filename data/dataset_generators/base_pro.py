@@ -145,7 +145,7 @@ class DatasetGeneratorFromage:
         torch.cuda.empty_cache()
     
 
-    def create_prompts(self, label,val_data,maping):
+    def create_prompts(self, lab,val_data,maping):
 
         #model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
         model_id = "xtuner/llava-phi-3-mini-hf"
@@ -198,9 +198,9 @@ class DatasetGeneratorFromage:
             image, label = batch
             valeur_label = label[0].item()
             image = image.squeeze(0)
-            print(label)
+            print(lab)
             print(maping[valeur_label])
-            if(maping[valeur_label]==label):
+            if(maping[valeur_label]==lab):
                 map_images[maping[valeur_label]].append(image)
                 image = to_pil(image)
 
