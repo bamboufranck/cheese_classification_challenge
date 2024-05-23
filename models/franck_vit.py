@@ -98,7 +98,7 @@ class FranckVit(nn.Module):
         print(image.shape)
         print(features_extractor_text.shape)
             
-        combined_features = torch.cat([image, features_extractor_text], dim=1)
+        combined_features = torch.cat([x, features_extractor_text], dim=1)
 
        
 
