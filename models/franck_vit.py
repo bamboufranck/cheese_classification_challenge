@@ -78,7 +78,7 @@ class FranckVit(nn.Module):
         for img in image:
             pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
             generated_ids = self.model_text.generate(pixel_values)
-            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True)[0]
+            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_length=20)[0]
             
             encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
             output = self.text_encoder(**encoded_input)
