@@ -11,6 +11,8 @@ def generate(cfg):
 
     label=hydra.utils.instantiate(cfg.label)
 
+    print(label)
+
 
     val_loaders,maping  = valmodule.val_real_dataloader()
 
