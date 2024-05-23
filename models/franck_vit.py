@@ -55,8 +55,8 @@ class FranckVit(nn.Module):
         #self.classifier = nn.Linear(1536, num_classes)
         #self.relu=nn.ReLU()
         
-        self.classifier1= nn.Linear(1536, 768).to(device) # Ajuster selon les dimensions combinées
-        self.classifier2= nn.Linear(768, num_classes).to(device)
+        self.classifier1= nn.Linear(1536, 768) # Ajuster selon les dimensions combinées
+        self.classifier2= nn.Linear(768, num_classes)
  
 
     def forward(self, x):
