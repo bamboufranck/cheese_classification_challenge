@@ -69,7 +69,8 @@ class FineTune_Sdxl:
             "MUNSTER": "Franck19/munster",
             "OSSAU- IRATY":"Franck19/ossau",
             "MOTHAIS": "Franck19/mothais",
-            "MORBIER": "Franck19/morbier"
+            "MORBIER": "Franck19/morbier",
+            "MOZZARELLA" :"Franck19/mozarella"
 
         }
         base = "stabilityai/stable-diffusion-xl-base-1.0"

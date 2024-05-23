@@ -9,20 +9,17 @@ def generate(cfg):
     dataset_generator = hydra.utils.instantiate(cfg.dataset_generator)
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
-    label="MORBIER"
+    label=" FROMAGE FRAIS"
 
-    print(label)
+   
+
+    backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vitb14_reg")
+    print("dim",backbone.num_features)
 
 
     val_loaders,maping  = valmodule.val_real_dataloader()
 
-    with open(cfg.labels_file, "r") as f:
-        labels = f.readlines()
-        labels = [label.strip() for label in labels]
-
-    #print(labels)
-    #print("mon label",label.strip())
-
+   
     dataset_generator.generate(label.strip(),val_loaders,maping)
 
 
