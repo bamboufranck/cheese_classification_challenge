@@ -87,6 +87,7 @@ class FranckVit(nn.Module):
             
         
         features_extractor_text = torch.stack(features_extractor_text_list)
+        print(features_extractor_image.shape)
 
        
 
