@@ -48,6 +48,7 @@ class DatasetGeneratorFromage:
         generator,
         batch_size=1,
         output_dir="dataset/train",
+          num_images_per_label=10
     ):
         """
         Args:
@@ -58,6 +59,7 @@ class DatasetGeneratorFromage:
         self.generator = generator
         self.batch_size = batch_size
         self.output_dir = output_dir
+        self.num_images_per_label = num_images_per_label
 
     def generate(self, label,val_data,maping):
 
