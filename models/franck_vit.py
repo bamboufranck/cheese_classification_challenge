@@ -7,7 +7,7 @@ from transformers import ViTImageProcessor, ViTModel
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 # Définition des transformations de base sans normalisation
 
@@ -35,17 +35,27 @@ class FranckVit(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         # Charger le modèle pré-entraîné pour l'exctraction de features 
-        self.processor_image = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224-in21k')
-        self.model_image= ViTModel.from_pretrained('google/vit-base-patch16-224-in21k').to(device)
+        self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vitb14_reg")
+        #self.backbone= torch.hub.load('google/vit-base-patch16-224-in21k', 'vit_large_patch16_224', pretrained=True)
+        self.backbone.head = nn.Identity()
+        if frozen:
+            for param in self.backbone.parameters():
+                param.requires_grad = False
+            if unfreeze_last_layer:
+                for param in self.backbone.norm.parameters():
+                    param.requires_grad = True
+                for param in self.backbone.blocks[-1].parameters():
+                    param.requires_grad = True
+      
 
 
         # pour la vision de texte sur l'image
         self.processor_text = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten')
-        self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten').to(device)
+        self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')
 
          # pour lencodage de ce texte avec bert
         self.tokenizer= BertTokenizer.from_pretrained('bert-base-uncased')
-        self.text_encoder = BertModel.from_pretrained('bert-base-uncased').to(device)
+        self.text_encoder = BertModel.from_pretrained('bert-base-uncased')
 
 
 
@@ -54,49 +64,34 @@ class FranckVit(nn.Module):
         # classifieur
         #self.classifier = nn.Linear(1536, num_classes)
         #self.relu=nn.ReLU()
-        
         self.classifier1= nn.Linear(1536, 768) # Ajuster selon les dimensions combinées
         self.classifier2= nn.Linear(768, num_classes)
  
 
     def forward(self, x):
-        #to_pil = transforms.ToPILImage()
-        #feature extractor for image
-        #x=x.squeeze(0)
-        #x=to_pil(x)
 
         image=denormalize(x)
-        inputs = self.processor_image(images=image, return_tensors="pt").to(device)
-        outputs = self.model_image(**inputs)
-        features_extractor_image = outputs.last_hidden_state[:, 0]
-
+        x= self.backbone(x)
 
         features_extractor_text_list = []
-
-    # Traitement image par image pour la génération de texte
+        # Traitement image par image pour la génération de texte
     
         for img in image:
-            pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
+            pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values
             generated_ids = self.model_text.generate(pixel_values)
             generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_length=20)[0]
             
-            encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
+            encoded_input = self.tokenizer(generated_text, return_tensors='pt')
             output = self.text_encoder(**encoded_input)
             features_text = output.last_hidden_state[:, 0, :]
             features_extractor_text_list.append(features_text.squeeze(0))
             
         
         features_extractor_text = torch.stack(features_extractor_text_list)
-        #print(features_extractor_image.shape)
-
-       
-
-
-        combined_features = torch.cat([features_extractor_image, features_extractor_text], dim=1)
+        combined_features = torch.cat([image, features_extractor_text], dim=1)
 
         predictions = self.classifier1(combined_features)
         predictions = self.classifier2(predictions)
-
 
         return predictions
 

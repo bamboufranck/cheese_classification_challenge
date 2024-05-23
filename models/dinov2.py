@@ -5,6 +5,19 @@ from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 
 
+def denormalize(tensor):
+    # Convertit un tenseur normalisé (ImageNet) en un tenseur avec des valeurs entre 0 et 1
+    mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+    std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+    if tensor.is_cuda:
+        mean = mean.cuda()
+        std = std.cuda()
+
+    tensor = tensor * std + mean  # Appliquer l'inverse de la normalisation
+    tensor = torch.clamp(tensor, 0.0, 1.0)  # Clamp les valeurs pour s'assurer qu'elles sont entre 0 et 1
+    return tensor
+
+
 
 
 class DinoV2Finetune(nn.Module):
@@ -40,10 +53,9 @@ class DinoV2Finetune(nn.Module):
         self.features_dim = self.backbone.num_features
         #self.dropout = nn.Dropout(0.7)
         #self.batch_norm = nn.BatchNorm1d(self.features_dim)
-        self.classifier= nn.Linear(self.features_dim, num_classes)
-        #self.classifier = nn.Linear(self.features_dim, 768)
         #self.activation = nn.ReLU()
-        #self.classifier1 = nn.Linear(768, num_classes)
+        self.classifier= nn.Linear(self.features_dim, num_classes)
+
 
         """""
 
@@ -83,10 +95,11 @@ class DinoV2Finetune(nn.Module):
         #ADD
 
         """""
+        image=denormalize(x)
         features_extractor_text_list = []
         # Traitement image par image pour la génération de texte
     
-        for img in x:
+        for img in image:
             pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values
             generated_ids = self.model_text.generate(pixel_values)
             generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_length=20)[0]
