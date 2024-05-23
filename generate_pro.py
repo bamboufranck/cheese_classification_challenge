@@ -17,9 +17,9 @@ def generate(cfg):
         labels = [label.strip() for label in labels]
 
     print(labels)
-    print("mon label",label)
+    print("mon label",label.strip())
 
-    dataset_generator.generate(label,val_loaders,maping)
+    dataset_generator.generate(label.strip(),val_loaders,maping)
 
 
 if __name__ == "__main__":
