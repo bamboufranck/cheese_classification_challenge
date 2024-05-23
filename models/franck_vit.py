@@ -83,7 +83,7 @@ class FranckVit(nn.Module):
             encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
             output = self.text_encoder(**encoded_input)
             features_text = output.last_hidden_state[:, 0, :]
-            features_extractor_text_list.append(features_text)
+            features_extractor_text_list.append(features_text.squeeze(0))
             
         
         features_extractor_text = torch.stack(features_extractor_text_list)
