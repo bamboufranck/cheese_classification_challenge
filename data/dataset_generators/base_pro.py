@@ -167,7 +167,7 @@ class DatasetGeneratorFromage:
 
         #prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese and its surroundings, its location.<|end|>\n<|assistant|>\n"
 
-        prompt = "<|user|>\n<image>\nGenerate a detailed description of the visible elements in this image.<|end|>\n<|assistant|>\n"
+        prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
 
         #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"

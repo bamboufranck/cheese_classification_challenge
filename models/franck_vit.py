@@ -74,15 +74,17 @@ class FranckVit(nn.Module):
     def forward(self, x):
         x=x.to(device)
 
-        image=denormalize(x)
-        x= self.backbone(x)
+        #image=denormalize(x)
+        #x= self.backbone(x)
+
+        image_features = self.backbone(denormalize(x))
 
         
 
         features_extractor_text_list = []
         # Traitement image par image pour la génération de texte
     
-        for img in image:
+        for img in image_features:
             pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
             generated_ids = self.model_text.generate(pixel_values)
             generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True,max_new_tokens=25)[0]
