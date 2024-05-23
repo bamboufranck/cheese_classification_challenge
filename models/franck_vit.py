@@ -73,7 +73,7 @@ class FranckVit(nn.Module):
 
 
         # troc for extracting text in the image
-        pixel_values = self.processor_text(images=x, return_tensors="pt").pixel_values.to(device)
+        pixel_values = self.processor_text(images=image, return_tensors="pt").pixel_values.to(device)
         generated_ids = self.model_text.generate(pixel_values)
         generated_text =self.processor_text.batch_decode(generated_ids, skip_special_tokens=True)[0]
  
