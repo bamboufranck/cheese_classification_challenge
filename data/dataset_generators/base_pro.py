@@ -198,6 +198,8 @@ class DatasetGeneratorFromage:
             image, label = batch
             valeur_label = label[0].item()
             image = image.squeeze(0)
+            print(label)
+            print(maping[valeur_label])
             if(maping[valeur_label]==label):
                 map_images[maping[valeur_label]].append(image)
                 image = to_pil(image)
