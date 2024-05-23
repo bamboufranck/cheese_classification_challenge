@@ -7,7 +7,7 @@ from transformers import ViTImageProcessor, ViTModel
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Définition des transformations de base sans normalisation
 
@@ -36,12 +36,12 @@ class FranckVit(nn.Module):
         super().__init__()
         # Charger le modèle pré-entraîné pour l'exctraction de features 
         self.processor_image = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224-in21k')
-        self.model_image= ViTModel.from_pretrained('google/vit-base-patch16-224-in21k')
+        self.model_image= ViTModel.from_pretrained('google/vit-base-patch16-224-in21k').to(device)
 
 
         # pour la vision de texte sur l'image
         self.processor_text = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten')
-        self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')
+        self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten').to(device)
 
          # pour lencodage de ce texte avec bert
         self.tokenizer= BertTokenizer.from_pretrained('bert-base-uncased')
