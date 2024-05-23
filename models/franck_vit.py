@@ -73,8 +73,11 @@ class FranckVit(nn.Module):
 
     def forward(self, x):
         x=x.to(device)
+
         image=denormalize(x)
         x= self.backbone(x)
+
+        
 
         features_extractor_text_list = []
         # Traitement image par image pour la génération de texte
