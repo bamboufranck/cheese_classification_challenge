@@ -89,7 +89,7 @@ class FineTune_Sdxl:
         if use_cpu_offload:
             self.pipe.enable_sequential_cpu_offload()
 
-        self.num_inference_steps = 30
+        self.num_inference_steps = 40
         self.guidance_scale = 0
 
          # refiner 
@@ -109,6 +109,7 @@ class FineTune_Sdxl:
             for index,text in enumerate(prompts):
                 text=text.replace(label,"tok")
                 prompts[index]=text
+                print(prompts[index])
            
 
             print("start of generation")
@@ -127,8 +128,14 @@ class FineTune_Sdxl:
         ).images
             
         print("rafinage")
+        for index,text in enumerate(prompts):
+            text=text.replace("tok",label)
+            prompts[index]=text
+            print(prompts[index])
+        
         refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
         refined_image = refined_output.images
+        print("end of raffinage")
 
         print("end generation")
 
