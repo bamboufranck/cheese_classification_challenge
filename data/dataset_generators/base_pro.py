@@ -179,10 +179,10 @@ class DatasetGeneratorFromage:
         prompts = {}
         map_images={}
         to_pil = transforms.ToPILImage()
-        prompts[label]=[]
-        map_images[label]=[]
-        prompts[label].append({
-                    "prompt": f"an image of {label} cheese",
+        prompts[lab]=[]
+        map_images[lab]=[]
+        prompts[lab].append({
+                    "prompt": f"an image of {lab} cheese",
                     "num_images": self.num_images_per_label,
                 })
             
