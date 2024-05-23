@@ -7,6 +7,10 @@ from transformers import ViTImageProcessor, ViTModel
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 
+from torchvision import transforms
+
+# Définition des transformations de base sans normalisation
+
 # Charger le modèle et l'extracteur de caractéristiques
 #model = ViTForImageClassification.from_pretrained('google/vit-large-patch16-224')
 #feature_extractor = ViTFeatureExtractor.from_pretrained('google/vit-large-patch16-224')
@@ -29,6 +33,14 @@ class FranckVit(nn.Module):
 
 
 
+        #transformations 
+        self.transforms=base_transform = transforms.Compose([
+transforms.Resize((224, 224)),  # Adaptez la taille si nécessaire
+    transforms.ToTensor()           # Convertit les valeurs de pixel en [0, 1]
+])
+
+
+
 
         # classifieur
         #self.classifier = nn.Linear(1536, num_classes)
@@ -43,8 +55,9 @@ class FranckVit(nn.Module):
         #feature extractor for image
         #x=x.squeeze(0)
         #x=to_pil(x)
-        
-        inputs = self.processor_image(images=x, return_tensors="pt")
+
+        image=self.transforms(x)
+        inputs = self.processor_image(images=image, return_tensors="pt")
         outputs = self.model_image(**inputs)
         features_extractor_image = outputs.last_hidden_state[:, 0]
 
