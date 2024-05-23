@@ -137,7 +137,7 @@ class FineTune_Sdxl:
             
         print("rafinage")
         
-        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=40, guidance_scale=0)
+        refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=20, guidance_scale=0)
         refined_image = refined_output.images
        
 
