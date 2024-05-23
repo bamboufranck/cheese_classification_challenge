@@ -96,9 +96,10 @@ class FranckVit(nn.Module):
 
 
         
-        
+        print(x.shape)
         
         features_extractor_text = torch.stack(features_extractor_text_list).to(device)
+        print(features_extractor_text.shape)
         combined_features = torch.cat([x, features_extractor_text], dim=1)
 
        
