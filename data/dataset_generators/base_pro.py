@@ -81,7 +81,7 @@ class DatasetGeneratorFromage:
         m_batch[label]= m_batch[label]/m_batch[label].norm(dim=-1, keepdim=True)
 
 
-        image_id_0 = 0
+        image_id_0 = 98
         for prompt_metadata in labels_prompts[label]:
 
             num_images_per_prompt = prompt_metadata["num_images"]
@@ -220,21 +220,22 @@ class DatasetGeneratorFromage:
                     "num_images": self.num_images_per_label,
                 }
             )
-                
-                return prompts,map_images
+        
+        
+        return prompts,map_images
 
             
             # blip
-        
-            """""
-            inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
-            pixel_values = inputs.pixel_values
-            generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
-            generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-            generated_text=generated_caption.split("\n")[0]
-            generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
-            description=f" A {maping[valeur_label]} cheese," + generated_text
-            """""
+            
+        """"
+        inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
+        pixel_values = inputs.pixel_values
+        generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
+        generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        generated_text=generated_caption.split("\n")[0]
+        generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
+        description=f" A {maping[valeur_label]} cheese," + generated_text
+        """""
             
         
 
