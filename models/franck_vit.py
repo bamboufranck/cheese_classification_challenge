@@ -88,6 +88,10 @@ class FranckVit(nn.Module):
         
         features_extractor_text = torch.stack(features_extractor_text_list)
 
+        print("Image Features Shape:", features_extractor_image.shape)
+        print("Text Features Shape:", features_extractor_text.shape)
+
+
         combined_features = torch.cat([features_extractor_image, features_extractor_text], dim=1)
 
         predictions = self.classifier1(combined_features)
