@@ -71,19 +71,24 @@ class FranckVit(nn.Module):
         features_extractor_image = outputs.last_hidden_state[:, 0]
 
 
+        features_extractor_text_list = []
 
-        # troc for extracting text in the image
-        pixel_values = self.processor_text(images=image, return_tensors="pt").pixel_values.to(device)
-        generated_ids = self.model_text.generate(pixel_values, num_return_sequences=pixel_values.size(0))
-        generated_text =self.processor_text.batch_decode(generated_ids, skip_special_tokens=True)[0]
- 
-        # we encode the text in the image
-        encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
-        output = self.text_encoder(**encoded_input)
-        features_extractor_text= output.last_hidden_state[:, 0]
+    # Traitement image par image pour la génération de texte
+    
+        for img in image:
+            pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
+            generated_ids = self.model_text.generate(pixel_values)
+            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True)[0]
+            
+            encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
+            output = self.text_encoder(**encoded_input)
+            features_text = output.last_hidden_state[:, 0]
+            features_extractor_text_list.append(features_text)
+            
+        
+        features_extractor_text = torch.stack(features_extractor_text_list)
 
         combined_features = torch.cat([features_extractor_image, features_extractor_text], dim=1)
-        #predictions = self.classifier(combined_features)
 
         predictions = self.classifier1(combined_features)
         predictions = self.classifier2(predictions)
