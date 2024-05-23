@@ -67,7 +67,9 @@ class FineTune_Sdxl:
             "PECORINO": "Franck19/pecorino",
             "NEUFCHATEL": "Franck19/neufchatel",
             "MUNSTER": "Franck19/munster",
-            "OSSAU- IRATY":"Franck19/ossau"
+            "OSSAU- IRATY":"Franck19/ossau",
+            "MOTHAIS": "Franck19/mothais",
+            "MORBIER": "Franck19/morbier"
 
         }
         base = "stabilityai/stable-diffusion-xl-base-1.0"
