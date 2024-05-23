@@ -81,7 +81,7 @@ class DatasetGeneratorFromage:
         m_batch[label]= m_batch[label]/m_batch[label].norm(dim=-1, keepdim=True)
 
 
-        image_id_0 = 71
+        image_id_0 = 100
         for prompt_metadata in labels_prompts[label]:
 
             num_images_per_prompt = prompt_metadata["num_images"]

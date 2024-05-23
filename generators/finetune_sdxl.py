@@ -106,8 +106,8 @@ class FineTune_Sdxl:
         if label in self.models:
             if label!=self.actual_label:
                 self.actual_label=label
-                print("load",label)
                 self.pipe.load_lora_weights(self.models[label],token=hf_token)
+                print("load",label)
         
             for index,text in enumerate(prompts):
                 text=text.replace(label,"tok")
