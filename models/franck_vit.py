@@ -88,13 +88,17 @@ class FranckVit(nn.Module):
             output = self.text_encoder(**encoded_input)
             features_text = output.last_hidden_state[:, 0, :]
             features_extractor_text_list.append(features_text.squeeze(0))
+
+
+        
+        print(image.shape)
+        print(features_extractor_text.shape)
             
         
         features_extractor_text = torch.stack(features_extractor_text_list).to(device)
         combined_features = torch.cat([image, features_extractor_text], dim=1)
 
-        print(image.shape)
-        print(features_extractor_text.shape)
+       
 
         predictions = self.classifier1(combined_features)
         predictions = self.classifier2(predictions)
