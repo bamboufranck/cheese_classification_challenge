@@ -80,7 +80,10 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
         #prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese and its surroundings, its location.<|end|>\n<|assistant|>\n"
 
-        prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt = "<|user|>\n<image>\nGenerate a detailed description of the visible elements in this image.<|end|>\n<|assistant|>\n"
+
+
+        #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
         model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
         processor = AutoProcessor.from_pretrained(model_id)
 
@@ -146,7 +149,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
           
             inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
-            output = model.generate(**inputs, max_new_tokens=60, do_sample=False)
+            output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
             j=description.find(".")
             description=description[j+1:]
