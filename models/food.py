@@ -23,6 +23,7 @@ class CheeseClassifier(nn.Module):
     
     def forward(self, x):
         # Assuming x is already preprocessed and ready for the model
+        x=self.processor(x)
         outputs = self.model(pixel_values=x)
         logits = outputs.logits
         return logits
