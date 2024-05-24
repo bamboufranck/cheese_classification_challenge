@@ -2,7 +2,7 @@ _target_: torchvision.transforms.Compose
 transforms:
   - _target_: torchvision.transforms.Resize
     size: [224, 224]
-   _target_: torchvision.transforms.RandAugment
+  - _target_: torchvision.transforms.RandAugment
     num_ops: 2
     magnitude: 9
   - _target_: torchvision.transforms.ToTensor
