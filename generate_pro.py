@@ -9,15 +9,12 @@ def generate(cfg):
     dataset_generator = hydra.utils.instantiate(cfg.dataset_generator)
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
-    label="COMTÉ"
 
-
-
-
-    val_loaders,maping  = valmodule.val_real_dataloader()
-
+    labels=["EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MONT D’OR","MOTHAIS","MOZZARELLA","MUNSTER","NEUFCHATEL","OSSAU- IRATY","PARMESAN","PECORINO","SAINT- FÉLICIEN"]
    
-    dataset_generator.generate(label.strip(),val_loaders,maping)
+    val_loaders,maping  = valmodule.val_real_dataloader()
+    for label in labels:
+        dataset_generator.generate(label.strip(),val_loaders,maping)
 
 
 if __name__ == "__main__":
