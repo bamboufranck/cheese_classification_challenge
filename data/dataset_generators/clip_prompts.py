@@ -149,7 +149,7 @@ class ClipPromptsDatasetGenerator(DatasetGenerator):
 
           
             inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
-            output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
+            output = model.generate(**inputs, max_new_tokens=50, do_sample=True, temperature=0.9, top_k=50)
             description=processor.decode(output[0][2:], skip_special_tokens=True)
             j=description.find(".")
             description=description[j+1:]
