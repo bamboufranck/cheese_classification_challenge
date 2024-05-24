@@ -28,7 +28,7 @@ login(token=hf_token)
 
 
 
-def correct(text,key_word,labels):
+def correct(text,key_word):
 
     bags=["cheese","cheeses","cake","cakes"]
 
