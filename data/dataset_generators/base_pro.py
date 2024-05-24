@@ -67,8 +67,8 @@ class DatasetGeneratorFromage:
         model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
         processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")   # Ajout
 
-        labels_names_with_cheese = [name + " cheese" for name in labels]
-        text_input = processor(text=labels_names_with_cheese, return_tensors="pt", padding=True)
+        #labels_names_with_cheese = [name + " cheese" for name in labels]
+        #text_input = processor(text=labels_names_with_cheese, return_tensors="pt", padding=True)
 
 
         m_batch={}
@@ -80,9 +80,9 @@ class DatasetGeneratorFromage:
 
         labels_prompts,map_images = self.create_prompts(label,val_data,maping)
 
-        #image_val_features=processor(images=torch.stack(map_images[label]), return_tensors="pt")
-        #m_batch[label]=model.get_image_features(**image_val_features)
-        #m_batch[label]= m_batch[label]/m_batch[label].norm(dim=-1, keepdim=True)
+        image_val_features=processor(images=torch.stack(map_images[label]), return_tensors="pt")
+        m_batch[label]=model.get_image_features(**image_val_features)
+        m_batch[label]= m_batch[label]/m_batch[label].norm(dim=-1, keepdim=True)
 
 
         image_id_0 = 0
@@ -106,24 +106,24 @@ class DatasetGeneratorFromage:
                 with torch.no_grad():
                     image_features = model.get_image_features(**image_input) # Ajout
                     image_features = image_features / image_features.norm(dim=-1, keepdim=True)
-                    #similarities = torch.matmul(image_features,  m_batch[label].T)
+                    similarities = torch.matmul(image_features,  m_batch[label].T)
                     
-                    text_features = model.get_text_features(**text_input)  # Ajout # Ajout
+                    #text_features = model.get_text_features(**text_input)  # Ajout # Ajout
 
-                    text_features = text_features / text_features.norm(dim=-1, keepdim=True)  # Ajout
+                    #text_features = text_features / text_features.norm(dim=-1, keepdim=True)  # Ajout
 
-                    similarities = torch.matmul(image_features, text_features.T)  # Ajout #ajout1
-                    predicted_index = similarities.argmax().item()               # Ajout
-                    predicted_category = labels_names_with_cheese[predicted_index] # Ajout
+                    #similarities = torch.matmul(image_features, text_features.T)  # Ajout #ajout1
+                    #predicted_index = similarities.argmax().item()               # Ajout
+                    #predicted_category = labels_names_with_cheese[predicted_index] # Ajout
 
 
 
 
                     ### Ajout avec plutot une similarité avec le val 
-                    #average_similarity = similarities.mean().item()
-                    #print("average similarity", average_similarity)
+                    average_similarity = similarities.mean().item()
+                    print("average similarity", average_similarity)
 
-                if(predicted_category==label+ " cheese"): 
+                if(average_similarity>0.55): 
                     numbers+=1
                     print("save!",numbers)                             # Ajout
                     self.save_images(images, label, image_id_0)            
