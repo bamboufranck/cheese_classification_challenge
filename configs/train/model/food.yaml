@@ -1,5 +1,5 @@
 instance:
-  _target_: models.resnet.ResNetFinetune
+  _target_: models.food.CheeseClassifier
   num_classes: ${dataset.num_classes}
   frozen: True
 
