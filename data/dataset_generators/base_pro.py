@@ -368,7 +368,7 @@ class DatasetGeneratorFromage:
         prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
         prompt2= "<|user|>\n<image>\nInspire you of this image and generate me a prompt in fifty words, which describe primarily the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
 
-        prompts=[prompt1,prompt2]
+        prompts_liste=[prompt1,prompt2]
 
         #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
@@ -389,27 +389,27 @@ class DatasetGeneratorFromage:
             image = image.squeeze(0)
            
             if(maping[valeur_label]==lab):
-                map_images[maping[valeur_label]].append(image)
+                map_images[lab].append(image)
                 image = to_pil(image)
-                #for prompt in prompts:
-                inputs = processor(prompt1,image, return_tensors='pt').to(device, torch.float16)
-                output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
-                description=processor.decode(output[0][2:], skip_special_tokens=True)
+                for prompt in prompts_liste:
+                    inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
+                    output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
+                    description=processor.decode(output[0][2:], skip_special_tokens=True)
 
-                j=description.find(".")
-                description=description[j+1:]
-                description=correct(description,f" A {maping[valeur_label]} cheese")
-                description=f"An image of a {maping[valeur_label]} cheese," + description
-                print(description)
-          
-                prompts[maping[valeur_label]].append(
-                        {
-                            "prompt": description,
-                            "num_images": self.num_images_per_label,
-                        }
-                    )
-        
-        
+                    j=description.find(".")
+                    description=description[j+1:]
+                    description=correct(description,f" {lab} cheese")
+                    description=f"An image of a {lab} cheese," + description
+                    print(description)
+            
+                    prompts[lab].append(
+                            {
+                                "prompt": description,
+                                "num_images": self.num_images_per_label,
+                            }
+                        )
+            
+            
         return prompts,map_images
 
             
