@@ -33,7 +33,7 @@ class FranckVit(nn.Module):
         self.features_dim = self.backbone.config.hidden_size
 
         # pour la vision de texte sur l'image
-        self.processor_text = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten')
+        self.processor_text = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten', do_rescale=False)
         self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')
 
         # pour l'encodage de ce texte avec BERT
@@ -57,8 +57,8 @@ class FranckVit(nn.Module):
         # Traitement des images pour générer du texte
         for img in images:
             pixel_values = self.processor_text(images=img.unsqueeze(0), return_tensors="pt").pixel_values.to(device)
-            generated_ids = self.model_text.generate(pixel_values)
-            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True, max_new_tokens=25)[0]
+            generated_ids = self.model_text.generate(pixel_values, max_new_tokens=25)
+            generated_text = self.processor_text.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
             # Encoder le texte généré
             encoded_input = self.tokenizer(generated_text, return_tensors='pt').to(device)
@@ -70,7 +70,7 @@ class FranckVit(nn.Module):
         features_extractor_text = torch.stack(features_extractor_text_list).to(device)
         combined_features = torch.cat([visual_features, features_extractor_text], dim=1)
 
-        # Passer les caractéristiques combinées à travers le classificateur
+        # Passer les caractéristiques combinées à travers le classifieur
         predictions = self.classifier1(combined_features)
         predictions = self.classifier2(predictions)
 
