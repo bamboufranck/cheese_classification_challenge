@@ -155,38 +155,6 @@ class DatasetGeneratorFromage:
 
     def create_prompts(self, lab,val_data,maping):
 
-        #model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
-        model_id = "xtuner/llava-phi-3-mini-hf"
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-       
-        #blip
-        #blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        #blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
-
-    
-
-    
-    
-        # llama
-        #pipeline = transformers.pipeline("text-generation",model=model_id,tokenizer=model_id,model_kwargs={"torch_dtype": torch.bfloat16})
-
-
-        #llava
-
-        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
-        prompt2= "<|user|>\n<image>\nInspire you of this image and generate me a prompt in fifty words, which describe primarily the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
-
-        prompts=[prompt1,prompt2]
-
-        #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
-
-
-        #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
-        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
-        processor = AutoProcessor.from_pretrained(model_id)
-
-
-
         prompts = {}
         map_images={}
         to_pil = transforms.ToPILImage()
@@ -390,7 +358,25 @@ class DatasetGeneratorFromage:
             "prompt": f"Illustrate a block of {lab} cheese in a resealable plastic bag, with the name of the cheese prominently displayed on the packaging along with nutrition facts, a brand logo, and a vibrant product image.",
             "num_images": self.num_images_per_label,
         })
-                
+
+       
+        model_id = "xtuner/llava-phi-3-mini-hf"
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+        #llava
+
+        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt2= "<|user|>\n<image>\nInspire you of this image and generate me a prompt in fifty words, which describe primarily the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+
+        prompts=[prompt1,prompt2]
+
+        #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
+
+
+        #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
+        processor = AutoProcessor.from_pretrained(model_id)
+   
 
         print( "start generation of prompts")
 
@@ -405,23 +391,23 @@ class DatasetGeneratorFromage:
             if(maping[valeur_label]==lab):
                 map_images[maping[valeur_label]].append(image)
                 image = to_pil(image)
-                for prompt in prompts:
-                    inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
-                    output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
-                    description=processor.decode(output[0][2:], skip_special_tokens=True)
+                #for prompt in prompts:
+                inputs = processor(prompt1,image, return_tensors='pt').to(device, torch.float16)
+                output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
+                description=processor.decode(output[0][2:], skip_special_tokens=True)
 
-                    j=description.find(".")
-                    description=description[j+1:]
-                    description=correct(description,f" A {maping[valeur_label]} cheese")
-                    description=f"An image of a {maping[valeur_label]} cheese," + description
-                    print(description)
-                    
-                    prompts[maping[valeur_label]].append(
-                    {
-                        "prompt": description,
-                        "num_images": self.num_images_per_label,
-                    }
-                )
+                j=description.find(".")
+                description=description[j+1:]
+                description=correct(description,f" A {maping[valeur_label]} cheese")
+                description=f"An image of a {maping[valeur_label]} cheese," + description
+                print(description)
+          
+                prompts[maping[valeur_label]].append(
+                        {
+                            "prompt": description,
+                            "num_images": self.num_images_per_label,
+                        }
+                    )
         
         
         return prompts,map_images
