@@ -167,10 +167,10 @@ class DatasetGeneratorFromage:
 
         #prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese and its surroundings, its location.<|end|>\n<|assistant|>\n"
 
-        prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
+        #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
 
-        #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
         model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
         processor = AutoProcessor.from_pretrained(model_id)
 

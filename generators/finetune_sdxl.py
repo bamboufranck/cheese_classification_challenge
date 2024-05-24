@@ -122,10 +122,10 @@ class FineTune_Sdxl:
             guidance_scale=self.guidance_scale,
         ).images
             
-            for index,text in enumerate(prompts):
-                text=text.replace("tok",label)
-                prompts[index]=text
-                print(prompts[index])
+            #for index,text in enumerate(prompts):
+               # text=text.replace("tok",label)
+               # prompts[index]=text
+               # print(prompts[index])
 
         else:
             print("start of generation")
