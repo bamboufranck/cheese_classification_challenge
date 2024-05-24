@@ -173,7 +173,10 @@ class DatasetGeneratorFromage:
 
         #llava
 
-        prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt2= "<|user|>\n<image>\nInspire you of this image and generate me a prompt in fifty words, which describe primarily the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+
+        prompts=[prompt1,prompt2]
 
         #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
@@ -189,6 +192,47 @@ class DatasetGeneratorFromage:
         to_pil = transforms.ToPILImage()
         prompts[lab]=[]
         map_images[lab]=[]
+
+        prompts[lab].append({
+        "prompt": f"Generate an image of a round wheel of {lab} cheese, showing its texture and color. Place it on a wooden board with a cheese knife beside it.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Create an image of a wedge of {lab} cheese, showcasing its unique characteristics such as holes, veins, or creamy interior. Arrange it on a marble slab with some complementary food items like fruits, nuts, or crackers.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Illustrate a block of {lab} cheese, with a few slices cut off to reveal its interior. Set it on a rustic cutting board with a bunch of grapes and a small jar of honey.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Produce a picture of a soft, spreadable {lab} cheese, displayed in a small bowl or on a piece of crusty bread. Garnish with fresh herbs and place a few olives or cherry tomatoes around it.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Design an image of a whole wheel of {lab} cheese, partially sliced to show the texture inside. Surround it with some fresh fruit slices, a handful of nuts, and a sprig of rosemary.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Create a scene featuring a log of {lab} cheese, garnished with spices or herbs. Place it on a ceramic plate with some sliced baguette and a drizzle of olive oil.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Generate an image of a semi-hard {lab} cheese wheel, with a small wedge cut out to reveal its smooth interior. Set it on a slate serving platter with some fresh berries and a small bowl of jam.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Produce an image of a chunk of {lab} cheese, with a grater nearby and a pile of freshly grated cheese. Include a sprig of fresh basil or thyme in the background.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Illustrate a crumbled {lab} cheese on a simple white plate, with a few olives and cherry tomatoes around it. Drizzle with olive oil and sprinkle with a pinch of herbs.",
+        "num_images": self.num_images_per_label,
+    })
+        prompts[lab].append({
+        "prompt": f"Create an image of a fresh {lab} cheese ball, showing its smooth and shiny exterior. Place it on a cutting board with fresh basil leaves, sliced tomatoes, and a small bowl of balsamic vinegar.",
+        "num_images": self.num_images_per_label,
+    })
 
         prompts[lab].append({
                     "prompt": f"an image of {lab} cheese",
@@ -226,22 +270,128 @@ class DatasetGeneratorFromage:
                     "num_images": self.num_images_per_label,
                 })
         
+        prompts[lab].append({
+        "prompt": f"Show a platter with assorted {lab} cheese slices arranged in a fan shape, accompanied by dried apricots, almonds, and a small dish of honey.",
+        "num_images": self.num_images_per_label,
+    })
+
+        prompts[lab].append({
+            "prompt": f"Depict a picnic scene with a block of {lab} cheese partially sliced, set on a checkered cloth with a loaf of bread, a bottle of wine, and some wildflowers.",
+            "num_images": self.num_images_per_label,
+        })
+        
+        prompts[lab].append({
+            "prompt": f"Create an image of {lab} cheese cubes skewered with toothpicks, displayed on a wooden platter with assorted berries and a sprig of mint.",
+            "num_images": self.num_images_per_label,
+        })
+        
+        prompts[lab].append({
+            "prompt": f"Illustrate a close-up shot of a melting {lab} cheese fondue in a pot, with bread cubes on skewers ready to dip, surrounded by assorted vegetables.",
+            "num_images": self.num_images_per_label,
+        })
+        
+        prompts[lab].append({
+            "prompt": f"Generate an image of a sophisticated cheese board featuring {lab} cheese, along with assorted charcuterie, olives, nuts, and a small bowl of mustard.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Show a festive arrangement of {lab} cheese cut into star shapes, placed on a platter with decorative holiday elements like pine cones and cranberries.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Depict a rustic kitchen setting with a large wheel of {lab} cheese on a wooden table, surrounded by fresh herbs, a cutting board, and kitchen utensils.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Create an image of {lab} cheese being grated over a pasta dish, with a rich and creamy sauce visible in the background.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Illustrate a gourmet setting with a slice of {lab} cheese on a piece of slate, drizzled with truffle oil and garnished with edible flowers.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Generate an image of a cheese market stall showcasing a variety of {lab} cheese, with price tags, a scale, and fresh produce in the background.",
+            "num_images": self.num_images_per_label,
+        })
 
 
-        
+        prompts[lab].append({
+        "prompt": f"Show {lab} cheese in a vacuum-sealed package with a clear label, placed on a supermarket shelf. The packaging should be transparent to show the cheese's texture and color.",
+        "num_images": self.num_images_per_label,
+    })
 
+        prompts[lab].append({
+            "prompt": f"Depict {lab} cheese in a clear plastic container with a snap-on lid, labeled with branding and nutrition facts, sitting in a refrigerator section with other dairy products.",
+            "num_images": self.num_images_per_label,
+        })
         
-         
+        prompts[lab].append({
+            "prompt": f"Create an image of {lab} cheese slices individually wrapped in clear plastic, stacked neatly in a packaging box with branding and product information visible.",
+            "num_images": self.num_images_per_label,
+        })
         
+        prompts[lab].append({
+            "prompt": f"Illustrate a block of {lab} cheese in a resealable plastic bag, with the packaging showing nutrition facts, a brand logo, and a vibrant product image.",
+            "num_images": self.num_images_per_label,
+        })
         
-        
+        prompts[lab].append({
+            "prompt": f"Generate an image of a round wheel of {lab} cheese wrapped in wax paper, tied with a string, and labeled with a rustic tag. Place it in a cozy kitchen setting.",
+            "num_images": self.num_images_per_label,
+        })
 
-        
+        prompts[lab].append({
+            "prompt": f"Show a wedge of {lab} cheese in a clear plastic clamshell package, with a price sticker on the front. Display it on a grocery store shelf with other cheese varieties.",
+            "num_images": self.num_images_per_label,
+        })
 
-            
+        prompts[lab].append({
+            "prompt": f"Depict {lab} cheese crumbles in a transparent tub with a snap-on lid, featuring a colorful brand label and a small scoop inside the container.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Create an image of {lab} cheese string sticks individually wrapped, displayed in a branded packaging bag with a vibrant design. Place it on a supermarket shelf.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Illustrate a block of {lab} cheese in shrink wrap, with a barcode and a detailed product description. Show it in a kitchen setting with other cooking ingredients.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+            "prompt": f"Generate an image of a log of {lab} cheese vacuum-sealed in clear plastic, with a branded label and an expiration date sticker. Place it in a refrigerator section.",
+            "num_images": self.num_images_per_label,
+        })
+
+        prompts[lab].append({
+        "prompt": f"Show {lab} cheese in a vacuum-sealed package with a clear label that displays the name of the cheese, placed on a supermarket shelf. The packaging should be transparent to show the cheese's texture and color.",
+        "num_images": self.num_images_per_label,
+    })
+
+        prompts[lab].append({
+            "prompt": f"Depict {lab} cheese in a clear plastic container with a snap-on lid, labeled with the name of the cheese, branding, and nutrition facts, sitting in a refrigerator section with other dairy products.",
+            "num_images": self.num_images_per_label,
+        })
         
+        prompts[lab].append({
+            "prompt": f"Create an image of {lab} cheese slices individually wrapped in clear plastic, each wrapper displaying the name of the cheese, stacked neatly in a packaging box with branding and product information visible.",
+            "num_images": self.num_images_per_label,
+        })
         
-        
+        prompts[lab].append({
+            "prompt": f"Illustrate a block of {lab} cheese in a resealable plastic bag, with the name of the cheese prominently displayed on the packaging along with nutrition facts, a brand logo, and a vibrant product image.",
+            "num_images": self.num_images_per_label,
+        })
+                
+
         print( "start generation of prompts")
 
        
@@ -255,23 +405,23 @@ class DatasetGeneratorFromage:
             if(maping[valeur_label]==lab):
                 map_images[maping[valeur_label]].append(image)
                 image = to_pil(image)
+                for prompt in prompts:
+                    inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
+                    output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
+                    description=processor.decode(output[0][2:], skip_special_tokens=True)
 
-                inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
-                output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
-                description=processor.decode(output[0][2:], skip_special_tokens=True)
-
-                j=description.find(".")
-                description=description[j+1:]
-                description=correct(description,f" A {maping[valeur_label]} cheese")
-                description=f"An image of a {maping[valeur_label]} cheese," + description
-                print(description)
-                
-                prompts[maping[valeur_label]].append(
-                {
-                    "prompt": description,
-                    "num_images": self.num_images_per_label,
-                }
-            )
+                    j=description.find(".")
+                    description=description[j+1:]
+                    description=correct(description,f" A {maping[valeur_label]} cheese")
+                    description=f"An image of a {maping[valeur_label]} cheese," + description
+                    print(description)
+                    
+                    prompts[maping[valeur_label]].append(
+                    {
+                        "prompt": description,
+                        "num_images": self.num_images_per_label,
+                    }
+                )
         
         
         return prompts,map_images
