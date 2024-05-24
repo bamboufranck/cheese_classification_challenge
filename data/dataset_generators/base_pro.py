@@ -86,6 +86,7 @@ class DatasetGeneratorFromage:
 
 
         image_id_0 = 0
+        numbers=0
         for prompt_metadata in labels_prompts[label]:
 
             num_images_per_prompt = prompt_metadata["num_images"]
@@ -122,10 +123,12 @@ class DatasetGeneratorFromage:
                     #average_similarity = similarities.mean().item()
                     #print("average similarity", average_similarity)
 
-                    if(predicted_category==label+ " cheese"):                              # Ajout
-                        self.save_images(images, label, image_id_0)            
-                        image_id_0 += len(images)                               
-                        pbar.update(1)
+                if(predicted_category==label+ " cheese"): 
+                    numbers+=1
+                    print("save!",numbers)                             # Ajout
+                    self.save_images(images, label, image_id_0)            
+                    image_id_0 += len(images)                               
+                    pbar.update(1)
 
                     ### fin 
 
