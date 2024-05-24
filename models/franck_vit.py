@@ -33,8 +33,8 @@ class FranckVit(nn.Module):
         self.features_dim = self.backbone.config.hidden_size
 
         # pour la vision de texte sur l'image
-        self.processor_text = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten', do_rescale=False)
-        self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')
+        self.processor_text = TrOCRProcessor.from_pretrained('microsoft/trocr-small-handwritten', do_rescale=False)
+        self.model_text = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-small-handwritten')
 
         # pour l'encodage de ce texte avec BERT
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
