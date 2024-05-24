@@ -6,7 +6,7 @@ class CheeseClassifier(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         model_name = "nateraw/food"  # Correction ici, suppression de la virgule
-        self.processor = AutoImageProcessor.from_pretrained(model_name)
+        #self.processor = AutoImageProcessor.from_pretrained(model_name)
         self.model = AutoModelForImageClassification.from_pretrained(model_name)
         
         # Freeze all layers
@@ -23,7 +23,7 @@ class CheeseClassifier(nn.Module):
     
     def forward(self, x):
         # Assuming x is already preprocessed and ready for the model
-        x=self.processor(x)
+        #x=self.processor(x)
         outputs = self.model(pixel_values=x)
         logits = outputs.logits
         return logits
