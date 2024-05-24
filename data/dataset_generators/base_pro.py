@@ -81,7 +81,7 @@ class DatasetGeneratorFromage:
         m_batch[label]= m_batch[label]/m_batch[label].norm(dim=-1, keepdim=True)
 
 
-        image_id_0 = 350
+        image_id_0 = 0
         for prompt_metadata in labels_prompts[label]:
 
             num_images_per_prompt = prompt_metadata["num_images"]
@@ -114,7 +114,7 @@ class DatasetGeneratorFromage:
                     average_similarity = similarities.mean().item()
                     print("average similarity", average_similarity)
 
-                    if(average_similarity>=0.55):                              # Ajout
+                    if(average_similarity>=0.6):                              # Ajout
                         self.save_images(images, label, image_id_0)            
                         image_id_0 += len(images)                               
                         pbar.update(1)
@@ -165,12 +165,12 @@ class DatasetGeneratorFromage:
 
         #llava
 
-        #prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese and its surroundings, its location.<|end|>\n<|assistant|>\n"
+        prompt = "<|user|>\n<image>\nDescribe the image in sixty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
 
         #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
 
-        prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
+        #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
         model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
         processor = AutoProcessor.from_pretrained(model_id)
 
