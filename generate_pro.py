@@ -10,8 +10,9 @@ def generate(cfg):
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
 
-    labels=["FETA","TOMME DE VACHE","VACHERIN","TÊTE DE MOINES","CHABICHOU","EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MOTHAIS","MOZZARELLA","OSSAU- IRATY","REBLOCHON","PECORINO","SAINT- FÉLICIEN"]
+    #labels=["FETA","TOMME DE VACHE","VACHERIN","TÊTE DE MOINES","CHABICHOU","EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MOTHAIS","MOZZARELLA","OSSAU- IRATY","REBLOCHON","PECORINO","SAINT- FÉLICIEN"]
 
+    labels=["MIMOLETTE","MAROILLES"]
     #with open(cfg.labels_file, "r") as f:
         #labels = f.readlines()
         #labels = [label.strip() for label in labels]

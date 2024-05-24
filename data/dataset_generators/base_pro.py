@@ -4,6 +4,8 @@ import torch
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel
 import torchvision.transforms as transforms
+import random
+
 
 import torchvision
 import transformers
@@ -26,7 +28,7 @@ login(token=hf_token)
 
 
 
-def correct(text,key_word):
+def correct(text,key_word,labels):
 
     bags=["cheese","cheeses","cake","cakes"]
 
@@ -163,6 +165,134 @@ class DatasetGeneratorFromage:
         to_pil = transforms.ToPILImage()
         prompts[lab]=[]
         map_images[lab]=[]
+
+
+        backgrounds = [
+            "rustic wooden table", "clean marble countertop", "brick wall", "shelves with wine bottles", 
+            "culinary books", "modern kitchen with sleek lines", "neutral-toned cabinets", 
+            "large window with curtains", "potted plants", "wall art", "hanging pots and pans", 
+            "open shelving", "vintage kitchen tools", "wooden beams", "exposed brickwork", "stone tiles", 
+            "farmhouse decor", "chalkboard with menu", "hanging garlic", "string lights", "metal bar stools", 
+            "wooden bench", "basket with bread", "hanging herbs", "wine rack", "fruit basket", 
+            "cutting boards on wall", "copper pots", "ceramic dishes", "glass jars with grains", 
+            "wooden crates", "vintage scales", "mason jars", "hanging dried flowers", "lace tablecloth", 
+            "leather bar stools", "bar cart", "metal shelves", "antique kitchen items", 
+            "ceramic tile backsplash", "wall clock", "windowsill with plants", "french doors", 
+            "glass cabinet doors", "farmhouse sink", "distressed wood furniture", "industrial lighting", 
+            "vintage signage", "wooden stools", "iron skillet", "rolling pin", "linen towels", 
+            "mixing bowls", "kitchen island", "open pantry", "decorative plates", "fresh produce", 
+            "potted succulents", "wooden ladder", "glass domes", "rustic lanterns", "hanging baskets", 
+            "vintage jars", "patchwork quilt", "farm tools", "market baskets", "wooden shutters", 
+            "exposed pipes", "iron hooks", "wire baskets", "ceramic pitchers", "stone mortar and pestle", 
+            "rustic candle holders", "kitchen scales", "old-fashioned oven", "checkered napkins", 
+            "wooden trays", "enamel bowls", "herb garden", "metal colander", "handwoven baskets", 
+            "ceramic crocks", "hand-painted tiles", "copper kettle", "vintage posters", 
+            "retro refrigerator", "cast iron stove", "wooden spoons", "spices in jars", "wrought iron racks", 
+            "hanging utensils", "carved wooden signs", "terracotta pots", "antique cutting boards", 
+            "galvanized buckets", "tin containers", "slate placemats", "wooden rolling pins", 
+            "rustic bread bins", "checkered tablecloths"
+        ]
+
+        lighting_conditions = [
+            "soft natural light", "bright natural light", "golden hour light", "diffused sunlight", 
+            "overcast daylight", "morning sunlight", "afternoon sunlight", "evening sunlight", 
+            "candlelight", "warm incandescent light", "cool fluorescent light", "LED lighting", 
+            "ambient light", "spotlight", "under-cabinet lighting", "pendant lights", "recessed lighting", 
+            "track lighting", "chandelier lighting", "string lights", "table lamp light", "lantern light", 
+            "sconce lighting", "floor lamp lighting", "natural window light", "studio lighting", 
+            "reflector light", "backlighting", "side lighting", "top-down lighting", "bottom-up lighting", 
+            "warm golden light", "soft white light", "bright white light", "cool white light", 
+            "soft blue light", "harsh light", "diffused softbox light", "ring light", "flash lighting", 
+            "bounce lighting", "fill lighting", "rim lighting", "cross lighting", "natural sunset light", 
+            "moonlight", "firelight", "overhead kitchen lights", "skylight illumination", "cafe-style lighting", 
+            "bistro lights", "Edison bulb lighting", "soft yellow light", "twilight light", "dawn light", 
+            "fireplace light", "halogen lighting", "adjustable lighting", "task lighting", "soft orange light", 
+            "gentle shadowing", "minimal shadows", "dramatic shadows", "high contrast light", 
+            "low contrast light", "natural daylight", "bright daylight", "subdued lighting", "soft glow", 
+            "radiant light", "reflected light", "soft shadows", "hard shadows", "continuous lighting", 
+            "daylight temperature light", "tungsten light", "fluorescent temperature light", "cool daylight", 
+            "warm afternoon light", "crisp morning light", "gentle evening light", "late afternoon light", 
+            "early morning light", "golden morning light", "soft evening glow", "soft focus light", 
+            "sharp focus light", "natural ambient light", "diffused window light", "filtered sunlight", 
+            "shade lighting", "bright overcast light", "cloudy day light", "interior lighting", 
+            "natural kitchen light", "candle-lit ambiance", "string-lit background", "spotlit subject", 
+            "low ambient light", "high ambient light"
+        ]
+
+        camera_angles = [
+            "eye level", "slightly tilted", "close-up", "wide shot", "top-down", "side angle", 
+            "45-degree angle", "low angle", "high angle", "overhead", "macro shot", "wide-angle", 
+            "panoramic view", "dutch angle", "extreme close-up", "medium shot", "long shot", 
+            "close mid shot", "close-up wide shot", "profile shot", "three-quarter view", "from above", 
+            "from below", "straight-on", "angled view", "over-the-shoulder", "subject-centered", 
+            "off-center", "symmetrical framing", "asymmetrical framing", "low close-up", "high close-up", 
+            "wide profile shot", "narrow profile shot", "perspective shot", "diagonal shot", 
+            "horizontal framing", "vertical framing", "depth of field focus", "foreground emphasis", 
+            "background emphasis", "balanced framing", "leading lines", "rule of thirds", "centered subject", 
+            "off-centered subject", "top focus", "bottom focus", "angled from left", "angled from right", 
+            "tilted from above", "tilted from below", "parallel framing", "perpendicular framing", 
+            "symmetrical balance", "asymmetrical balance", "high perspective", "low perspective", 
+            "bird’s eye view", "worm’s eye view", "detail-focused", "broad view", "flat lay", 
+            "dynamic angle", "static angle", "compositional focus", "contextual focus", "extreme wide shot", 
+            "mid-wide shot", "mid-close shot", "slight upward tilt", "slight downward tilt", 
+            "overhead close-up", "side close-up", "off-center close-up", "centered close-up", "pan shot", 
+            "tilt shot", "zoom-in", "zoom-out", "rack focus", "pull focus", "push-in", "pull-out", 
+            "establishing shot", "action shot", "reaction shot", "insert shot", "point of view", 
+            "reverse angle", "multi-angle", "single angle", "static frame", "moving frame", 
+            "circular framing", "spiral framing", "square framing", "rectangular framing", 
+            "geometric framing", "organic framing"
+        ]
+
+        locations = [
+    "grocery store", "supermarket", "cheese shop", "farmers' market", "home refrigerator", 
+    "cheese counter", "gourmet shop", "restaurant", "restaurant kitchen", 
+    "picnic table", "home cheese platter", "charcuterie board", 
+    "picnic bag", "wedding buffet", "hotel reception", "office lunch", 
+    "holiday dinner", "birthday party", "wine bar", "pastry shop", "market stall", 
+    "deli counter", "camping kitchen", "food truck", "dining room", 
+    "serving tray", "kitchen counter", "breakfast table", "family reunion", 
+    "outdoor terrace", "outdoor meal", "wine tasting", "cellar", "school kitchen", 
+    "canteen", "bakery", "catering kitchen", "delivery box", "mountain cabin", 
+    "ski resort", "cooking class", "food festival", "tea salon", 
+    "forest picnic", "boat kitchen", "airplane (in-flight meal)", "brunch buffet", 
+    "stadium concession", "park picnic area", "hotel buffet", "hotel room", 
+    "highway rest area", "office refrigerator", "hair salon (small snack)", 
+    "mountain lodge", "charity sale", "gala dinner", "outdoor wedding", 
+    "neighborhood party", "beer festival", "harvest festival", "beach picnic", 
+    "outdoor reception", "Christmas market", "music festival", "trade show", 
+    "culinary conference", "theme park", "brewery", "sports club", "street kiosk", 
+    "hospital kitchen", "cooking school", "retreat center", "private club", "VIP lounge", 
+    "nature reserve", "mountain chalet", "luxury hotel", "spa", "café terrace", 
+    "company canteen", "television studio", "tasting event", "agricultural fair", 
+    "local market", "family brunch", "gas station", "train (dining car)", "cruise ship", 
+    "beach resort", "wedding hall", "holiday meal", "night market", "tapas bar", 
+    "conference room", "water park", "hotel breakfast buffet", "classroom meal", 
+    "airport lounge"
+]
+
+
+
+
+
+
+
+
+
+
+        for _ in range(100):
+            bg = random.choice(backgrounds)
+            light = random.choice(lighting_conditions)
+            angle = random.choice(camera_angles)
+            location=random.choice(locations)
+
+            prompts[lab].append({
+                    "prompt": f"A photograph of {lab} cheese with a {bg} in the background, illuminated by {light}, captured from a {angle} angle, in {location}.",
+                    "num_images": self.num_images_per_label,
+                })
+
+      
+
+
 
         prompts[lab].append({
         "prompt": f"Generate an image of a round wheel of {lab} cheese, showing its texture and color. Place it on a wooden board with a cheese knife beside it.",
@@ -369,11 +499,12 @@ class DatasetGeneratorFromage:
         #llava
 
         prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
-        prompt2= "<|user|>\n<image>\nInspire you of this image and generate me a prompt in fifty words, which describe primarily the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt3= "<|user|>\n<image>\nGive me a caption of this image.<|end|>\n<|assistant|>\n"
+        prompt2 = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
-        prompts_liste=[prompt1,prompt2]
+        prompts_liste=[prompt1,prompt3,prompt2]
 
-        #prompt = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
+       
 
 
         #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
@@ -402,7 +533,7 @@ class DatasetGeneratorFromage:
                     j=description.find(".")
                     description=description[j+1:]
                     description=correct(description,f" {lab} cheese")
-                    description=f"An image of a {lab} cheese," + description
+                    #description=f"An image of a {lab} cheese," + description
                     print(description)
             
                     prompts[lab].append(
