@@ -87,7 +87,7 @@ class DatasetGeneratorFromage:
         m_batch[label]= m_batch[label]/m_batch[label].norm(dim=-1, keepdim=True)
 
 
-        image_id_0 = 150
+        image_id_0 = 0
         numbers=0
         for prompt_metadata in labels_prompts[label]:
 
@@ -125,7 +125,7 @@ class DatasetGeneratorFromage:
                     average_similarity = similarities.mean().item()
                     print("average similarity", average_similarity)
 
-                if(average_similarity>0.55): 
+                if(average_similarity>0.50): 
                     numbers+=1
                     print("save!",numbers)                             # Ajout
                     self.save_images(images, label, image_id_0)            
@@ -499,7 +499,7 @@ class DatasetGeneratorFromage:
         #llava
 
         prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
-        prompt3= "<|user|>\n<image>\nGive me a caption of this image.<|end|>\n<|assistant|>\n"
+        prompt3= "<|user|>\n<image>\nGive me a  caption of this image.<|end|>\n<|assistant|>\n"
         prompt2 = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the texture and the location also the background of the image.<|end|>\n<|assistant|>\n"
 
         prompts_liste=[prompt1,prompt3,prompt2]

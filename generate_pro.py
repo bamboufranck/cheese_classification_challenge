@@ -19,14 +19,14 @@ def generate(cfg):
    
     val_loaders,maping  = valmodule.val_real_dataloader()
 
-    #for label in labels:
+    for label in labels:
         #if label not in labels1: 
-            #dataset_generator.generate(label.strip(),labels,val_loaders,maping)
+        dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
 
 
-    label="MONT D’OR"
-    dataset_generator.generate(label.strip(),labels,val_loaders,maping)
+    #label="MONT D’OR"
+    #dataset_generator.generate(label.strip(),labels,val_loaders,maping)
         
     
 
