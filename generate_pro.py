@@ -12,7 +12,7 @@ def generate(cfg):
 
     #labels=["FETA","TOMME DE VACHE","VACHERIN","TÊTE DE MOINES","CHABICHOU","EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MOTHAIS","MOZZARELLA","OSSAU- IRATY","REBLOCHON","PECORINO","SAINT- FÉLICIEN"]
 
-    #labels1=["MIMOLETTE","MAROILLES"]
+    labels1=["BRIE DE MELUN","CAMEMBERT"]
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]
@@ -20,8 +20,8 @@ def generate(cfg):
     val_loaders,maping  = valmodule.val_real_dataloader()
 
     for label in labels:
-        #if label not in labels1: 
-        dataset_generator.generate(label.strip(),labels,val_loaders,maping)
+        if label not in labels1: 
+            dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
 
 
