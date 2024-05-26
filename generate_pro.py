@@ -20,8 +20,8 @@ def generate(cfg):
     val_loaders,maping  = valmodule.val_real_dataloader()
 
     for label in labels:
-        if label not in labels1: 
-            dataset_generator.generate(label.strip(),labels,val_loaders,maping)
+        #if label not in labels1: 
+        dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
 
 
