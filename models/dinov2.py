@@ -26,7 +26,7 @@ class DinoV2Finetune(nn.Module):
 
 
         self.features_dim = self.backbone.num_features
-        self.dropout = nn.Dropout(0.5)
+        #self.dropout = nn.Dropout(0.5)
         #self.batch_norm = nn.BatchNorm1d(self.features_dim)
         #self.activation = nn.ReLU()
         self.classifier= nn.Linear(self.features_dim, num_classes)
@@ -34,7 +34,7 @@ class DinoV2Finetune(nn.Module):
 
     def forward(self, x):
         x= self.backbone(x)
-        x = self.dropout(x)
+        #x = self.dropout(x)
         #x = self.batch_norm(x)
         x = self.classifier(x)
         #x = self.activation(x)
