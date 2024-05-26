@@ -75,43 +75,49 @@ class FineTune_Sdxl:
 
         }
         base = "stabilityai/stable-diffusion-xl-base-1.0"
-        repo="Franck19/brie"
 
-        self.pipe = DiffusionPipeline.from_pretrained(
-            base, torch_dtype=torch.float16, variant="fp16",
-        ).to(device)
+        self.actual_label=""
 
-        self.pipe.load_lora_weights(repo, token=hf_token)
+        self.pipe = DiffusionPipeline.from_pretrained(base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
+
+        #self.pipe=DiffusionPipeline.from_pretrained("SG16222/Realistic_Vision_V1.4", torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
+
+        
 
         self.pipe.scheduler = EulerDiscreteScheduler.from_config(
             self.pipe.scheduler.config, timestep_spacing="trailing"
         )
         self.pipe.set_progress_bar_config(disable=True)
 
-
+        
         if use_cpu_offload:
             self.pipe.enable_sequential_cpu_offload()
+
         self.num_inference_steps = 50
         self.guidance_scale = 2
-       
 
-        self.actual_label=""
-
-        
          # refiner 
        
         refiner_model_id = "stabilityai/stable-diffusion-xl-refiner-1.0"
         #self.refiner_pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to(device)
 
     def generate(self, prompts,label):
-        for index,text in enumerate(prompts):
-            text=text.replace(label,"tok")
-            prompts[index]=text
-          
+
+        # define a method to update self.repo  using the right label
+        if label in self.models:
+            if label!=self.actual_label:
+                self.actual_label=label
+                self.pipe.load_lora_weights(self.models[label],token=hf_token)
+                print("load",label)
+        
+            for index,text in enumerate(prompts):
+                text=text.replace(label,"tok")
+                prompts[index]=text
+                print(prompts[index])
            
 
-        print("start of generation")
-        images = self.pipe(
+            print("start of generation")
+            images = self.pipe(
             prompts,
             num_inference_steps=self.num_inference_steps,
             guidance_scale=self.guidance_scale,
@@ -121,7 +127,15 @@ class FineTune_Sdxl:
                # text=text.replace("tok",label)
                # prompts[index]=text
                # print(prompts[index])
-               
+
+        else:
+            print("start of generation")
+            images = self.pipe(
+            prompts,
+            num_inference_steps=self.num_inference_steps,
+            guidance_scale=self.guidance_scale,
+        ).images
+            
         #print("rafinage")
         
         #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=4, guidance_scale=0)
