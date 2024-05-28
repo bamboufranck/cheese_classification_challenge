@@ -74,11 +74,11 @@ class FineTune_Sdxl:
             "MONT D’OR" :"Franck19/montdor"
 
         }
-        base = "stabilityai/stable-diffusion-xl-base-1.0"
+        self.base = "stabilityai/stable-diffusion-xl-base-1.0"
 
         self.actual_label=""
 
-        self.pipe = DiffusionPipeline.from_pretrained(base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
+        self.pipe = DiffusionPipeline.from_pretrained(self.base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
 
         #self.pipe=DiffusionPipeline.from_pretrained("SG16222/Realistic_Vision_V1.4", torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
 
@@ -104,45 +104,53 @@ class FineTune_Sdxl:
     def generate(self, prompts,label):
 
         # define a method to update self.repo  using the right label
+        """""
         if label in self.models:
             if label!=self.actual_label:
                 self.actual_label=label
                 self.pipe.load_lora_weights(self.models[label],token=hf_token)
                 print("load",label)
-        
+
             for index,text in enumerate(prompts):
                 text=text.replace(label,"tok")
                 prompts[index]=text
-                print(prompts[index])
+                print(prompts[index])   
+
+        """""
+
+       
+        if label != self.actual_label:
+            self.actual_label = label
+
+            del self.pipe
+            self.pipe = DiffusionPipeline.from_pretrained(self.base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
+            self.pipe.scheduler = EulerDiscreteScheduler.from_config(self.pipe.scheduler.config, timestep_spacing="trailing" )
+            self.pipe.set_progress_bar_config(disable=True)
+            self.pipe.load_lora_weights(self.models[label],token=hf_token)
+
+        
+        for index,text in enumerate(prompts):
+            text=text.replace(label,"tok")
+            prompts[index]=text
+            print(prompts[index])
            
 
-            print("start of generation")
-            images = self.pipe(
+        print("start of generation")
+        images = self.pipe(
             prompts,
             num_inference_steps=self.num_inference_steps,
             guidance_scale=self.guidance_scale,
         ).images
             
-            #for index,text in enumerate(prompts):
-               # text=text.replace("tok",label)
-               # prompts[index]=text
-               # print(prompts[index])
 
-        else:
-            print("start of generation")
-            images = self.pipe(
-            prompts,
-            num_inference_steps=self.num_inference_steps,
-            guidance_scale=self.guidance_scale,
-        ).images
+        print("end generation")
             
+           
         #print("rafinage")
         
         #refined_output = self.refiner_pipe(prompts, image=images, num_inference_steps=4, guidance_scale=0)
         #refined_image = refined_output.images
        
-
-        print("end generation")
 
         #return refined_image
         return images
