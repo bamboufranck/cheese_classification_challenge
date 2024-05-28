@@ -12,15 +12,22 @@ def generate(cfg):
 
     #labels=["FETA","TOMME DE VACHE","VACHERIN","TÊTE DE MOINES","CHABICHOU","EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MOTHAIS","MOZZARELLA","OSSAU- IRATY","REBLOCHON","PECORINO","SAINT- FÉLICIEN"]
 
-    labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
+    #labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
+
+
+    labels1=["ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]
    
     val_loaders,maping  = valmodule.val_real_dataloader()
 
+    # PEDRIX je génère labels1 
+    #Quiscale je génère labels/labels1
+    # LORIOL je génère tout ce qui n'est pas dans not car j'ai déja fait le reste
+
     for label in labels:
-        if label not in labels1: 
+        if label in labels1: 
             dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
 
