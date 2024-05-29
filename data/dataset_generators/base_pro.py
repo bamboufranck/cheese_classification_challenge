@@ -277,29 +277,6 @@ class DatasetGeneratorFromage:
 ]
 
 
-
-
-
-
-
-
-
-
-        for _ in range(100):
-            bg = random.choice(backgrounds)
-            light = random.choice(lighting_conditions)
-            angle = random.choice(camera_angles)
-            location=random.choice(locations)
-
-            prompts[lab].append({
-                    "prompt": f"A photograph of {lab} cheese with a {bg} in the background, illuminated by {light}, captured from a {angle} angle, in {location}.",
-                    "num_images": self.num_images_per_label,
-                })
-
-      
-
-
-
         prompts[lab].append({
         "prompt": f"Generate an image of a round wheel of {lab} cheese, showing its texture and color. Place it on a wooden board with a cheese knife beside it.",
         "num_images": self.num_images_per_label,
@@ -502,15 +479,264 @@ class DatasetGeneratorFromage:
 
         """""
 
+        #GPT PROMPT
+        cheese_info = {
+        "BRIE DE MELUN": {
+            "color": ["white", "pale yellow"],
+            "shape": ["round"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "CAMEMBERT": {
+            "color": ["white", "pale yellow"],
+            "shape": ["round"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "EPOISSES": {
+            "color": ["orange", "red"],
+            "shape": ["round"],
+            "crust": ["washed crust"],
+            "texture": ["soft", "pungent"]
+        },
+        "FOURME D’AMBERT": {
+            "color": ["ivory", "blue veins"],
+            "shape": ["cylindrical"],
+            "crust": ["natural crust"],
+            "texture": ["creamy", "blue veins"]
+        },
+        "RACLETTE": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["semi-firm", "melts easily"]
+        },
+        "MORBIER": {
+            "color": ["ivory", "black layer"],
+            "shape": ["round"],
+            "crust": ["natural crust"],
+            "texture": ["semi-soft"]
+        },
+        "SAINT-NECTAIRE": {
+            "color": ["yellow", "orange"],
+            "shape": ["round"],
+            "crust": ["washed crust"],
+            "texture": ["creamy", "smooth"]
+        },
+        "POULIGNY SAINT- PIERRE": {
+            "color": ["white"],
+            "shape": ["pyramid"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "ROQUEFORT": {
+            "color": ["white", "blue veins"],
+            "shape": ["wheel"],
+            "crust": ["no crust"],
+            "texture": ["crumbly", "creamy"]
+        },
+        "COMTÉ": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm", "smooth"]
+        },
+        "CHÈVRE": {
+            "color": ["white"],
+            "shape": ["various"],
+            "crust": ["bloomy crust", "natural crust"],
+            "texture": ["soft", "firm"]
+        },
+        "PECORINO": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["hard", "crumbly"]
+        },
+        "NEUFCHATEL": {
+            "color": ["white"],
+            "shape": ["heart-shaped"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "CHEDDAR": {
+            "color": ["yellow", "orange"],
+            "shape": ["block"],
+            "crust": ["natural crust", "waxed crust"],
+            "texture": ["firm"]
+        },
+        "BÛCHETTE DE CHÈVRE": {
+            "color": ["white"],
+            "shape": ["log"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "PARMESAN": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["hard", "granular"]
+        },
+        "SAINT- FÉLICIEN": {
+            "color": ["ivory"],
+            "shape": ["round"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "MONT D’OR": {
+            "color": ["pale yellow"],
+            "shape": ["round"],
+            "crust": ["washed crust"],
+            "texture": ["soft", "spoonable"]
+        },
+        "STILTON": {
+            "color": ["ivory", "blue veins"],
+            "shape": ["cylindrical"],
+            "crust": ["natural crust"],
+            "texture": ["crumbly"]
+        },
+        "SCAMORZA": {
+            "color": ["white", "pale yellow"],
+            "shape": ["pear-shaped"],
+            "crust": ["natural crust"],
+            "texture": ["semi-soft"]
+        },
+        "CABECOU": {
+            "color": ["white"],
+            "shape": ["small round"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "BEAUFORT": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm", "smooth"]
+        },
+        "MUNSTER": {
+            "color": ["orange"],
+            "shape": ["round"],
+            "crust": ["washed crust"],
+            "texture": ["soft", "pungent"]
+        },
+        "CHABICHOU": {
+            "color": ["white"],
+            "shape": ["small cylindrical"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "TOMME DE VACHE": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm"]
+        },
+        "REBLOCHON": {
+            "color": ["pale yellow"],
+            "shape": ["small round"],
+            "crust": ["washed crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "EMMENTAL": {
+            "color": ["pale yellow"],
+            "shape": ["large wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm", "holes"]
+        },
+        "FETA": {
+            "color": ["white"],
+            "shape": ["block"],
+            "crust": ["no crust"],
+            "texture": ["crumbly"]
+        },
+        "OSSAU- IRATY": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm"]
+        },
+        "MIMOLETTE": {
+            "color": ["orange"],
+            "shape": ["ball"],
+            "crust": ["natural crust"],
+            "texture": ["hard", "crumbly"]
+        },
+        "MAROILLES": {
+            "color": ["orange"],
+            "shape": ["square"],
+            "crust": ["washed crust"],
+            "texture": ["soft", "pungent"]
+        },
+        "GRUYÈRE": {
+            "color": ["pale yellow"],
+            "shape": ["wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm"]
+        },
+        "MOTHAIS": {
+            "color": ["white"],
+            "shape": ["small round"],
+            "crust": ["bloomy crust"],
+            "texture": ["soft", "creamy"]
+        },
+        "VACHERIN": {
+            "color": ["pale yellow"],
+            "shape": ["round"],
+            "crust": ["washed crust"],
+            "texture": ["soft", "spoonable"]
+        },
+        "MOZZARELLA": {
+            "color": ["white"],
+            "shape": ["ball"],
+            "crust": ["no crust"],
+            "texture": ["soft", "stretchy"]
+        },
+        "TÊTE DE MOINES": {
+            "color": ["pale yellow"],
+            "shape": ["small wheel"],
+            "crust": ["natural crust"],
+            "texture": ["firm"]
+        },
+        "FROMAGE FRAIS": {
+            "color": ["white"],
+            "shape": ["various"],
+            "crust": ["no crust"],
+            "texture": ["soft", "creamy"]
+        }
+        }
+
+        attributes = cheese_info[lab]
+        color = ", ".join(attributes["color"])
+        shape = ", ".join(attributes["shape"])
+        crust = ", ".join(attributes["crust"])
+        texture = ", ".join(attributes["texture"])
+        
+        base_prompt = (f"Generate an image of {lab} cheese. "
+                   f"The cheese is {color} in color, {shape} in shape, "
+                   f"with a {crust}. It has a {texture} texture.")
+        
+        for _ in range(100):
+            bg = random.choice(backgrounds)
+            light = random.choice(lighting_conditions)
+            angle = random.choice(camera_angles)
+            location=random.choice(locations)
+            p= (f"{base_prompt} A photograph of {lab} cheese with a {bg} in the background, "
+                  f"illuminated by {light}, captured from a {angle} angle, in {location}.")
+
+            prompts[lab].append({
+                    "prompt": p,
+                    "num_images": self.num_images_per_label,
+                })
+        
        
         model_id = "xtuner/llava-phi-3-mini-hf"
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
         #llava
 
-        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form, its color, its crust and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its shape, its color, its crust and its surroundings.<|end|>\n<|assistant|>\n"
         prompt3= "<|user|>\n<image>\nGive me a  caption of this image.<|end|>\n<|assistant|>\n"
-        prompt2 = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the color, the crust and the texture.<|end|>\n<|assistant|>\n"
+        prompt2 = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the shape, the color, the crust and the texture.<|end|>\n<|assistant|>\n"
 
         prompts_liste=[prompt1,prompt3,prompt2]
 
