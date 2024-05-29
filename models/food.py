@@ -23,8 +23,6 @@ class CheeseClassifier(nn.Module):
         """""
 
 
-        num_features = self.model.classifier.in_features
-
         """"
         self.projection_head = nn.Sequential(
             nn.Linear(num_features, hidden_dim),
@@ -38,7 +36,17 @@ class CheeseClassifier(nn.Module):
         """""
         
         # Update classifier to match the number of classes
-        self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
+        #self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
+
+        self.model.classifier= nn.Sequential(
+            nn.Linear(self.model.classifier.in_features, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, num_classes),
+        )
     
     def forward(self, x):
         # Assuming x is already preprocessed and ready for the model
