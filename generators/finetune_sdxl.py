@@ -93,8 +93,8 @@ class FineTune_Sdxl:
         if use_cpu_offload:
             self.pipe.enable_sequential_cpu_offload()
 
-        self.num_inference_steps = 50
-        self.guidance_scale = 2
+        self.num_inference_steps = 55
+        self.guidance_scale = 2.5
 
          # refiner 
        

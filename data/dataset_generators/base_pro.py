@@ -334,6 +334,8 @@ class DatasetGeneratorFromage:
         "prompt": f"Create an image of a fresh {lab} cheese ball, showing its smooth and shiny exterior. Place it on a cutting board with fresh basil leaves, sliced tomatoes, and a small bowl of balsamic vinegar.",
         "num_images": self.num_images_per_label,
     })
+        
+        """""
 
         prompts[lab].append({
                     "prompt": f"an image of {lab} cheese",
@@ -492,6 +494,8 @@ class DatasetGeneratorFromage:
             "num_images": self.num_images_per_label,
         })
 
+        """""
+
        
         model_id = "xtuner/llava-phi-3-mini-hf"
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -533,7 +537,7 @@ class DatasetGeneratorFromage:
                     j=description.find(".")
                     description=description[j+1:]
                     description=correct(description,f" {lab} cheese")
-                    #description=f"An image of a {lab} cheese," + description
+                    description=f"An image of a {lab} cheese," + description
                     print(description)
             
                     prompts[lab].append(

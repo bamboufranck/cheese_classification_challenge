@@ -28,7 +28,7 @@ def generate(cfg):
     #labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
 
 
-    labels1=["SAINT- FÉLICIEN","FROMAGE FRAIS", "TÊTE DE MOINES"]
+    labels1=["CABECOU","PECORINO","FROMAGE FRAIS", "TÊTE DE MOINES","CHEDDAR","COMTÉ","GRUYÈRE","BÛCHETTE DE CHÈVRE","TÊTE DE MOINES","MOZZARELLA"]
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]
