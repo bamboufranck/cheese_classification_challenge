@@ -508,9 +508,9 @@ class DatasetGeneratorFromage:
     
         #llava
 
-        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form and its surroundings.<|end|>\n<|assistant|>\n"
+        prompt1 = "<|user|>\n<image>\nDescribe the image in fifty words, focusing primarily on the cheese; its texture, its form, its color and its surroundings.<|end|>\n<|assistant|>\n"
         prompt3= "<|user|>\n<image>\nGive me a  caption of this image.<|end|>\n<|assistant|>\n"
-        prompt2 = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form and the texture.<|end|>\n<|assistant|>\n"
+        prompt2 = "<|user|>\n<image>\nDescribe the  cheese in the image,precisely the form, the color and the texture.<|end|>\n<|assistant|>\n"
 
         prompts_liste=[prompt1,prompt3,prompt2]
 
