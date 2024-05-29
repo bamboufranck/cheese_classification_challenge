@@ -127,6 +127,7 @@ class FineTune_Sdxl:
             self.pipe.scheduler = EulerDiscreteScheduler.from_config(self.pipe.scheduler.config, timestep_spacing="trailing" )
             self.pipe.set_progress_bar_config(disable=True)
             self.pipe.load_lora_weights(self.models[label],token=hf_token)
+            print("load of",label,"model")
 
         
         for index,text in enumerate(prompts):
