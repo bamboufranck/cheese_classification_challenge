@@ -23,7 +23,7 @@ class CheeseClassifier(nn.Module):
         """""
 
 
-        num_features = self.model.classifier.in_features
+        num_features = self.model.in_features
 
 
         self.projection_head = nn.Sequential(
