@@ -11,7 +11,6 @@ def generate(cfg):
 
 
     fromages = [
-    "FETA",
     "OSSAU-IRATY",
     "MIMOLETTE",
     "MAROILLES",
@@ -40,6 +39,10 @@ def generate(cfg):
     #Quiscale je génère labels/labels1
     # LORIOL je génère tout ce qui n'est pas dans not car j'ai déja fait le reste
 
+
+
+    """
+
     
 
     for label in labels:
@@ -51,7 +54,7 @@ def generate(cfg):
     for label in fromages:
         dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
-     """
+    
 
 
 
