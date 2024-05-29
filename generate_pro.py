@@ -11,7 +11,7 @@ def generate(cfg):
 
 
     fromages = [
-    "OSSAU-IRATY",
+    "OSSAU- IRATY"
     "MIMOLETTE",
     "MAROILLES",
     "GRUYÈRE",
