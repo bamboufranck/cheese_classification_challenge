@@ -14,9 +14,13 @@ class CheeseClassifier(nn.Module):
             param.requires_grad = False
         
         # Unfreeze last layer if required
+
+        """"
         if unfreeze_last_layer:
             for param in self.model.classifier.parameters():
                 param.requires_grad = True
+
+        """""
 
 
         num_features = self.model.classifier.in_features
