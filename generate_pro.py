@@ -29,7 +29,7 @@ def generate(cfg):
     #labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
 
 
-    labels1=["ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
+    labels1=["NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]
@@ -40,7 +40,7 @@ def generate(cfg):
     #Quiscale je génère labels/labels1
     # LORIOL je génère tout ce qui n'est pas dans not car j'ai déja fait le reste
 
-    """"
+    
 
     for label in labels:
         if label in labels1: 
@@ -50,6 +50,8 @@ def generate(cfg):
 
     for label in fromages:
         dataset_generator.generate(label.strip(),labels,val_loaders,maping)
+
+     """
 
 
 
