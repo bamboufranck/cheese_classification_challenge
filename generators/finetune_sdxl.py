@@ -36,7 +36,7 @@ class FineTune_Sdxl:
     ):
         self.models = {
             "BRIE DE MELUN": "Franck19/brie",
-            "SAINT-FÉLICIEN": "Franck19/saintfeli",
+            "SAINT- FÉLICIEN": "Franck19/saintfeli",
             "CAMEMBERT": "Franck19/camembert",
             "EPOISSES": "Franck19/epoisses",
             "FOURME D’AMBERT": "Franck19/fourme",

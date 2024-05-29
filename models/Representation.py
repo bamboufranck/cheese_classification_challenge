@@ -5,7 +5,7 @@ from transformers import ViTFeatureExtractor, ViTModel
 
 
 class Encoder(nn.Module):
-    def __init__(self,):
+    def __init__(self,num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         vit_model_name="google/vit-base-patch16-224-in21k"
         hidden_dim=4096
@@ -22,11 +22,19 @@ class Encoder(nn.Module):
             nn.BatchNorm1d(output_dim)
         )
 
+        # ADD
+
+        self.classifier= nn.Linear(output_dim, num_classes)
+
+
+
         
     def forward(self, x):
         outputs = self.vit(x)
         cls_token = outputs.last_hidden_state[:, 0, :]
         projection = self.projection_head(cls_token)
+        projection=self.classifier(projection)
+
         return projection
 
 
