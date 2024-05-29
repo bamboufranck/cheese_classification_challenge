@@ -19,8 +19,11 @@ class CheeseClassifier(nn.Module):
                 param.requires_grad = True
 
 
+        num_features = self.model.classifier.in_features
+
+
         self.projection_head = nn.Sequential(
-            nn.Linear(self.model.num_features, hidden_dim),
+            nn.Linear(num_features, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(),
             nn.Linear(hidden_dim, hidden_dim),
