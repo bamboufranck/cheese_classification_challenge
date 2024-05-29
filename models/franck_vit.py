@@ -28,7 +28,7 @@ class FranckVit(nn.Module):
                 param.requires_grad = False
             if unfreeze_last_layer:
                 for param in self.backbone.encoder.layer[-1].parameters():
-                    param.requires_grad = True
+                    param.requires_grad = False
 
         self.features_dim = self.backbone.config.hidden_size
 

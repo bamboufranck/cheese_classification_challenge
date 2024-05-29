@@ -5,19 +5,18 @@ from transformers import DeiTFeatureExtractor, DeiTModel
 from transformers import ViTFeatureExtractor, ViTModel
 
 
-"""""
 
 class DinoV2Finetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
-        #self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vitb14_reg")
-        self.backbone = ViTModel.from_pretrained('google/vit-large-patch16-224')
+        self.backbone = torch.hub.load("facebookresearch/dinov2", "dinov2_vitb14_reg")
+        #self.backbone = ViTModel.from_pretrained('google/vit-large-patch16-224')
         #self.backbone = DeiTModel.from_pretrained('facebook/deit-base-distilled-patch16-224')
         #self.backbone= torch.hub.load('google/vit-base-patch16-224-in21k', 'vit_large_patch16_224', pretrained=True)
         self.backbone.head = nn.Identity()
         if frozen:
             for param in self.backbone.parameters():
-                param.requires_grad = False
+                param.requires_grad = True
             if unfreeze_last_layer:
                 for param in self.backbone.norm.parameters():
                     param.requires_grad = True
@@ -82,7 +81,7 @@ class DinoV2Finetune(nn.Module):
         logits = self.classifier(pooled_output)
         return logits
 
-
+"""""
 
 
 

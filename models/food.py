@@ -11,7 +11,7 @@ class CheeseClassifier(nn.Module):
         hidden_dim=75
         # Freeze all layers
         for param in self.model.parameters():
-            param.requires_grad = False
+            param.requires_grad = True
         
         # Unfreeze last layer if required
 
