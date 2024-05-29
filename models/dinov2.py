@@ -5,7 +5,7 @@ from transformers import DeiTFeatureExtractor, DeiTModel
 from transformers import ViTFeatureExtractor, ViTModel
 
 
-
+"""""
 
 class DinoV2Finetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
@@ -43,6 +43,44 @@ class DinoV2Finetune(nn.Module):
     
         return x
     
+
+"""""
+
+
+
+
+
+class DinoV2Finetune(nn.Module):
+    def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
+        super().__init__()
+        self.backbone = ViTModel.from_pretrained('google/vit-large-patch16-224')
+        self.backbone.pooler = nn.Identity()  # Set the pooler to identity if it exists
+
+            # Freeze all layers if required
+        if frozen:
+            for param in self.backbone.parameters():
+                param.requires_grad = False
+                # Unfreeze the last layer if required
+            if unfreeze_last_layer:
+                for param in self.backbone.encoder.layer[-1].parameters():
+                    param.requires_grad = True
+
+            # Determine the number of features based on the backbone
+        num_features = self.backbone.config.hidden_size
+
+            # Define the classifier
+        self.classifier = nn.Sequential(
+                nn.Linear(num_features, num_classes)
+            )
+
+    def forward(self, x):
+        # Extract features using the backbone
+        outputs = self.backbone(x).last_hidden_state
+        # Pool the outputs (take the mean of the sequence)
+        pooled_output = outputs.mean(dim=1)
+        # Pass through the classifier
+        logits = self.classifier(pooled_output)
+        return logits
 
 
 
