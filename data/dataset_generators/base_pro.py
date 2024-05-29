@@ -28,7 +28,7 @@ login(token=hf_token)
 
 
 
-def correct(text,key_word):
+def correct(text,key_word,labels):
 
     bags=["cheese","cheeses","cake","cakes"]
 
@@ -36,6 +36,12 @@ def correct(text,key_word):
         start = text.find(word)
         if start != -1:
             text = text.replace(word, key_word)
+
+    for word in labels:
+        start=text.find(word)
+        if start != -1:
+            text = text.replace(word, key_word)
+
 
     return text
 
@@ -80,7 +86,7 @@ class DatasetGeneratorFromage:
         # ou encore utiliser ca pour generer de meilleur prompt avec clip interrogator par exemple 
 
 
-        labels_prompts,map_images = self.create_prompts(label,val_data,maping)
+        labels_prompts,map_images = self.create_prompts(label,val_data,maping,labels)
 
         image_val_features=processor(images=torch.stack(map_images[label]), return_tensors="pt")
         m_batch[label]=model.get_image_features(**image_val_features)
@@ -158,7 +164,7 @@ class DatasetGeneratorFromage:
         torch.cuda.empty_cache()
     
 
-    def create_prompts(self, lab,val_data,maping):
+    def create_prompts(self, lab,val_data,maping,labels):
 
         prompts = {}
         map_images={}
@@ -536,7 +542,7 @@ class DatasetGeneratorFromage:
 
                     j=description.find(".")
                     description=description[j+1:]
-                    description=correct(description,f" {lab} cheese")
+                    description=correct(description,f" {lab} cheese",labels)
                     description=f"An image of a {lab} cheese," + description
                     print(description)
             
