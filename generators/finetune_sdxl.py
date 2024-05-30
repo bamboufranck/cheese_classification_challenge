@@ -67,7 +67,7 @@ class FineTune_Sdxl:
             "POULIGNY SAINT- PIERRE": "Franck19/pouligny",
             "PECORINO": "Franck19/pecorino",
             "NEUFCHATEL": "Franck19/neufchatel",
-            "MUNSTER": "Franck19/munster",
+            "MUNSTER": "ralietonle/finetune-sdxl-lora-munster",  #"Franck19/munster"
             "OSSAU- IRATY":"Franck19/ossau",
             "MOTHAIS": "Franck19/mothais",
             "MORBIER": "Franck19/morbier",
@@ -95,7 +95,7 @@ class FineTune_Sdxl:
             self.pipe.enable_sequential_cpu_offload()
 
         self.num_inference_steps = 55
-        self.guidance_scale = 2.5
+        self.guidance_scale = 4
 
          # refiner 
        
