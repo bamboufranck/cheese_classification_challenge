@@ -30,7 +30,7 @@ def generate(cfg):
 
     labels1=["MUNSTER","NEUFCHATEL","GRUYÈRE","CABECOU"]  # pedrix
     labels2=["FROMAGE FRAIS","PARMESAN","PECORINO"]    #oriol
-    labels3=["CHÈVRE","TÊTE DE MOINES"]
+    labels3=["TÊTE DE MOINES"]
 
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
