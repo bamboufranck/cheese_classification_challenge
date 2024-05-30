@@ -41,11 +41,11 @@ def train(cfg):
     for epoch in tqdm(range(cfg.epochs)):
 
 
-        if epoch % unfreeze_interval == 0 and epoch > 0:
-            unfreeze_layers(model,  layers_unfrozen)
-            optimizer = reset_optimizer(optimizer, model, cfg)
-            print(f"Unfreezing { layers_unfrozen} more layers and resetting optimizer")
-            layers_unfrozen += 1
+        #if epoch % unfreeze_interval == 0 and epoch > 0:
+            #unfreeze_layers(model,  layers_unfrozen)
+            #optimizer = reset_optimizer(optimizer, model, cfg)
+            #print(f"Unfreezing { layers_unfrozen} more layers and resetting optimizer")
+            #layers_unfrozen += 1
 
 
 
