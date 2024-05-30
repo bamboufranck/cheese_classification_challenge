@@ -28,7 +28,7 @@ def generate(cfg):
     #labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
 
 
-    labels1=["BRIE DE MELUN"]  # pedrix
+    labels1=["BÛCHETTE DE CHÈVRE"]  # pedrix
     labels2=["TÊTE DE MOINES","MOZZARELLA"]    #oriol
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
