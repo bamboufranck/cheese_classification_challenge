@@ -29,8 +29,9 @@ def generate(cfg):
 
 
     labels1=["MUNSTER","NEUFCHATEL","GRUYÈRE","CABECOU"]  # pedrix
-    labels2=["TÊTE DE MOINES","MOZZARELLA"]    #oriol
+    labels2=["FROMAGE FRAIS","PARMESAN","PECORINO"]    #oriol
     labels3=["CHÈVRE","MONT D’OR","TÊTE DE MOINES","MOZZARELLA"]
+
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]
@@ -48,7 +49,7 @@ def generate(cfg):
     
 
     for label in labels:
-        if label in labels3: 
+        if label in labels2: 
             dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
     """

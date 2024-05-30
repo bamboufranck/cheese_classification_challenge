@@ -61,11 +61,11 @@ class FineTune_Sdxl:
             "GRUYÈRE": "ralietonle/finetune-sdxl-lora-gruyere",       #"Franck19/gruyere"
             "VACHERIN": "Franck19/vacherin",
             "TÊTE DE MOINES": "ralietonle/finetune-sdxl-lora-tete-moines",
-            "FROMAGE FRAIS": "Franck19/fromageFrais",
+            "FROMAGE FRAIS": "ralietonle/finetune-sdxl-lora-fromage-frais",
             "REBLOCHON": "Franck19/reblochon",
-            "PARMESAN": "Franck19/parmesan",
+            "PARMESAN": "ralietonle/finetune-sdxl-lora-parmesan",
             "POULIGNY SAINT- PIERRE": "Franck19/pouligny",
-            "PECORINO": "Franck19/pecorino",
+            "PECORINO": "ralietonle/finetune-sdxl-lora-pecorino",
             "NEUFCHATEL": "ralietonle/finetune-sdxl-lora-neufchatel",
             "MUNSTER": "ralietonle/finetune-sdxl-lora-munster",  #"Franck19/munster"
             "OSSAU- IRATY":"Franck19/ossau",
