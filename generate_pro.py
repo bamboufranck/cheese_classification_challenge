@@ -47,7 +47,7 @@ def generate(cfg):
     
 
     for label in labels:
-        if label in labels1: 
+        if label in labels2: 
             dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
     """
