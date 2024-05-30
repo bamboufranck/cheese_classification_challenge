@@ -45,7 +45,7 @@ class FineTune_Sdxl:
             "SAINT-NECTAIRE": "Franck19/saintnect",
             "ROQUEFORT": "Franck19/roquefort",
             "COMTÉ": "ralietonle/finetune-sdxl-lora-comte",
-            "CHÈVRE": "Franck19/chevre",  # Assuming as general goat cheese if specific not available
+            "CHÈVRE": "ralietonle/finetune-sdxl-lora-chevre",  # Assuming as general goat cheese if specific not available
             "CHEDDAR": "ralietonle/finetune-sdxl-lora-cheddar",
             "BÛCHETTE DE CHÈVRE": "ralietonle/finetune-sdxl-lora-buchette",  #"Franck19/buchette"
             "STILTON": "Franck19/stilton",
@@ -72,7 +72,7 @@ class FineTune_Sdxl:
             "MOTHAIS": "Franck19/mothais",
             "MORBIER": "Franck19/morbier",
             "MOZZARELLA" :"ralietonle/finetune-sdxl-lora-mozarella",
-            "MONT D’OR" :"Franck19/montdor"
+            "MONT D’OR" :"ralietonle/finetune-sdxl-lora-mont-or"
 
         }
         self.base = "stabilityai/stable-diffusion-xl-base-1.0"
