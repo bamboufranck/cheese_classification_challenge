@@ -28,6 +28,7 @@ class GoogleVitFinetune(nn.Module):
         # Ajouter un nouveau classificateur
         hidden_dim=768
         dropout_rate=0.5
+        """""
         self.classifier = nn.Sequential(
             nn.Linear(1024, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
@@ -39,6 +40,9 @@ class GoogleVitFinetune(nn.Module):
             nn.Dropout(dropout_rate),
             nn.Linear(hidden_dim, num_classes)
         )
+        """""
+
+        self.classifier= nn.Linear(1024, num_classes)
         
 
     def forward(self, x):

@@ -16,7 +16,7 @@ class DinoV2Finetune(nn.Module):
         self.backbone.head = nn.Identity()
         if frozen:
             for param in self.backbone.parameters():
-                param.requires_grad = True
+                param.requires_grad = False
             if unfreeze_last_layer:
                 for param in self.backbone.norm.parameters():
                     param.requires_grad = True

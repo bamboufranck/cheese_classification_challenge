@@ -9,11 +9,14 @@ def unfreeze_layers(model, num_layers):
         for param in model.backbone.encoder.layer[layer].parameters():
             param.requires_grad = True
 
-    for param in model.backbone.blocks[-1].parameters():
-        param.requires_grad = True
+        #for param in model.backbone.blocks[layer].parameters():
+            #param.requires_grad = True
 
 
 
+def reset_optimizer(optimizer, model, cfg):
+    optimizer = hydra.utils.instantiate(cfg.optim, params=model.parameters())
+    return optimizer
 
 
 
@@ -33,7 +36,21 @@ def train(cfg):
     train_loader = datamodule.train_dataloader()
     val_loaders = datamodule.val_dataloader()
 
+    unfreeze_interval=2
+    num_layers_to_unfreeze=1
+
     for epoch in tqdm(range(cfg.epochs)):
+
+
+
+        #if epoch % unfreeze_interval == 0 and epoch > 0:
+            #unfreeze_layers(model, num_layers_to_unfreeze)
+            #optimizer = reset_optimizer(optimizer, model, cfg)
+            #print(f"Unfreezing {num_layers_to_unfreeze} more layers and resetting optimizer")
+
+
+
+
         epoch_loss = 0
         epoch_num_correct = 0
         num_samples = 0
