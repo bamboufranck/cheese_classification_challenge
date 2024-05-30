@@ -30,7 +30,7 @@ def generate(cfg):
 
     labels1=["MUNSTER","NEUFCHATEL","GRUYÈRE","CABECOU"]  # pedrix
     labels2=["TÊTE DE MOINES","MOZZARELLA"]    #oriol
-    labels3=["CHÈVRE","MONT D’OR"]
+    labels3=["CHÈVRE","MONT D’OR","TÊTE DE MOINES","MOZZARELLA"]
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
         labels = [label.strip() for label in labels]
