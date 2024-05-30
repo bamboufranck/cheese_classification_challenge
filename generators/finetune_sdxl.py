@@ -60,7 +60,7 @@ class FineTune_Sdxl:
             "MAROILLES": "Franck19/maroilles",
             "GRUYÈRE": "ralietonle/finetune-sdxl-lora-gruyere",       #"Franck19/gruyere"
             "VACHERIN": "Franck19/vacherin",
-            "TÊTE DE MOINES": "Franck19/tetedemoine",
+            "TÊTE DE MOINES": "ralietonle/finetune-sdxl-lora-tete-moines",
             "FROMAGE FRAIS": "Franck19/fromageFrais",
             "REBLOCHON": "Franck19/reblochon",
             "PARMESAN": "Franck19/parmesan",
@@ -71,7 +71,7 @@ class FineTune_Sdxl:
             "OSSAU- IRATY":"Franck19/ossau",
             "MOTHAIS": "Franck19/mothais",
             "MORBIER": "Franck19/morbier",
-            "MOZZARELLA" :"Franck19/mozarella",
+            "MOZZARELLA" :"ralietonle/finetune-sdxl-lora-mozarella",
             "MONT D’OR" :"Franck19/montdor"
 
         }
