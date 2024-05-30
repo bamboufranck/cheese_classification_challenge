@@ -13,7 +13,7 @@ from transformers import AutoProcessor, LlavaForConditionalGeneration
 
 
 #for blip
-from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
+#from transformers import AutoProcessor, BlipForConditionalGeneration, pipeline
 import os
 
 from huggingface_hub import login
@@ -740,18 +740,12 @@ class DatasetGeneratorFromage:
 
         prompts_liste=[prompt1,prompt3,prompt2]
 
-
-
-
        
 
 
         #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
-        #model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
-        #processor = AutoProcessor.from_pretrained(model_id)
-
-        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
+        processor = AutoProcessor.from_pretrained(model_id)
    
 
         print( "start generation of prompts")
@@ -767,28 +761,6 @@ class DatasetGeneratorFromage:
             if(maping[valeur_label]==lab):
                 map_images[lab].append(image)
                 image = to_pil(image)
-
-                inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
-                pixel_values = inputs.pixel_values
-                generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
-                generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-                generated_text=generated_caption.split("\n")[0]
-                generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese",labels)
-                description=f" An image of a {maping[valeur_label]} cheese," + generated_text
-                print(description)
-
-                prompts[lab].append(
-                            {
-                                "prompt": description,
-                                "num_images": self.num_images_per_label,
-                            }
-                        )
-
-
-
-
-
-                """""
                 for prompt in prompts_liste:
                     inputs = processor(prompt,image, return_tensors='pt').to(device, torch.float16)
                     output = model.generate(**inputs, max_new_tokens=60, do_sample=True, temperature=0.9, top_k=50)
@@ -806,9 +778,6 @@ class DatasetGeneratorFromage:
                                 "num_images": self.num_images_per_label,
                             }
                         )
-
-                    """""
-                
             
             
         return prompts,map_images
@@ -823,7 +792,7 @@ class DatasetGeneratorFromage:
         generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         generated_text=generated_caption.split("\n")[0]
         generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
-        description=f" An image of a {maping[valeur_label]} cheese," + generated_text
+        description=f" A {maping[valeur_label]} cheese," + generated_text
         """""
             
         
