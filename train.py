@@ -3,14 +3,13 @@ import wandb
 import hydra
 from tqdm import tqdm
 
-def unfreeze_layers(model, num_layers):
-    # Unfreeze the specified number of layers from the end
-    for layer in range(-1, -num_layers-1, -1):
-        for param in model.backbone.encoder.layer[layer].parameters():
-            param.requires_grad = True
+def unfreeze_layers(model, layers_unfrozen):
+    layer_to_unfrozen = -layers_unfrozen - 1
+    for param in model.backbone.blocks[layer_to_unfrozen].parameters():
+        param.requires_grad = True
 
-        #for param in model.backbone.blocks[layer].parameters():
-            #param.requires_grad = True
+    #for param in model.backbone.encoder.layer[layer].parameters():
+        #param.requires_grad = True
 
 
 
@@ -37,16 +36,16 @@ def train(cfg):
     val_loaders = datamodule.val_dataloader()
 
     unfreeze_interval=4
-    num_layers_to_unfreeze=1
+    layers_unfrozen = 1
 
     for epoch in tqdm(range(cfg.epochs)):
 
 
-
-        #if epoch % unfreeze_interval == 0 and epoch > 0:
-            #unfreeze_layers(model, num_layers_to_unfreeze)
-            #optimizer = reset_optimizer(optimizer, model, cfg)
-            #print(f"Unfreezing {num_layers_to_unfreeze} more layers and resetting optimizer")
+        if epoch % unfreeze_interval == 0 and epoch > 0:
+            unfreeze_layers(model,  layers_unfrozen)
+            optimizer = reset_optimizer(optimizer, model, cfg)
+            print(f"Unfreezing { layers_unfrozen} more layers and resetting optimizer")
+            layers_unfrozen += 1
 
 
 
