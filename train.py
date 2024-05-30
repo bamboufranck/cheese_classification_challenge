@@ -3,6 +3,23 @@ import wandb
 import hydra
 from tqdm import tqdm
 
+def unfreeze_layers(model, num_layers):
+    # Unfreeze the specified number of layers from the end
+    for layer in range(-1, -num_layers-1, -1):
+        for param in model.backbone.encoder.layer[layer].parameters():
+            param.requires_grad = True
+
+    for param in model.backbone.blocks[-1].parameters():
+        param.requires_grad = True
+
+
+
+
+
+
+
+
+
 
 @hydra.main(config_path="configs/train", config_name="config")
 def train(cfg):

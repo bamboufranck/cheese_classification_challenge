@@ -4,6 +4,7 @@ from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from transformers import BertModel, BertTokenizer
 from transformers import DeiTModel
 
+
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def denormalize(tensor):
