@@ -46,7 +46,7 @@ class FineTune_Sdxl:
             "ROQUEFORT": "Franck19/roquefort",
             "COMTÉ": "ralietonle/finetune-sdxl-lora-comte",
             "CHÈVRE": "Franck19/chevre",  # Assuming as general goat cheese if specific not available
-            "CHEDDAR": "Franck19/cheddar",
+            "CHEDDAR": "ralietonle/finetune-sdxl-lora-cheddar",
             "BÛCHETTE DE CHÈVRE": "ralietonle/finetune-sdxl-lora-buchette",  #"Franck19/buchette"
             "STILTON": "Franck19/stilton",
             "SCARMOZA": "Franck19/scarmoza",
