@@ -712,10 +712,10 @@ class DatasetGeneratorFromage:
         texture = ", ".join(attributes["texture"])
         
         base_prompt = (f"Generate an image of {lab} cheese. "
-                   f"The cheese is {color} in color, {shape} in shape, "
+                   f"the {shape} in shape, "
                    f"with a {crust}. It has a {texture} texture.")
         
-        for _ in range(100):
+        for _ in range(50):
             bg = random.choice(backgrounds)
             light = random.choice(lighting_conditions)
             angle = random.choice(camera_angles)
