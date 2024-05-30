@@ -318,7 +318,6 @@ class DatasetGeneratorFromage:
         "num_images": self.num_images_per_label,
     })
         
-        """""
 
         prompts[lab].append({
                     "prompt": f"an image of {lab} cheese",
@@ -477,7 +476,6 @@ class DatasetGeneratorFromage:
             "num_images": self.num_images_per_label,
         })
 
-        """""
 
         #GPT PROMPT
         cheese_info = {
@@ -715,7 +713,7 @@ class DatasetGeneratorFromage:
                    f"the {shape} in shape, "
                    f"with a {crust}. It has a {texture} texture.")
         
-        for _ in range(50):
+        for _ in range(60):
             bg = random.choice(backgrounds)
             light = random.choice(lighting_conditions)
             angle = random.choice(camera_angles)
@@ -773,7 +771,7 @@ class DatasetGeneratorFromage:
                 generated_ids = blip_model.generate(pixel_values=pixel_values, max_length=60)
                 generated_caption = blip_processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
                 generated_text=generated_caption.split("\n")[0]
-                generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese",labels)
+                generated_text=correct(generated_text,f" A {maping[valeur_label]}",labels)
                 description=f" An image of a {maping[valeur_label]} cheese," + generated_text
                 print(description)
 

@@ -50,7 +50,7 @@ class FineTune_Sdxl:
             "BÛCHETTE DE CHÈVRE": "ralietonle/finetune-sdxl-lora-buchette",  #"Franck19/buchette"
             "STILTON": "Franck19/stilton",
             "SCARMOZA": "Franck19/scarmoza",
-            "CABECOU": "Franck19/cabecou",
+            "CABECOU": "ralietonle/finetune-sdxl-lora-cabecou",
             "BEAUFORT": "Franck19/beaufort",
             "CHABICHOU": "Franck19/chabichou",
             "TOMME DE VACHE": "Franck19/tommedevache",
@@ -58,7 +58,7 @@ class FineTune_Sdxl:
             "FETA": "Franck19/feta",
             "MIMOLETTE": "Franck19/mimolette",  # If mimolette model exists in your setup
             "MAROILLES": "Franck19/maroilles",
-            "GRUYÈRE": "Franck19/gruyere",
+            "GRUYÈRE": "ralietonle/finetune-sdxl-lora-gruyere",       #"Franck19/gruyere"
             "VACHERIN": "Franck19/vacherin",
             "TÊTE DE MOINES": "Franck19/tetedemoine",
             "FROMAGE FRAIS": "Franck19/fromageFrais",
@@ -66,7 +66,7 @@ class FineTune_Sdxl:
             "PARMESAN": "Franck19/parmesan",
             "POULIGNY SAINT- PIERRE": "Franck19/pouligny",
             "PECORINO": "Franck19/pecorino",
-            "NEUFCHATEL": "Franck19/neufchatel",
+            "NEUFCHATEL": "ralietonle/finetune-sdxl-lora-neufchatel",
             "MUNSTER": "ralietonle/finetune-sdxl-lora-munster",  #"Franck19/munster"
             "OSSAU- IRATY":"Franck19/ossau",
             "MOTHAIS": "Franck19/mothais",
