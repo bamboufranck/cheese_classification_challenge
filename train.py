@@ -36,7 +36,7 @@ def train(cfg):
     train_loader = datamodule.train_dataloader()
     val_loaders = datamodule.val_dataloader()
 
-    unfreeze_interval=2
+    unfreeze_interval=4
     num_layers_to_unfreeze=1
 
     for epoch in tqdm(range(cfg.epochs)):
