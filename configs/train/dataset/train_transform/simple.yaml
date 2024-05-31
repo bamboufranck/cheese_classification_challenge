@@ -3,8 +3,8 @@ transforms:
   - _target_: torchvision.transforms.Resize
     size: [224, 224]
   - _target_: torchvision.transforms.RandAugment
-    num_ops: 10
-    magnitude: 10
+    num_ops: 5
+    magnitude: 5
   - _target_: torchvision.transforms.ToTensor
   - _target_: torchvision.transforms.Normalize
     mean: [0.485, 0.456, 0.406]

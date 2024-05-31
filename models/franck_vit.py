@@ -8,20 +8,20 @@ from transformers import DeiTModel
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def denormalize(tensor):
-    # Convertit un tenseur normalisé (ImageNet) en un tenseur avec des valeurs entre 0 et 1
+    
     mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
     std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
     if tensor.is_cuda:
         mean = mean.cuda()
         std = std.cuda()
-    tensor = tensor * std + mean  # Appliquer l'inverse de la normalisation
-    tensor = torch.clamp(tensor, 0.0, 1.0)  # Clamp les valeurs pour s'assurer qu'elles sont entre 0 et 1
+    tensor = tensor * std + mean  #
+    tensor = torch.clamp(tensor, 0.0, 1.0)  
     return tensor
 
 class FranckVit(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
-        # Charger le modèle pré-entraîné pour l'extraction de features
+       
         self.backbone = DeiTModel.from_pretrained('facebook/deit-base-distilled-patch16-224')
         self.backbone.eval()
         if frozen:

@@ -745,11 +745,11 @@ class DatasetGeneratorFromage:
 
 
         #prompt = "<|user|>\n<image>\n Use this image and generated a detailed prompt, focusing primarily on the cheese and its surroundings.<|end|>\n<|assistant|>\n"
-        #model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
-        #processor = AutoProcessor.from_pretrained(model_id)
+        model = LlavaForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to(device, torch.float16)
+        processor = AutoProcessor.from_pretrained(model_id)
 
-        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
+        #blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+        #blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",torch_dtype=torch.float16).to(device)
    
 
         print( "start generation of prompts")
@@ -765,6 +765,7 @@ class DatasetGeneratorFromage:
             if(maping[valeur_label]==lab):
                 map_images[lab].append(image)
                 image = to_pil(image)
+                """""
 
                 inputs = blip_processor(images=image, return_tensors="pt").to(device, torch.float16)
                 pixel_values = inputs.pixel_values
@@ -774,6 +775,7 @@ class DatasetGeneratorFromage:
                 generated_text=correct(generated_text,f" A {maping[valeur_label]}",labels)
                 description=f" An image of a {maping[valeur_label]} cheese," + generated_text
                 print(description)
+                
 
                 prompts[lab].append(
                             {
@@ -805,7 +807,6 @@ class DatasetGeneratorFromage:
                             }
                         )
 
-                    """""
                 
             
             
@@ -822,7 +823,7 @@ class DatasetGeneratorFromage:
         generated_text=generated_caption.split("\n")[0]
         generated_text=correct(generated_text,f" A {maping[valeur_label]} cheese")
         description=f" An image of a {maping[valeur_label]} cheese," + generated_text
-        """""
+      
             
         
 
@@ -840,7 +841,7 @@ class DatasetGeneratorFromage:
             
 
             # llava 
-
+        """""
           
 
 
