@@ -5,8 +5,6 @@ from transformers import SwinForImageClassification, SwinConfig
 
 
 
-"""""
-
 class CheeseClassifier(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
@@ -19,15 +17,11 @@ class CheeseClassifier(nn.Module):
             param.requires_grad = True
         
         # Unfreeze last layer if required
-
-        
         if unfreeze_last_layer:
             for param in self.model.classifier.parameters():
                 param.requires_grad = True
 
-    
 
-        
         
         
         # Update classifier to match the number of classes
@@ -93,7 +87,5 @@ class CheeseClassifier(nn.Module):
         logits = self.classifier(outputs)
         return logits
      
-
-
-
+    """""
 
