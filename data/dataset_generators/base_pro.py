@@ -131,7 +131,7 @@ class DatasetGeneratorFromage:
                     average_similarity = similarities.mean().item()
                     print("average similarity", average_similarity)
 
-                if(average_similarity>0.50): 
+                if(average_similarity>0): 
                     numbers+=1
                     print("save!",numbers)                             # Ajout
                     self.save_images(images, label, image_id_0)            
