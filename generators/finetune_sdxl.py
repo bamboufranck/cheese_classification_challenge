@@ -152,8 +152,10 @@ class FineTune_Sdxl:
             self.pipe = DiffusionPipeline.from_pretrained(self.base, torch_dtype=torch.float16, variant="fp16",).to(device,torch.float16)
             self.pipe.scheduler = EulerDiscreteScheduler.from_config(self.pipe.scheduler.config, timestep_spacing="trailing" )
             self.pipe.set_progress_bar_config(disable=True)
-            #self.pipe.load_lora_weights(self.models[label],token=hf_token)
-            self.pipe.load_lora_weights(self.models[label])
+            if label in fromages:
+                self.pipe.load_lora_weights(self.models[label],token=hf_token)
+            else:
+                self.pipe.load_lora_weights(self.models[label])
             print("load of",label,"model")
 
         
