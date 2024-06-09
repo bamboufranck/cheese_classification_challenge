@@ -103,6 +103,31 @@ class FineTune_Sdxl:
         #self.refiner_pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained("stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True).to(device)
 
     def generate(self, prompts,label):
+        fromages = [
+    "CAMEMBERT",
+    "EPOISSES",
+    "FOURME D’AMBERT",
+    "RACLETTE",
+    "MORBIER",
+    "SAINT-NECTAIRE",
+    "POULIGNY SAINT- PIERRE",
+    "ROQUEFORT",
+    "SAINT- FÉLICIEN",
+    "STILTON",
+    "SCARMOZA",
+    "BEAUFORT",
+    "CHABICHOU",
+    "TOMME DE VACHE",
+    "REBLOCHON",
+    "EMMENTAL",
+    "FETA",
+    "OSSAU- IRATY",
+    "MIMOLETTE",
+    "MAROILLES",
+    "MOTHAIS",
+    "VACHERIN"
+]
+
 
         # define a method to update self.repo  using the right label
         """""
@@ -133,7 +158,10 @@ class FineTune_Sdxl:
 
         
         for index,text in enumerate(prompts):
-            text=text.replace(label,"<s0><s1>")
+            if label in fromages:
+                text=text.replace(label,"tok")
+            else:
+                text=text.replace(label,"<s0><s1>")
             prompts[index]=text
             print(prompts[index])
            
