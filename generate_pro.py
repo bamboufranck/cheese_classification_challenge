@@ -10,17 +10,7 @@ def generate(cfg):
     valmodule = hydra.utils.instantiate(cfg.get_val)
 
 
-    fromages = [
-    "OSSAU- IRATY",
-    "MIMOLETTE",
-    "MAROILLES",
-    "GRUYÈRE",
-    "MOTHAIS",
-    "VACHERIN",
-    "MOZZARELLA",
-    "TÊTE DE MOINES",
-    "FROMAGE FRAIS"
-]
+    
 
 
     #labels=["FETA","TOMME DE VACHE","VACHERIN","TÊTE DE MOINES","CHABICHOU","EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MOTHAIS","MOZZARELLA","OSSAU- IRATY","REBLOCHON","PECORINO","SAINT- FÉLICIEN"]
@@ -28,9 +18,8 @@ def generate(cfg):
     #labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
 
 
-    labels1=["MUNSTER","NEUFCHATEL","GRUYÈRE","CABECOU"]  # pedrix
-    labels2=["FROMAGE FRAIS","PARMESAN","PECORINO"]    #oriol
-    labels3=["TÊTE DE MOINES"]
+    fromages = ["BRIE DE MELUN", "CAMEMBERT", "EPOISSES", "FOURME D’AMBERT", "RACLETTE", "MORBIER", "SAINT-NECTAIRE"]
+
 
     with open(cfg.labels_file, "r") as f:
         labels = f.readlines()
@@ -49,8 +38,8 @@ def generate(cfg):
     
 
     for label in labels:
-        #if label in labels3: 
-        dataset_generator.generate(label.strip(),labels,val_loaders,maping)
+        if label not in fromages: 
+            dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
     """
 
