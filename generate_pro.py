@@ -16,9 +16,7 @@ def generate(cfg):
     #labels=["FETA","TOMME DE VACHE","VACHERIN","TÊTE DE MOINES","CHABICHOU","EMMENTAL","FROMAGE FRAIS","GRUYÈRE","MOTHAIS","MOZZARELLA","OSSAU- IRATY","REBLOCHON","PECORINO","SAINT- FÉLICIEN"]
 
     #labels1=["BRIE DE MELUN", "CAMEMBERT","EPOISSES","FOURME D’AMBERT","RACLETTE", "MORBIER","SAINT-NECTAIRE", "POULIGNY SAINT- PIERRE","ROQUEFORT","COMTÉ","CHÈVRE","PECORINO","NEUFCHATEL","CHEDDAR","BÛCHETTE DE CHÈVRE","PARMESAN","SAINT- FÉLICIEN"]
-
-
-    fromages = ["BRIE DE MELUN", "CAMEMBERT", "EPOISSES", "FOURME D’AMBERT", "RACLETTE", "MORBIER", "SAINT-NECTAIRE"]
+    
 
 
     with open(cfg.labels_file, "r") as f:
@@ -35,10 +33,29 @@ def generate(cfg):
 
 
 
-    
+    fromages = [
+    "STILTON",
+    "SCARMOZA",
+    "CABECOU",
+    "BEAUFORT",
+    "MUNSTER",
+    "CHABICHOU",
+    "TOMME DE VACHE",
+    "REBLOCHON",
+    "EMMENTAL",
+    "FETA",
+    "OSSAU- IRATY",
+    "MIMOLETTE",
+    "MAROILLES",
+    "GRUYÈRE",
+    "MOTHAIS",
+    "VACHERIN",
+    "MOZZARELLA",
+    "TÊTE DE MOINES",
+    "FROMAGE FRAIS"]
 
     for label in labels:
-        if label not in fromages: 
+        if label in fromages: 
             dataset_generator.generate(label.strip(),labels,val_loaders,maping)
 
     """
