@@ -593,7 +593,7 @@ class DatasetGeneratorFromage:
             "crust": ["natural crust"],
             "texture": ["crumbly"]
         },
-        "SCAMORZA": {
+        "SCARMOZA": {
             "color": ["white", "pale yellow"],
             "shape": ["pear-shaped"],
             "crust": ["natural crust"],
