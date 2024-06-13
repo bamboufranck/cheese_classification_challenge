@@ -34,10 +34,6 @@ def generate(cfg):
 
 
     fromages = [
-    "TOMME DE VACHE",
-    "REBLOCHON",
-    "EMMENTAL",
-    "FETA",
     "OSSAU- IRATY",
     "MIMOLETTE",
     "MAROILLES",
