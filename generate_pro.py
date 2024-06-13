@@ -34,8 +34,6 @@ def generate(cfg):
 
 
     fromages = [
-    "MUNSTER",
-    "CHABICHOU",
     "TOMME DE VACHE",
     "REBLOCHON",
     "EMMENTAL",
