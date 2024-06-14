@@ -6,6 +6,6 @@ name: clip_prompts
 num_classes: 37
 batch_size: 64
 num_workers: 6
-train_path: ${data_dir}/train/clip_prompts
+train_path: ${data_dir}/train/prompts
 real_images_val_path: ${data_dir}/val
 test_path: ${data_dir}/test
