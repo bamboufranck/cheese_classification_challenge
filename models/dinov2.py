@@ -17,11 +17,17 @@ class DinoV2Finetune(nn.Module):
         if frozen:
             for param in self.backbone.parameters():
                 param.requires_grad = False
+            
             if unfreeze_last_layer:
-                #for param in self.backbone.norm.parameters():
-                    #param.requires_grad = True
+                """""
+                for param in self.backbone.norm.parameters():
+                    param.requires_grad = True
                 for param in self.backbone.blocks[-1].parameters():
                     param.requires_grad = True
+                """""
+                if hasattr(self.backbone, 'encoder'):
+                    for param in self.backbone.encoder.layer[-1].parameters():
+                        param.requires_grad = True
 
 
         #self.features_dim = self.backbone.num_features
