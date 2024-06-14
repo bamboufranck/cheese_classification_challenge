@@ -1,8 +1,7 @@
 import torch
 import torch.nn as nn
-from transformers import BertModel, BertTokenizer
 from transformers import DeiTFeatureExtractor, DeiTModel
-from transformers import ViTFeatureExtractor, ViTModel
+from transformers import ViTImageProcessor, ViTModel
 
 
 
@@ -49,3 +48,52 @@ class DinoV2Finetune(nn.Module):
     
         return x
     
+
+
+
+
+
+"""""""""""
+class DinoV2Finetune(nn.Module):
+    def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
+        super().__init__()
+        
+        # Load the backbone (ViT Model)
+        self.processor = ViTImageProcessor.from_pretrained('google/vit-large-patch16-224-in21k')
+        self.backbone = ViTModel.from_pretrained('google/vit-large-patch16-224-in21k')
+        
+        # Remove the classification head
+        self.backbone.pooler = nn.Identity()
+        
+        if frozen:
+            for param in self.backbone.parameters():
+                param.requires_grad = False
+            
+            if unfreeze_last_layer:
+                for param in self.backbone.layernorm.parameters():
+                    param.requires_grad = True
+                for param in self.backbone.encoder.layer[-1].parameters():
+                    param.requires_grad = True
+        
+        self.features_dim = self.backbone.config.hidden_size
+        self.classifier = nn.Linear(self.features_dim, num_classes)
+
+    def forward(self, images):
+        # Preprocess images
+        inputs = self.processor(images=images, return_tensors="pt")
+        
+        # Move inputs to the same device as the model
+        inputs = {k: v.to(self.backbone.device) for k, v in inputs.items()}
+        
+        # Get the outputs from the backbone model
+        outputs = self.backbone(**inputs)
+        
+        # Use the CLS token for classification (assuming the first token is the CLS token)
+        cls_token = outputs.last_hidden_state[:, 0, :]
+        
+        # Classify
+        logits = self.classifier(cls_token)
+        return logits
+    
+
+"""""""""
