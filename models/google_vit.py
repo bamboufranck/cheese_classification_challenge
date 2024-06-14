@@ -6,26 +6,6 @@ class GoogleVitFinetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
 
-        self.model = timm.create_model("vit_base_patch16_224", pretrained=True)
-        if frozen:
-            for param in self.model.parameters():
-                param.requires_grad = False
-        self.model.head = nn.Linear(self.model.head.in_features, num_classes)
-        #self.classifier = nn.Linear(self.backbone.norm.normalized_shape[0], num_classes)
-
-    def forward(self, x):
-        x = self.model(x)
-        return x
-
-
-
-
-
-
-
-
-
-        """""
         # Charger le modèle pré-entraîné
         self.backbone = ViTForImageClassification.from_pretrained('google/vit-large-patch16-224')
         # Remplacer la tête de classification par une identité (pas de calcul)
@@ -73,5 +53,5 @@ class GoogleVitFinetune(nn.Module):
         x = self.classifier(logits)  # Passer les logits au classificateur
         return x
 
-    """""
+
 
