@@ -1,5 +1,5 @@
 defaults:
-  - model: food
+  - model: vit
   - dataset: clip_prompts
   - optim: adamw
   - loss_fn: cross_entropy
