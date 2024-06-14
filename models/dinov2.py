@@ -4,7 +4,6 @@ from transformers import DeiTFeatureExtractor, DeiTModel
 from transformers import ViTImageProcessor, ViTModel
 
 
-"""""""""""""""
 class DinoV2Finetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
@@ -98,3 +97,4 @@ def preprocess_image(image_path):
     image = np.array(image).astype(np.float32) / 255.0  # Normalize to [0, 1]
     return image
 
+"""""""""
