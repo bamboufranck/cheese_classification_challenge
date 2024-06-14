@@ -3,7 +3,7 @@ import torch.nn as nn
 import timm
 
 class VisionTransformerFinetune(nn.Module):
-    def __init__(self, num_classes, frozen=False):
+    def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         self.model = timm.create_model("vit_base_patch16_224", pretrained=True)
         if frozen:
