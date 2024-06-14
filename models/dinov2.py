@@ -46,6 +46,11 @@ class DinoV2Finetune(nn.Module):
 """""""""
 
 
+import torch
+import torch.nn as nn
+from transformers import ViTImageProcessor, ViTModel
+from PIL import Image
+import numpy as np
 
 class DinoV2Finetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
@@ -87,4 +92,9 @@ class DinoV2Finetune(nn.Module):
         # Classify
         logits = self.classifier(cls_token)
         return logits
-    
+
+def preprocess_image(image_path):
+    image = Image.open(image_path).convert("RGB")
+    image = np.array(image).astype(np.float32) / 255.0  # Normalize to [0, 1]
+    return image
+

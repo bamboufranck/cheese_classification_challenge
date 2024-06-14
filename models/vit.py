@@ -6,6 +6,7 @@ class VisionTransformerFinetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
         self.model = timm.create_model("vit_base_patch16_224", pretrained=True)
+        #self.model = timm.create_model(\'93mobilenetv2_100\'94, pretrained=True)
         if frozen:
             for param in self.model.parameters():
                 param.requires_grad = False
