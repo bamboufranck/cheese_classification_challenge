@@ -4,7 +4,7 @@ from transformers import DeiTFeatureExtractor, DeiTModel
 from transformers import ViTImageProcessor, ViTModel
 
 
-
+"""""""""""""""
 class DinoV2Finetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
@@ -23,12 +23,7 @@ class DinoV2Finetune(nn.Module):
                     param.requires_grad = True
                 for param in self.backbone.blocks[-1].parameters():
                     param.requires_grad = True
-                """""
-                if hasattr(self.backbone, 'encoder'):
-                    for param in self.backbone.encoder.layer[-1].parameters():
-                        param.requires_grad = True
-
-                """""
+            
 
         self.features_dim = self.backbone.num_features
         #self.dropout = nn.Dropout(0.5)
@@ -48,12 +43,10 @@ class DinoV2Finetune(nn.Module):
     
         return x
     
+"""""""""
 
 
 
-
-
-"""""""""""
 class DinoV2Finetune(nn.Module):
     def __init__(self, num_classes, frozen=False, unfreeze_last_layer=True):
         super().__init__()
@@ -95,5 +88,3 @@ class DinoV2Finetune(nn.Module):
         logits = self.classifier(cls_token)
         return logits
     
-
-"""""""""
