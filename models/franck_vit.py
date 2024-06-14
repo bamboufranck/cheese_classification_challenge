@@ -23,7 +23,6 @@ class FranckVit(nn.Module):
         super().__init__()
        
         self.backbone = DeiTModel.from_pretrained('facebook/deit-base-distilled-patch16-224')
-        self.backbone.eval()
         if frozen:
             for param in self.backbone.parameters():
                 param.requires_grad = False
